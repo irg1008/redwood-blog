@@ -1,4 +1,5 @@
 import { Metadata } from '@redwoodjs/web'
+
 import ArticleCell from 'src/components/Article/ArticleCell'
 
 type ArticlePageProps = {

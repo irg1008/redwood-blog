@@ -1,4 +1,3 @@
-import { Link, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 
 const AboutPage = () => {
@@ -6,7 +5,7 @@ const AboutPage = () => {
     <>
       <Metadata title="About" description="About page" />
 
-      <p>
+      <p className="font-light">
         This site was created to demonstrate my mastery of Redwood: Look on my
         works, ye mighty, and despair!
       </p>

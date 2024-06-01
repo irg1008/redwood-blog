@@ -7,27 +7,42 @@
     ]
   },
   "scripts": {
+    "dev": "rw dev",
+    "test": "rw test --silent=false",
+    "console": "rw c",
+    "lint": "rw lint",
+    "test:cov": "rw test --collect-coverage",
     "g:scf": "rw g scaffold",
     "g:page": "rw g page",
     "g:cell": "rw g cell",
     "g:component": "rw g component",
     "g:layout": "rw g layout",
     "g:sdl": "rw g sdl",
-    "g:sdl:simple": "rw g sdl --no-crud",
+    "g:sdl:bare": "rw g sdl --no-crud",
     "types": "rw g types",
     "auth:set": "rw setup auth dbAuth",
     "auth:g": "rw g dbAuth",
     "auth:secret": "rw g secret",
-    "dev": "rw dev",
     "db": "rw prisma db",
     "db:gen": "rw prisma generate",
     "db:mig": "rw prisma migrate dev",
-    "db:dev": "rw prisma studio"
+    "db:dev": "rw prisma studio",
+    "db:start": "docker compose up -d",
+    "db:stop": "docker compose down",
+    "db:seed": "rw prisma db seed",
+    "deploy:set": "rw setup deploy netlify",
+    "ui:set": "rw setup ui tailwind",
+    "mail:set": "rw setup mailer",
+    "storybook": "rw storybook",
+    "add:web": "yarn workspace web add -E",
+    "add:api": "yarn workspace api add -E"
   },
   "devDependencies": {
     "@redwoodjs/auth-dbauth-setup": "7.6.2",
+    "@redwoodjs/cli-storybook": "7.6.2",
     "@redwoodjs/core": "7.6.2",
-    "@redwoodjs/project-config": "7.6.2"
+    "@redwoodjs/project-config": "7.6.2",
+    "prettier-plugin-tailwindcss": "0.4.1"
   },
   "eslintConfig": {
     "extends": "@redwoodjs/eslint-config",

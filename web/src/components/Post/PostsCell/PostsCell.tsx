@@ -11,7 +11,7 @@ import Posts from 'src/components/Post/Posts'
 
 export const QUERY: TypedDocumentNode<FindPosts, FindPostsVariables> = gql`
   query FindPosts {
-    posts {
+    posts: adminPosts {
       id
       title
       slug

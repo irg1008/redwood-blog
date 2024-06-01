@@ -1,10 +1,12 @@
 import type { ArticlesQuery, ArticlesQueryVariables } from 'types/graphql'
+
 import type {
   CellSuccessProps,
   CellFailureProps,
   TypedDocumentNode,
 } from '@redwoodjs/web'
-import Article from 'src/components/Article/Article/Article'
+
+import Article from 'src/components/Article/Article'
 
 export const QUERY: TypedDocumentNode<
   ArticlesQuery,
@@ -17,13 +19,18 @@ export const QUERY: TypedDocumentNode<
       slug
       body
       createdAt
+      user {
+        name
+      }
     }
   }
 `
 
 export const Loading = () => <div>Loading...</div>
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => {
+  return <div>No posts to show</div>
+}
 
 export const Failure = ({ error }: CellFailureProps) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
@@ -31,12 +38,10 @@ export const Failure = ({ error }: CellFailureProps) => (
 
 export const Success = ({ articles }: CellSuccessProps<ArticlesQuery>) => {
   return (
-    <ul>
+    <div className="space-y-10">
       {articles.map((article) => (
-        <li key={article.id}>
-          <Article article={article} />
-        </li>
+        <Article key={article.id} article={article} summary={true} />
       ))}
-    </ul>
+    </div>
   )
 }

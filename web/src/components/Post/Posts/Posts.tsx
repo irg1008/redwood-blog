@@ -68,14 +68,14 @@ const PostsList = ({ posts }: FindPosts) => {
               <td>
                 <nav className="rw-table-actions">
                   <Link
-                    to={routes.post({ slug: post.slug })}
+                    to={routes.post({ id: post.id })}
                     title={'Show post ' + post.id + ' detail'}
                     className="rw-button rw-button-small"
                   >
                     Show
                   </Link>
                   <Link
-                    to={routes.editPost({ slug: post.slug })}
+                    to={routes.editPost({ id: post.id })}
                     title={'Edit post ' + post.id}
                     className="rw-button rw-button-small rw-button-blue"
                   >

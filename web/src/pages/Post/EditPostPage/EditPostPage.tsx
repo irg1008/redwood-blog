@@ -1,11 +1,11 @@
 import EditPostCell from 'src/components/Post/EditPostCell'
 
 type PostPageProps = {
-  slug: string
+  id: number
 }
 
-const EditPostPage = ({ slug }: PostPageProps) => {
-  return <EditPostCell slug={slug} />
+const EditPostPage = ({ id }: PostPageProps) => {
+  return <EditPostCell id={id} />
 }
 
 export default EditPostPage

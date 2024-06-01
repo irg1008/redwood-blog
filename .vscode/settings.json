@@ -9,9 +9,8 @@
     "editor.formatOnSave": true
   },
   "files.exclude": {
-    "**/.classpath": true,
-    "**/.project": true,
-    "**/.settings": true,
-    "**/.factorypath": true
-  }
+    "**/node_modules": true
+  },
+  "explorerExclude.backup": {},
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

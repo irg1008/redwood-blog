@@ -1,4 +1,6 @@
-import type { Contact } from '@prisma/client'
+import { CreateContactInput } from 'types/graphql'
+
+import { ValidationError } from '@redwoodjs/graphql-server'
 
 import {
   contacts,
@@ -9,12 +11,6 @@ import {
 } from './contacts'
 import type { StandardScenario } from './contacts.scenarios'
 
-// Generated boilerplate tests do not account for all circumstances
-// and can fail without adjustments, e.g. Float.
-//           Please refer to the RedwoodJS Testing Docs:
-//       https://redwoodjs.com/docs/testing#testing-services
-// https://redwoodjs.com/docs/testing#jest-expect-type-considerations
-
 describe('contacts', () => {
   scenario('returns all contacts', async (scenario: StandardScenario) => {
     const result = await contacts()
@@ -23,36 +19,62 @@ describe('contacts', () => {
   })
 
   scenario('returns a single contact', async (scenario: StandardScenario) => {
-    const result = await contact({ id: scenario.contact.one.id })
+    const result = await contact({ id: scenario.contact.john.id })
 
-    expect(result).toEqual(scenario.contact.one)
+    expect(result).toEqual(scenario.contact.john)
   })
 
   scenario('creates a contact', async () => {
-    const result = await createContact({
-      input: { email: 'String', message: 'String' },
-    })
+    const contact: CreateContactInput = {
+      name: 'Jane Doe',
+      email: 'jane@anonymous.com',
+      message: 'Hi!',
+    }
 
-    expect(result.email).toEqual('String')
-    expect(result.message).toEqual('String')
+    const result = await createContact({ input: contact })
+
+    expect(result.name).toEqual(contact.name)
+    expect(result.email).toEqual(contact.email)
+    expect(result.message).toEqual(contact.message)
+    expect(result.createdAt).not.toEqual(null)
+  })
+
+  scenario('contact name is optional', async (scenario: StandardScenario) => {
+    const result = await contact({ id: scenario.contact.nameless.id })
+    expect(result.name).toBeNull()
   })
 
   scenario('updates a contact', async (scenario: StandardScenario) => {
-    const original = (await contact({ id: scenario.contact.one.id })) as Contact
+    const original = await contact({ id: scenario.contact.john.id })
+
+    const newName = 'Johnathan Doe'
     const result = await updateContact({
       id: original.id,
-      input: { email: 'String2' },
+      input: { name: newName },
     })
 
-    expect(result.email).toEqual('String2')
+    expect(result.name).toEqual(newName)
   })
 
   scenario('deletes a contact', async (scenario: StandardScenario) => {
-    const original = (await deleteContact({
-      id: scenario.contact.one.id,
-    })) as Contact
+    const original = await deleteContact({ id: scenario.contact.john.id })
     const result = await contact({ id: original.id })
 
     expect(result).toEqual(null)
+  })
+
+  scenario('only valid emails are inserted', async () => {
+    try {
+      await createContact({
+        input: {
+          name: 'Jane Doe',
+          email: 'jane@anonymous',
+          message: 'Hi!',
+        },
+      })
+    } catch (error) {
+      const { message } = error as ValidationError
+      expect(message).toEqual('Email must be formatted like an email address')
+    }
   })
 })

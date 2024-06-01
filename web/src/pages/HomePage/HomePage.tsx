@@ -1,4 +1,5 @@
 import { Metadata } from '@redwoodjs/web'
+
 import ArticlesCell from 'src/components/Article/ArticlesCell'
 
 const HomePage = () => {

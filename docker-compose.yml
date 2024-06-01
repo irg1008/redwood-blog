@@ -1,0 +1,36 @@
+version: "3.8"
+name: "redwood-blog"
+
+services:
+  db:
+    image: postgres
+    container_name: redwood-blog-postgres
+    restart: unless-stopped
+    networks:
+      - redwood-blog-network
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    env_file:
+      - .env
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "-d",
+          "${POSTGRES_DB}",
+          "-U",
+          "${POSTGRES_USER}"
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+networks:
+  redwood-blog-network:
+    driver: bridge
+
+volumes:
+  pgdata:

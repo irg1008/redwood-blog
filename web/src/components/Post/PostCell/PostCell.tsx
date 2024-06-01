@@ -1,4 +1,4 @@
-import type { FindPostBySlug, FindPostBySlugVariables } from 'types/graphql'
+import type { FindPostById, FindPostByIdVariables } from 'types/graphql'
 
 import type {
   CellSuccessProps,
@@ -9,11 +9,11 @@ import type {
 import Post from 'src/components/Post/Post'
 
 export const QUERY: TypedDocumentNode<
-  FindPostBySlug,
-  FindPostBySlugVariables
+  FindPostById,
+  FindPostByIdVariables
 > = gql`
-  query FindPostBySlug($slug: String!) {
-    post: post(slug: $slug) {
+  query FindPostById($id: Int!) {
+    post: adminPost(id: $id) {
       id
       title
       slug
@@ -27,12 +27,12 @@ export const Loading = () => <div>Loading...</div>
 
 export const Empty = () => <div>Post not found</div>
 
-export const Failure = ({ error }: CellFailureProps<FindPostBySlugVariables>) => (
+export const Failure = ({ error }: CellFailureProps<FindPostByIdVariables>) => (
   <div className="rw-cell-error">{error?.message}</div>
 )
 
 export const Success = ({
   post,
-}: CellSuccessProps<FindPostBySlug, FindPostBySlugVariables>) => {
+}: CellSuccessProps<FindPostById, FindPostByIdVariables>) => {
   return <Post post={post} />
 }

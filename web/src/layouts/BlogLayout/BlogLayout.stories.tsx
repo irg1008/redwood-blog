@@ -10,4 +10,19 @@ export default meta
 
 type Story = StoryObj<typeof BlogLayout>
 
-export const Primary: Story = {}
+export const loggedIn: Story = {
+  render: (args) => {
+    mockCurrentUser({
+      id: 1,
+      email: 'example@example.com',
+      roles: 'moderator',
+    })
+    return <BlogLayout {...args} />
+  },
+}
+
+export const loggedOut: Story = {
+  render: (args) => {
+    return <BlogLayout {...args} />
+  },
+}

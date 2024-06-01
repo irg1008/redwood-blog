@@ -5,7 +5,7 @@
 // https://www.prisma.io/docs/orm/prisma-migrate
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -14,12 +14,21 @@ generator client {
   binaryTargets = "native"
 }
 
+enum Role {
+  moderator
+  admin
+  user
+}
+
 model Post {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   title     String
-  slug      String   @unique
+  slug      String    @unique
   body      String
-  createdAt DateTime @default(now())
+  comments  Comment[]
+  user      User      @relation(fields: [userId], references: [id])
+  userId    Int
+  createdAt DateTime  @default(now())
 }
 
 model Contact {
@@ -38,4 +47,15 @@ model User {
   salt                String
   resetToken          String?
   resetTokenExpiresAt DateTime?
+  roles               Role      @default(user)
+  posts               Post[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  name      String
+  body      String
+  post      Post     @relation(fields: [postId], references: [id])
+  postId    Int
+  createdAt DateTime @default(now())
 }

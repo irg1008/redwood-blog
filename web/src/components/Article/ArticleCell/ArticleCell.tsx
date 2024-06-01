@@ -1,11 +1,12 @@
 import type { FindArticleQuery, FindArticleQueryVariables } from 'types/graphql'
 
-import type {
-  CellSuccessProps,
-  CellFailureProps,
-  TypedDocumentNode,
+import {
+  type CellSuccessProps,
+  type CellFailureProps,
+  type TypedDocumentNode,
 } from '@redwoodjs/web'
-import Article from 'src/components/Article/Article/Article'
+
+import Article from 'src/components/Article/Article'
 
 export const QUERY: TypedDocumentNode<
   FindArticleQuery,
@@ -18,13 +19,16 @@ export const QUERY: TypedDocumentNode<
       slug
       body
       createdAt
+      user {
+        name
+      }
     }
   }
 `
 
 export const Loading = () => <div>Loading...</div>
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => <div>Post not found</div>
 
 export const Failure = ({
   error,

@@ -7,6 +7,7 @@ import {
   timeTag,
   jsonDisplay,
   checkboxInputTag,
+  formatDate,
 } from './formatters'
 
 describe('formatEnum', () => {
@@ -188,5 +189,29 @@ describe('checkboxInputTag', () => {
   it('is disabled when unchecked', () => {
     render(checkboxInputTag(false))
     expect(screen.getByRole('checkbox')).toBeDisabled()
+  })
+})
+
+describe('formatDate', () => {
+  it('formats a date in spanish', () => {
+    expect(formatDate('2021-07-01T00:00:00Z', 'es')).toEqual(
+      '1 de julio de 2021, 2:00'
+    )
+  })
+
+  it('formats a date in english', () => {
+    expect(formatDate('2021-07-01T00:00:00Z', 'en')).toEqual(
+      'July 1, 2021 at 2:00 AM'
+    )
+  })
+
+  it('formats a date in OS locale by default', () => {
+    const defaultLocale = Intl.DateTimeFormat().resolvedOptions().locale
+
+    const dateString = '2021-07-01T00:00:00Z'
+    const baseFormattedDate = formatDate(dateString)
+    const defaultFormattedDate = formatDate(dateString, defaultLocale)
+
+    expect(baseFormattedDate).toEqual(defaultFormattedDate)
   })
 })

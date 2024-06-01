@@ -1,7 +1,7 @@
 import type {
   DeletePostMutation,
   DeletePostMutationVariables,
-  FindPostBySlug,
+  FindPostById,
 } from 'types/graphql'
 
 import { Link, routes, navigate } from '@redwoodjs/router'
@@ -23,7 +23,7 @@ const DELETE_POST_MUTATION: TypedDocumentNode<
 `
 
 type Props = {
-  post: NonNullable<FindPostBySlug['post']>
+  post: NonNullable<FindPostById['post']>
 }
 
 const Post = ({ post }: Props) => {
@@ -78,7 +78,7 @@ const Post = ({ post }: Props) => {
       </div>
       <nav className="rw-button-group">
         <Link
-          to={routes.editPost({ slug: post.slug })}
+          to={routes.editPost({ id: post.id })}
           className="rw-button rw-button-blue"
         >
           Edit
@@ -90,6 +90,13 @@ const Post = ({ post }: Props) => {
         >
           Delete
         </button>
+        <Link
+          to={routes.article({ slug: post.slug })}
+          title={'Show post ' + post.id + ' preview'}
+          className="rw-button rw-button-green"
+        >
+          Preview
+        </Link>
       </nav>
     </>
   )

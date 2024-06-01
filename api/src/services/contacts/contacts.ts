@@ -1,7 +1,8 @@
 import type { QueryResolvers, MutationResolvers } from 'types/graphql'
 
-import { db } from 'src/lib/db'
 import { validate } from '@redwoodjs/api'
+
+import { db } from 'src/lib/db'
 
 export const contacts: QueryResolvers['contacts'] = () => {
   return db.contact.findMany()
@@ -20,5 +21,18 @@ export const createContact: MutationResolvers['createContact'] = ({
 
   return db.contact.create({
     data: input,
+  })
+}
+
+export const updateContact = ({ id, input }) => {
+  return db.contact.update({
+    data: input,
+    where: { id },
+  })
+}
+
+export const deleteContact = ({ id }) => {
+  return db.contact.delete({
+    where: { id },
   })
 }

@@ -1,11 +1,11 @@
 import PostCell from 'src/components/Post/PostCell'
 
 type PostPageProps = {
-  slug: string
+  id: number
 }
 
-const PostPage = ({ slug }: PostPageProps) => {
-  return <PostCell slug={slug} />
+const PostPage = ({ id }: PostPageProps) => {
+  return <PostCell id={id} />
 }
 
 export default PostPage

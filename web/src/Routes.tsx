@@ -8,23 +8,22 @@
 // 'src/pages/Admin/BooksPage/BooksPage.js' -> AdminBooksPage
 
 import { Router, Route, Set, PrivateSet } from '@redwoodjs/router'
-import ScaffoldLayout from 'src/layouts/ScaffoldLayout'
+
 import BlogLayout from 'src/layouts/BlogLayout/BlogLayout'
+import ScaffoldLayout from 'src/layouts/ScaffoldLayout'
+
 import { useAuth } from './auth'
+import PostsPage from './pages/Post/PostsPage/PostsPage'
 
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
-      <Route path="/login" page={LoginPage} name="login" />
-      <Route path="/signup" page={SignupPage} name="signup" />
-      <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
-      <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
-      <PrivateSet unauthenticated="home">
+      <PrivateSet unauthenticated="login" roles="admin">
         <Set wrap={ScaffoldLayout} title="Posts" titleTo="posts" buttonLabel="New Post" buttonTo="newPost">
           <Route path="/admin/posts/new" page={PostNewPostPage} name="newPost" />
-          <Route path="/admin/posts/{slug:String}/edit" page={PostEditPostPage} name="editPost" />
-          <Route path="/admin/posts/{slug:String}" page={PostPostPage} name="post" />
-          <Route path="/admin/posts" page={PostPostsPage} name="posts" />
+          <Route path="/admin/posts/{id:Int}/edit" page={PostEditPostPage} name="editPost" />
+          <Route path="/admin/posts/{id:Int}" page={PostPostPage} name="post" />
+          <Route path="/admin/posts" page={PostsPage} name="posts" />
         </Set>
       </PrivateSet>
 
@@ -35,6 +34,11 @@ const Routes = () => {
         <Route path="/article/{slug:String}" page={ArticlePage} name="article" />
       </Set>
       <Route notfound page={NotFoundPage} />
+
+      <Route path="/login" page={LoginPage} name="login" />
+      <Route path="/signup" page={SignupPage} name="signup" />
+      <Route path="/forgot-password" page={ForgotPasswordPage} name="forgotPassword" />
+      <Route path="/reset-password" page={ResetPasswordPage} name="resetPassword" />
     </Router>
   )
 }

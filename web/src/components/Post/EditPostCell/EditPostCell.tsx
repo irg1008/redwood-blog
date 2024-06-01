@@ -1,5 +1,6 @@
 import type {
-  EditPostBySlug,
+  EditPostById,
+  EditPostByIdVariables,
   UpdatePostInput,
   UpdatePostMutationVariables,
 } from 'types/graphql'
@@ -15,9 +16,12 @@ import { toast } from '@redwoodjs/web/toast'
 
 import PostForm from 'src/components/Post/PostForm'
 
-export const QUERY: TypedDocumentNode<EditPostBySlug> = gql`
-  query EditPostBySlug($slug: String!) {
-    post: post(slug: $slug) {
+export const QUERY: TypedDocumentNode<
+  EditPostById,
+  EditPostByIdVariables
+> = gql`
+  query EditPostById($id: Int!) {
+    post: adminPost(id: $id) {
       id
       title
       slug
@@ -28,7 +32,7 @@ export const QUERY: TypedDocumentNode<EditPostBySlug> = gql`
 `
 
 const UPDATE_POST_MUTATION: TypedDocumentNode<
-  EditPostBySlug,
+  EditPostById,
   UpdatePostMutationVariables
 > = gql`
   mutation UpdatePostMutation($id: Int!, $input: UpdatePostInput!) {
@@ -48,7 +52,7 @@ export const Failure = ({ error }: CellFailureProps) => (
   <div className="rw-cell-error">{error?.message}</div>
 )
 
-export const Success = ({ post }: CellSuccessProps<EditPostBySlug>) => {
+export const Success = ({ post }: CellSuccessProps<EditPostById>) => {
   const [updatePost, { loading, error }] = useMutation(UPDATE_POST_MUTATION, {
     onCompleted: () => {
       toast.success('Post updated')
@@ -59,7 +63,7 @@ export const Success = ({ post }: CellSuccessProps<EditPostBySlug>) => {
     },
   })
 
-  const onSave = (input: UpdatePostInput, id: EditPostBySlug['post']['id']) => {
+  const onSave = (input: UpdatePostInput, id: EditPostByIdVariables['id']) => {
     updatePost({ variables: { id, input } })
   }
 
