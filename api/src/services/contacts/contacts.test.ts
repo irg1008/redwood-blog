@@ -1,13 +1,16 @@
 import { CreateContactInput } from 'types/graphql'
 
-import { ValidationError } from '@redwoodjs/graphql-server'
+import { EmailValidationError } from '@redwoodjs/api'
+import { InMemoryMailHandler } from '@redwoodjs/mailer-handler-in-memory'
+
+import { mailer } from 'src/lib/mailer'
 
 import {
-  contacts,
   contact,
+  contacts,
   createContact,
-  updateContact,
   deleteContact,
+  updateContact,
 } from './contacts'
 import type { StandardScenario } from './contacts.scenarios'
 
@@ -37,6 +40,39 @@ describe('contacts', () => {
     expect(result.email).toEqual(contact.email)
     expect(result.message).toEqual(contact.message)
     expect(result.createdAt).not.toEqual(null)
+
+    const mailHandler = mailer.getTestHandler() as InMemoryMailHandler
+    expect(mailHandler.inbox).toHaveLength(1)
+
+    const [sentEmail] = mailHandler.inbox
+
+    expect({
+      ...sentEmail,
+      htmlContent: undefined,
+      textContent: undefined,
+    }).toMatchInlineSnapshot(`
+      {
+        "attachments": [],
+        "bcc": [],
+        "cc": [],
+        "from": "contact-us@example.com",
+        "handler": "nodemailer",
+        "handlerOptions": undefined,
+        "headers": {},
+        "htmlContent": undefined,
+        "renderer": "reactEmail",
+        "rendererOptions": {},
+        "replyTo": "${contact.email}",
+        "subject": "New Contact Form Submission",
+        "textContent": undefined,
+        "to": [
+          "me@example.com",
+        ],
+      }
+    `)
+
+    expect(sentEmail.htmlContent).toMatchSnapshot()
+    expect(sentEmail.textContent).toMatchSnapshot()
   })
 
   scenario('contact name is optional', async (scenario: StandardScenario) => {
@@ -64,17 +100,14 @@ describe('contacts', () => {
   })
 
   scenario('only valid emails are inserted', async () => {
-    try {
-      await createContact({
+    expect(() =>
+      createContact({
         input: {
           name: 'Jane Doe',
           email: 'jane@anonymous',
           message: 'Hi!',
         },
       })
-    } catch (error) {
-      const { message } = error as ValidationError
-      expect(message).toEqual('Email must be formatted like an email address')
-    }
+    ).rejects.toThrow(EmailValidationError)
   })
 })

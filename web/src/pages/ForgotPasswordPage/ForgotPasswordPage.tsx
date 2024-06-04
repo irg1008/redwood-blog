@@ -1,9 +1,9 @@
 import { useEffect, useRef } from 'react'
 
-import { Form, Label, TextField, Submit, FieldError } from '@redwoodjs/forms'
+import { FieldError, Form, Label, Submit, TextField } from '@redwoodjs/forms'
 import { navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
-import { toast, Toaster } from '@redwoodjs/web/toast'
+import { toast } from '@redwoodjs/web/toast'
 
 import { useAuth } from 'src/auth'
 
@@ -27,12 +27,15 @@ const ForgotPasswordPage = () => {
     if (response.error) {
       toast.error(response.error)
     } else {
+      console.log(response)
+
       // The function `forgotPassword.handler` in api/src/functions/auth.js has
       // been invoked, let the user know how to get the link to reset their
       // password (sent in email, perhaps?)
       toast.success(
         'A link to reset your password was sent to ' + response.email
       )
+
       navigate(routes.login())
     }
   }
@@ -42,7 +45,6 @@ const ForgotPasswordPage = () => {
       <Metadata title="Forgot Password" />
 
       <main className="rw-main">
-        <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
         <div className="rw-scaffold rw-login-container">
           <div className="rw-segment">
             <header className="rw-segment-header">

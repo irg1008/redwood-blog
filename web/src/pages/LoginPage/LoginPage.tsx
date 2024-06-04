@@ -1,22 +1,27 @@
-import { useRef } from 'react'
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 
 import {
+  FieldError,
   Form,
   Label,
-  TextField,
   PasswordField,
   Submit,
-  FieldError,
+  TextField,
 } from '@redwoodjs/forms'
-import { Link, navigate, routes } from '@redwoodjs/router'
+import { Link, navigate, routes, useParams } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
-import { toast, Toaster } from '@redwoodjs/web/toast'
+import { toast } from '@redwoodjs/web/toast'
 
 import { useAuth } from 'src/auth'
+import SocialLogin from 'src/components/SocialLogin/SocialLogin'
 
 const LoginPage = () => {
   const { isAuthenticated, logIn } = useAuth()
+  const { error } = useParams()
+
+  useEffect(() => {
+    if (error) toast.error(error)
+  }, [error])
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -49,7 +54,6 @@ const LoginPage = () => {
       <Metadata title="Login" />
 
       <main className="rw-main">
-        <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />
         <div className="rw-scaffold rw-login-container">
           <div className="rw-segment">
             <header className="rw-segment-header">
@@ -126,6 +130,8 @@ const LoginPage = () => {
             </Link>
           </div>
         </div>
+
+        <SocialLogin />
       </main>
     </>
   )

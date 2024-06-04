@@ -5,9 +5,6 @@
 .rw-scaffold h2 {
   @apply m-0;
 }
-.rw-scaffold a {
-  @apply bg-transparent;
-}
 .rw-scaffold ul {
   @apply m-0 p-0;
 }

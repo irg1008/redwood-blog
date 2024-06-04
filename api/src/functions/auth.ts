@@ -1,10 +1,12 @@
 import type { APIGatewayProxyEvent, Context } from 'aws-lambda'
 
-import { DbAuthHandler } from '@redwoodjs/auth-dbauth-api'
 import type { DbAuthHandlerOptions, UserType } from '@redwoodjs/auth-dbauth-api'
+import { DbAuthHandler } from '@redwoodjs/auth-dbauth-api'
 
 import { cookieName } from 'src/lib/auth'
 import { db } from 'src/lib/db'
+import { mailer } from 'src/lib/mailer'
+import { ResetPasswordEmail } from 'src/mail/ResetPassword/ResetPassword'
 
 export const handler = async (
   event: APIGatewayProxyEvent,
@@ -28,10 +30,20 @@ export const handler = async (
     // so don't include anything you wouldn't want prying eyes to see. The
     // `user` here has been sanitized to only include the fields listed in
     // `allowedUserFields` so it should be safe to return as-is.
-    handler: (user, _resetToken) => {
-      // TODO: Send user an email/message with a link to reset their password,
-      // including the `resetToken`. The URL should look something like:
-      // `http://localhost:8910/reset-password?resetToken=${resetToken}`
+    handler: async (user, resetToken) => {
+      const resetLink = `${process.env.WEB_URI}/reset-password?resetToken=${resetToken}`
+
+      await mailer.send(
+        ResetPasswordEmail({
+          email: user.email,
+          resetLink,
+        }),
+        {
+          to: user.email,
+          subject: 'Reset your password',
+          from: 'Example <example@gazquez.art>',
+        }
+      )
 
       return user
     },
@@ -62,6 +74,8 @@ export const handler = async (
     // by the `logIn()` function from `useAuth()` in the form of:
     // `{ message: 'Error message' }`
     handler: (user) => {
+      // TODO: Check for valid email confirmation
+
       return user
     },
 
@@ -75,7 +89,7 @@ export const handler = async (
     },
 
     // How long a user will remain logged in, in seconds
-    expires: 60 * 60 * 24 * 365 * 10,
+    expires: 60 * 60 * 24 * 365,
   }
 
   const resetPasswordOptions: DbAuthHandlerOptions['resetPassword'] = {
@@ -125,18 +139,15 @@ export const handler = async (
     //
     // If this returns anything else, it will be returned by the
     // `signUp()` function in the form of: `{ message: 'String here' }`.
-    handler: ({
-      username,
-      hashedPassword,
-      salt,
-      userAttributes: _userAttributes,
-    }) => {
+    handler: ({ username, hashedPassword, salt, userAttributes }) => {
+      // TODO: Make confirm email step
+
       return db.user.create({
         data: {
           email: username,
           hashedPassword: hashedPassword,
           salt: salt,
-          // name: userAttributes.name
+          name: userAttributes.name,
         },
       })
     },
@@ -145,6 +156,7 @@ export const handler = async (
     // password is valid, otherwise throw a `PasswordValidationError`.
     // Import the error along with `DbAuthHandler` from `@redwoodjs/api` above.
     passwordValidation: (_password) => {
+      // TODO: Add password validation
       return true
     },
 

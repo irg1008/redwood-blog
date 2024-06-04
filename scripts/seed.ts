@@ -1,6 +1,5 @@
 import type { Prisma } from '@prisma/client'
 import { db } from 'api/src/lib/db'
-import {} from '@redwoodjs/auth'
 
 type SeedUser = Omit<
   Prisma.UserUncheckedCreateInput,

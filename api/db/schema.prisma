@@ -40,15 +40,16 @@ model Contact {
 }
 
 model User {
-  id                  Int       @id @default(autoincrement())
+  id                  Int        @id @default(autoincrement())
   name                String?
-  email               String    @unique
-  hashedPassword      String
-  salt                String
+  email               String     @unique
+  hashedPassword      String?
+  salt                String?
   resetToken          String?
   resetTokenExpiresAt DateTime?
-  roles               Role      @default(user)
+  roles               Role       @default(user)
   posts               Post[]
+  identities          Identity[]
 }
 
 model Comment {
@@ -58,4 +59,26 @@ model Comment {
   post      Post     @relation(fields: [postId], references: [id])
   postId    Int
   createdAt DateTime @default(now())
+}
+
+enum Provider {
+  github
+  google
+  twitch
+}
+
+model Identity {
+  id          Int       @id @default(autoincrement())
+  provider    Provider
+  uid         String
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  accessToken String?
+  scope       String?
+  lastLoginAt DateTime? @default(now())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([provider, uid])
+  @@index(userId)
 }

@@ -1,6 +1,6 @@
 import { useCallback, useEffect } from 'react'
 
-import type { EditPostBySlug, UpdatePostInput } from 'types/graphql'
+import type { EditPostById, UpdatePostInput } from 'types/graphql'
 
 import type { RWGqlError } from '@redwoodjs/forms'
 import {
@@ -13,10 +13,10 @@ import {
   useForm,
 } from '@redwoodjs/forms'
 
-type FormPost = NonNullable<EditPostBySlug['post']>
+type FormPost = NonNullable<EditPostById['post']>
 
 type PostFormProps = {
-  post?: EditPostBySlug['post']
+  post?: EditPostById['post']
   onSave: (data: UpdatePostInput, id?: FormPost['id']) => void
   error: RWGqlError
   loading: boolean

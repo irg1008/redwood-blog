@@ -1,16 +1,25 @@
 {
   "editor.tabSize": 2,
   "files.trimTrailingWhitespace": true,
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
+  "eslint.experimental.useFlatConfig": false,
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": "explicit"
+    "source.fixAll.eslint": "explicit",
+    "source.organizeImports": "explicit"
   },
-  "[prisma]": {
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+    "[prisma]": {
     "editor.formatOnSave": true
   },
   "files.exclude": {
     "**/node_modules": true
   },
   "explorerExclude.backup": {},
-  "typescript.tsdk": "node_modules\\typescript\\lib"
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
+  }
 }
