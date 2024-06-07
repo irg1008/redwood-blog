@@ -32,7 +32,7 @@ export const handler = async (
     // so don't include anything you wouldn't want prying eyes to see. The
     // `user` here has been sanitized to only include the fields listed in
     // `allowedUserFields` so it should be safe to return as-is.
-    handler: async (user: User, resetToken) => {
+    handler: async (user, resetToken) => {
       await sendResetPasswordEmail({ email: user.email, resetToken })
       return user
     },

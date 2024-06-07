@@ -3,7 +3,8 @@
   "workspaces": {
     "packages": [
       "api",
-      "web"
+      "web",
+      "schemas"
     ]
   },
   "scripts": {
@@ -48,11 +49,11 @@
     "add:api": "yarn workspace api add -E"
   },
   "devDependencies": {
-    "@redwoodjs/auth-dbauth-setup": "7.6.2",
-    "@redwoodjs/cli-storybook": "7.6.2",
-    "@redwoodjs/core": "7.6.2",
-    "@redwoodjs/project-config": "7.6.2",
-    "@redwoodjs/realtime": "7.6.2",
+    "@redwoodjs/auth-dbauth-setup": "7.6.3",
+    "@redwoodjs/cli-storybook": "7.6.3",
+    "@redwoodjs/core": "7.6.3",
+    "@redwoodjs/project-config": "7.6.3",
+    "@redwoodjs/realtime": "7.6.3",
     "@redwoodjs/studio": "11",
     "prettier-plugin-tailwindcss": "0.4.1"
   },

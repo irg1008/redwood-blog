@@ -41,11 +41,13 @@ describe('contacts', () => {
 
   scenario('contact name is optional', async (scenario: StandardScenario) => {
     const result = await contact({ id: scenario.contact.nameless.id })
-    expect(result.name).toBeNull()
+    expect(result?.name).toBeNull()
   })
 
   scenario('updates a contact', async (scenario: StandardScenario) => {
     const original = await contact({ id: scenario.contact.john.id })
+    expect(original).not.toBeNull()
+    if (!original) return
 
     const newName = 'Johnathan Doe'
     const result = await updateContact({

@@ -6,6 +6,7 @@ import type {
 
 import { validate } from '@redwoodjs/api'
 import { hashToken } from '@redwoodjs/auth-dbauth-api'
+import { UserNotFoundError } from '@redwoodjs/auth-dbauth-api/dist/errors'
 
 import { db } from 'src/lib/db'
 import { sendConfirmAccountEmail } from 'src/services/mails/mails'
@@ -31,8 +32,10 @@ export const confirmUser: MutationResolvers['confirmUser'] = async ({
     where: { email, confirmToken: hashedCode },
   })
 
+  if (!user?.confirmTokenExpiresAt) throw new UserNotFoundError()
+
   validate(user, 'code', { presence: { message: 'The code is not valid' } })
-  if (user.confirmed) return user
+  if (user?.confirmed) return user
 
   validate(new Date() <= user.confirmTokenExpiresAt, 'code', {
     acceptance: { in: [true], message: 'The code has expired' },
@@ -52,7 +55,8 @@ export const sendConfirmCode: MutationResolvers['sendConfirmCode'] = async ({
   email,
 }) => {
   const user = await db.user.findUnique({ where: { email } })
-  if (!user) throw new Error('No user found with this email address')
+  if (!user?.confirmTokenExpiresAt)
+    throw new Error('No user found with this email address')
 
   const isStillValid = user.confirmTokenExpiresAt > new Date()
   if (isStillValid) return true
