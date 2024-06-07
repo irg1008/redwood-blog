@@ -1,7 +1,9 @@
 import { TaskList } from 'graphile-worker'
 
-import { sendContactEmailTask } from './send_contact_email'
+import { sendConfirmUserEmailTask } from './sendConfirmUserEmailTask'
+import { sendContactEmailTask } from './sendContactEmailTask'
 
 export const tasks: TaskList = {
   send_contact_email: sendContactEmailTask,
+  send_confirm_user_email: sendConfirmUserEmailTask,
 }

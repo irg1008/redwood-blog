@@ -6,10 +6,9 @@ import type {
 
 import { validate } from '@redwoodjs/api'
 import { hashToken } from '@redwoodjs/auth-dbauth-api'
-import { UserNotFoundError } from '@redwoodjs/auth-dbauth-api/dist/errors'
 
 import { db } from 'src/lib/db'
-import { sendConfirmAccountEmail } from 'src/services/mails/mails'
+import { job } from 'src/lib/job'
 
 export const users: QueryResolvers['users'] = () => {
   return db.user.findMany()
@@ -32,8 +31,6 @@ export const confirmUser: MutationResolvers['confirmUser'] = async ({
     where: { email, confirmToken: hashedCode },
   })
 
-  if (!user?.confirmTokenExpiresAt) throw new UserNotFoundError()
-
   validate(user, 'code', { presence: { message: 'The code is not valid' } })
   if (user?.confirmed) return user
 
@@ -55,14 +52,13 @@ export const sendConfirmCode: MutationResolvers['sendConfirmCode'] = async ({
   email,
 }) => {
   const user = await db.user.findUnique({ where: { email } })
-  if (!user?.confirmTokenExpiresAt)
-    throw new Error('No user found with this email address')
+  if (!user) throw new Error('No user found with this email address')
 
   const isStillValid = user.confirmTokenExpiresAt > new Date()
   if (isStillValid) return true
 
   const code = Math.floor(100000 + Math.random() * 900000)
-  await sendConfirmAccountEmail({ email, code })
+  await job('send_confirm_user_email', { email, code })
 
   await db.user.update({
     where: { email },

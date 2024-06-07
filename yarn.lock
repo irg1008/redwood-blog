@@ -3726,6 +3726,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@hookform/resolvers@npm:3.6.0":
+  version: 3.6.0
+  resolution: "@hookform/resolvers@npm:3.6.0"
+  peerDependencies:
+    react-hook-form: ^7.0.0
+  checksum: 10c0/3577949a82b02b823b81592ec44630d28dc8748e9c42e57d8a19046670bb6d270d5e2c4780d65193c206bc18abb5575a0a5e261fa7aac17198faee1823208be6
+  languageName: node
+  linkType: hard
+
 "@humanwhocodes/config-array@npm:^0.11.14":
   version: 0.11.14
   resolution: "@humanwhocodes/config-array@npm:0.11.14"
@@ -12886,6 +12895,7 @@ __metadata:
     "@types/set-cookie-parser": "npm:2.4.7"
     cookie: "npm:0.6.0"
     graphile-worker: "npm:0.16.6"
+    schemas: "workspace:*"
     set-cookie-parser: "npm:2.6.0"
   languageName: unknown
   linkType: soft
@@ -26807,6 +26817,14 @@ __metadata:
   languageName: node
   linkType: hard
 
+"schemas@workspace:*, schemas@workspace:schemas, schemas@workspaces:*":
+  version: 0.0.0-use.local
+  resolution: "schemas@workspace:schemas"
+  dependencies:
+    valibot: "npm:^0.31.0"
+  languageName: unknown
+  linkType: soft
+
 "scroll-into-view-if-needed@npm:3.0.10":
   version: 3.0.10
   resolution: "scroll-into-view-if-needed@npm:3.0.10"
@@ -29506,6 +29524,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"valibot@npm:^0.31.0":
+  version: 0.31.0
+  resolution: "valibot@npm:0.31.0"
+  checksum: 10c0/c74311af3562020dc3d6d245bb72fdeec0080c14a4be46b9d76f6af58f62318fa500455d2eb6a8691589dffee93d12f4eb4d11b53766304c0cb508534806e5a6
+  languageName: node
+  linkType: hard
+
 "validate-npm-package-license@npm:^3.0.1":
   version: 3.0.4
   resolution: "validate-npm-package-license@npm:3.0.4"
@@ -29722,6 +29747,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "web@workspace:web"
   dependencies:
+    "@hookform/resolvers": "npm:3.6.0"
     "@nextui-org/react": "npm:2.4.1"
     "@redwoodjs/auth-dbauth-web": "npm:7.6.3"
     "@redwoodjs/forms": "npm:7.6.3"
@@ -29740,6 +29766,7 @@ __metadata:
     postcss-loader: "npm:8.1.1"
     react: "npm:18.3.1"
     react-dom: "npm:18.3.1"
+    schemas: "workspaces:*"
     tailwind-merge: "npm:2.3.0"
     tailwindcss: "npm:3.4.3"
   languageName: unknown

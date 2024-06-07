@@ -21,7 +21,7 @@ describe('ConfirmCodeForm', () => {
     await waitFor(() => userEvent.click(submit))
 
     expect(onConfirm).not.toHaveBeenCalled()
-    expect(screen.getByText('Code is empty')).toBeInTheDocument()
+    expect(screen.getByText('Please enter the code')).toBeInTheDocument()
   })
 
   it('code must be a 6 digit number', async () => {

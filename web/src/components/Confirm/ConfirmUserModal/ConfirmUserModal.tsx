@@ -53,7 +53,7 @@ const ConfirmUserModal = ({
     CONFIRM_USER_MUTATION,
     {
       onCompleted: async () => {
-        toast.success('User confirmed successfully')
+        toast.success('Confirmed successfully!')
         onClose?.(true)
       },
       onError: (error) => {

@@ -1,6 +1,8 @@
+import { valibotResolver } from '@hookform/resolvers/valibot'
+import { createContactSchema } from 'schemas/schemas'
 import {
-  CreateContactMutation,
   CreateContactInput,
+  CreateContactMutation,
   CreateContactMutationVariables,
 } from 'types/graphql'
 
@@ -27,7 +29,10 @@ const CREATE_CONTACT = gql`
 `
 
 const ContactPage = () => {
-  const formMethods = useForm<CreateContactInput>({ mode: 'onBlur' })
+  const formMethods = useForm<CreateContactInput>({
+    mode: 'onBlur',
+    resolver: valibotResolver(createContactSchema),
+  })
 
   const [createContact, { loading, error }] = useMutation<
     CreateContactMutation,
@@ -85,13 +90,6 @@ const ContactPage = () => {
         </Label>
         <TextField
           name="email"
-          validation={{
-            required: true,
-            pattern: {
-              value: /[^@]+@[^.]+\..+/,
-              message: 'Please enter a valid email address',
-            },
-          }}
           className="block w-full rounded border p-1 text-xs outline-none"
           errorClassName="block w-full rounded border p-1 text-xs border border-red-700 outline-none"
         />
@@ -106,7 +104,6 @@ const ContactPage = () => {
         </Label>
         <TextAreaField
           name="message"
-          validation={{ required: true }}
           className="block h-24 w-full rounded border p-1 text-xs outline-none"
           errorClassName="block h-24 w-full rounded border p-1 text-xs border border-red-700 outline-none"
         />

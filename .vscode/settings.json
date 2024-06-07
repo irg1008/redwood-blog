@@ -8,11 +8,17 @@
     "source.organizeImports": "explicit"
   },
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-    "[prisma]": {
+  "[prisma]": {
     "editor.formatOnSave": true
   },
   "files.exclude": {
-    "**/node_modules": true
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true,
+    "**/node_modules": true,
+    ".yarn": true,
+    ".redwood": true
   },
   "explorerExclude.backup": {},
   "typescript.tsdk": "node_modules\\typescript\\lib",

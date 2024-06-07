@@ -3,7 +3,7 @@ import { InMemoryMailHandler } from '@redwoodjs/mailer-handler-in-memory'
 import { mailer } from 'src/lib/mailer'
 
 import {
-  sendConfirmAccountEmail,
+  sendConfirmUserEmail,
   sendContactEmail,
   sendResetPasswordEmail,
 } from './mails'
@@ -68,7 +68,7 @@ describe('mails', () => {
       code: 123456,
     }
 
-    await sendConfirmAccountEmail(confirmData)
+    await sendConfirmUserEmail(confirmData)
 
     const mailHandler = mailer.getTestHandler() as InMemoryMailHandler
     expect(mailHandler.inbox).toHaveLength(1)

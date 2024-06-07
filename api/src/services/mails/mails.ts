@@ -26,7 +26,7 @@ export const sendResetPasswordEmail = async ({
   )
 }
 
-export const sendConfirmAccountEmail = async ({
+export const sendConfirmUserEmail = async ({
   code,
   email,
 }: {

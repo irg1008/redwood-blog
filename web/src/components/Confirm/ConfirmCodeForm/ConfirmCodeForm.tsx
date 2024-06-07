@@ -1,5 +1,7 @@
+import { valibotResolver } from '@hookform/resolvers/valibot'
 import { Button, Input, Tooltip } from '@nextui-org/react'
 import { ClipboardPasteIcon } from 'lucide-react'
+import { confirmCodeSchema } from 'schemas/schemas'
 
 import { FieldError, Form, Submit, useForm } from '@redwoodjs/forms'
 
@@ -21,6 +23,7 @@ const ConfirmCodeForm = ({ onConfirm, error, loading }: ConfirmCodeProps) => {
     defaultValues: {
       code: '',
     },
+    resolver: valibotResolver(confirmCodeSchema),
   })
 
   const onSubmit = (data: ConfirmCodeInput) => {
@@ -44,13 +47,6 @@ const ConfirmCodeForm = ({ onConfirm, error, loading }: ConfirmCodeProps) => {
     >
       <Controller
         name="code"
-        rules={{
-          required: { value: true, message: 'Code is empty' },
-          pattern: {
-            value: /^[0-9]{6}$/,
-            message: 'Invalid code format. Must be a 6 digit code',
-          },
-        }}
         render={({ field, fieldState: { invalid } }) => (
           <div>
             <Input
