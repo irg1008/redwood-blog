@@ -3,8 +3,7 @@ import type { MutationResolvers, QueryResolvers } from 'types/graphql'
 import { validate } from '@redwoodjs/api'
 
 import { db } from 'src/lib/db'
-
-import { sendContactEmail } from '../mails/mails'
+import { job } from 'src/lib/job'
 
 export const contacts: QueryResolvers['contacts'] = () => {
   return db.contact.findMany()
@@ -21,7 +20,8 @@ export const createContact: MutationResolvers['createContact'] = async ({
 }) => {
   validate(input.email, 'email', { email: true })
 
-  await sendContactEmail(input)
+  await job('send_contact_email', input)
+
   return db.contact.create({
     data: input,
   })

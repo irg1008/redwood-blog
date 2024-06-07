@@ -8,8 +8,10 @@
   },
   "scripts": {
     "dev": "rw dev",
-    "studio": "rw studio",
+    "studio": "rw studio | yarn rw-log-formatter",
     "build": "rw build",
+    "worker": "rw exec worker | yarn rw-log-formatter",
+    "dev:worker": "yarn dev & yarn worker",
     "serve": "rw serve",
     "test": "rw test --silent=false --telemetry=false",
     "test:cov": "rw test --collect-coverage",

@@ -11,6 +11,7 @@
     "@redwoodjs/mailer-handler-nodemailer": "7.6.2",
     "@redwoodjs/mailer-renderer-react-email": "7.6.2",
     "cookie": "0.6.0",
+    "graphile-worker": "0.16.6",
     "set-cookie-parser": "2.6.0"
   },
   "devDependencies": {
