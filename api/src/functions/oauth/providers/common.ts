@@ -8,6 +8,7 @@ import parse from 'set-cookie-parser'
 import {
   encryptSession,
   cookieName as getCookieName,
+  hashToken,
 } from '@redwoodjs/auth-dbauth-api'
 
 import { cookieName } from 'src/lib/auth'
@@ -17,14 +18,14 @@ export type ProviderUser = Pick<User, 'email' | 'name'> & {
   id: string | number
 }
 
-type GetUserVariables = {
+export type GetUserVariables = {
   provider: Provider
   providerUser: ProviderUser
   accessToken: string
   scope: string
 }
 
-type ProviderInfo = {
+export type ProviderInfo = {
   provider: Provider
   clientId: string
   clientSecret: string
@@ -33,49 +34,34 @@ type ProviderInfo = {
   getUserFromToken: (accessToken: string) => Promise<ProviderUser>
 }
 
-type OAuthTokenResponse =
+export type OAuthTokenResponse =
   | {
       access_token: string
       scope: string | string[]
       state?: string
-      error: never
+      error?: never
     }
   | {
-      access_token: never
-      scope: never
+      access_token?: never
+      scope?: never
       state?: string
       error: string
     }
 
-const CSRF_TOKEN = 'CSRFToken'
+export const CSRF_TOKEN = 'CSRFToken'
 
-const removeCSRFCookie = () => {
-  return createCookie(CSRF_TOKEN, null, 0)
+export const removeCSRFCookie = () => {
+  return createCookie(CSRF_TOKEN, '', 0)
 }
 
 export const getCSRFCookie = (): [string, string] => {
   const csrf = randomUUID()
-  const maxAge = 60 * 10
-  return [csrf, createCookie(CSRF_TOKEN, csrf, maxAge)]
+  const maxAge = 60 * 5
+  const hashedCSRFtoken = hashToken(csrf)
+  return [csrf, createCookie(CSRF_TOKEN, hashedCSRFtoken, maxAge)]
 }
 
-const getUser = async ({
-  provider,
-  providerUser,
-  accessToken,
-  scope,
-}: GetUserVariables) => {
-  const { user, identity } = await findOrCreateUser(provider, providerUser)
-
-  await db.identity.update({
-    where: { id: identity.id },
-    data: { accessToken, scope, lastLoginAt: new Date() },
-  })
-
-  return user
-}
-
-const findOrCreateUser = async (
+export const findOrCreateUser = async (
   provider: Provider,
   providerUser: ProviderUser
 ) => {
@@ -91,16 +77,15 @@ const findOrCreateUser = async (
     return { user, identity }
   }
 
-  const userData = {
-    email: providerUser.email,
-    name: providerUser.name,
-  }
-
   return db.$transaction(async (tx) => {
     const user = await tx.user.upsert({
-      where: { email: userData.email },
-      create: userData,
-      update: {},
+      where: { email: providerUser.email },
+      create: {
+        email: providerUser.email,
+        name: providerUser.name,
+        confirmed: true,
+      },
+      update: { confirmed: true },
     })
 
     const identity = await tx.identity.create({
@@ -115,34 +100,52 @@ const findOrCreateUser = async (
   })
 }
 
-const secureCookie = (user: User) => {
-  const data = JSON.stringify({ id: user.id, email: user.email })
+export const getUser = async ({
+  provider,
+  providerUser,
+  accessToken,
+  scope,
+}: GetUserVariables) => {
+  const { user, identity } = await findOrCreateUser(provider, providerUser)
 
+  await db.identity.update({
+    where: { id: identity.id },
+    data: { accessToken, scope, lastLoginAt: new Date() },
+  })
+
+  return user
+}
+
+export const secureCookie = (user: User) => {
+  const data = JSON.stringify({ id: user.id }) // Only user ID, no sensitive data
   const encrypted = encryptSession(data)
   const cookieNameWithPort = getCookieName(cookieName)
-
   const maxAge = 60 * 60 * 24 * 365
-
   return createCookie(cookieNameWithPort, encrypted, maxAge)
 }
 
-const secureCookieAndRedirect = (user: User) => {
-  try {
-    const userCookie = secureCookie(user)
-    const csrfCookie = removeCSRFCookie()
-    return redirectToLocation('/', userCookie, csrfCookie)
-  } catch (error) {
-    return redirectWithError(error.message)
+export const secureCookieAndRedirect = (user: User) => {
+  const userCookie = secureCookie(user)
+  const csrfCookie = removeCSRFCookie()
+  return redirectToLocation('/', userCookie, csrfCookie)
+}
+
+export const redirectWithError = (error: string) => {
+  const csrfCookie = removeCSRFCookie()
+  return {
+    statusCode: 307,
+    headers: {
+      Location: `/login?error=${error}`,
+      'Set-Cookie': csrfCookie,
+    },
   }
 }
 
-export const redirectWithError = (error: string) => ({
-  statusCode: 307,
-  headers: { Location: `/login?error=${error}` },
-})
-
-const getProviderToken = async (
-  providerInfo: ProviderInfo,
+export const getProviderToken = async (
+  providerInfo: Pick<
+    ProviderInfo,
+    'clientId' | 'clientSecret' | 'redirectUri' | 'tokenUrl'
+  >,
   body?: Record<string, string>
 ): Promise<OAuthTokenResponse> => {
   const { clientId, clientSecret, redirectUri, tokenUrl } = providerInfo
@@ -164,7 +167,7 @@ const getProviderToken = async (
   return await response.json()
 }
 
-const createCookie = (
+export const createCookie = (
   name: string,
   value: string,
   maxAge: number,
@@ -182,10 +185,16 @@ const createCookie = (
 }
 
 export const redirectToLocation = (location: string, ...cookies: string[]) => {
-  return {
+  const res = {
     statusCode: 302,
-    headers: { Location: location, 'Set-Cookie': cookies },
+    headers: { Location: location },
   }
+
+  if (cookies.length) {
+    res.headers['Set-Cookie'] = cookies
+  }
+
+  return res
 }
 
 export const providerCallback = async (
@@ -197,8 +206,8 @@ export const providerCallback = async (
     decodeValues: false,
   })
 
-  const csrffCookie = cookies[CSRF_TOKEN]
-  if (!csrffCookie) {
+  const csrfCookie = cookies[CSRF_TOKEN]
+  if (!csrfCookie) {
     return redirectWithError(
       'Invalid CSRF token. You may have taken too long to log in. Please try again.'
     )
@@ -213,29 +222,29 @@ export const providerCallback = async (
     )
   }
 
-  if (state !== csrffCookie.value) {
+  if (hashToken(state) !== csrfCookie.value) {
     return redirectWithError(
       'CSRF token does not match with callback state. You may be a victim of CSRF attack'
     )
   }
 
-  const {
-    access_token: accessToken,
-    scope,
-    error,
-  } = await getProviderToken(providerInfo, {
-    code,
-    grant_type: 'authorization_code',
-  })
-
-  if (error) return redirectWithError(error)
-
   try {
+    const {
+      access_token: accessToken,
+      scope,
+      error,
+    } = await getProviderToken(providerInfo, {
+      code,
+      grant_type: 'authorization_code',
+    })
+
+    if (error) return redirectWithError(error)
+
     const providerUser = await getUserFromToken(accessToken)
 
-    if (!providerUser?.id) {
+    if (!providerUser?.id || !providerUser?.email) {
       return redirectWithError(
-        'We were not able to find a user. Please try again'
+        'Invalid user data from provider. Please try again'
       )
     }
 

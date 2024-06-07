@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
+import { LoginAttributes } from '@redwoodjs/auth-dbauth-web'
 import {
   FieldError,
   Form,
@@ -7,17 +8,21 @@ import {
   PasswordField,
   Submit,
   TextField,
+  useForm,
 } from '@redwoodjs/forms'
 import { Link, navigate, routes, useParams } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { useAuth } from 'src/auth'
+import ConfirmUserModal from 'src/components/Confirm/ConfirmUserModal/ConfirmUserModal'
 import SocialLogin from 'src/components/SocialLogin/SocialLogin'
 
 const LoginPage = () => {
+  const formMethods = useForm<LoginAttributes>({ mode: 'onBlur' })
   const { isAuthenticated, logIn } = useAuth()
   const { error } = useParams()
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   useEffect(() => {
     if (error) toast.error(error)
@@ -34,19 +39,28 @@ const LoginPage = () => {
     usernameRef.current?.focus()
   }, [])
 
-  const onSubmit = async (data: Record<string, string>) => {
-    const response = await logIn({
-      username: data.username,
-      password: data.password,
-    })
+  const onSubmit = async (data: LoginAttributes) => {
+    const response = await logIn(data)
 
     if (response.message) {
-      toast(response.message)
-    } else if (response.error) {
-      toast.error(response.error)
-    } else {
-      toast.success('Welcome back!')
+      return toast(response.message)
     }
+
+    if (response.error === 'confirmUser') {
+      setConfirmOpen(true)
+      return toast.success('Check your inbox for a confirmation code', {
+        id: 'login-confirm',
+      })
+    }
+
+    if (response.error) {
+      return toast.error(response.error)
+    }
+  }
+
+  const onUserConfirmed = (success: boolean) => {
+    setConfirmOpen(false)
+    if (success) onSubmit(formMethods.getValues())
   }
 
   return (
@@ -62,7 +76,11 @@ const LoginPage = () => {
 
             <div className="rw-segment-main">
               <div className="rw-form-wrapper">
-                <Form onSubmit={onSubmit} className="rw-form-wrapper">
+                <Form
+                  onSubmit={onSubmit}
+                  className="rw-form-wrapper"
+                  formMethods={formMethods}
+                >
                   <Label
                     name="username"
                     className="rw-label"
@@ -104,6 +122,7 @@ const LoginPage = () => {
                       },
                     }}
                   />
+                  <FieldError name="password" className="rw-field-error" />
 
                   <div className="rw-forgot-link">
                     <Link
@@ -124,12 +143,18 @@ const LoginPage = () => {
             </div>
           </div>
           <div className="rw-login-link">
-            <span>Don&apos;t have an account?</span>{' '}
+            <span>{`Don't have an account?`}</span>{' '}
             <Link to={routes.signup()} className="rw-link">
               Sign up!
             </Link>
           </div>
         </div>
+
+        <ConfirmUserModal
+          isOpen={confirmOpen}
+          email={formMethods.getValues().username}
+          onClose={onUserConfirmed}
+        />
 
         <SocialLogin />
       </main>

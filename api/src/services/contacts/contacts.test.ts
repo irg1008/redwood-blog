@@ -1,9 +1,6 @@
 import { CreateContactInput } from 'types/graphql'
 
 import { EmailValidationError } from '@redwoodjs/api'
-import { InMemoryMailHandler } from '@redwoodjs/mailer-handler-in-memory'
-
-import { mailer } from 'src/lib/mailer'
 
 import {
   contact,
@@ -40,39 +37,6 @@ describe('contacts', () => {
     expect(result.email).toEqual(contact.email)
     expect(result.message).toEqual(contact.message)
     expect(result.createdAt).not.toEqual(null)
-
-    const mailHandler = mailer.getTestHandler() as InMemoryMailHandler
-    expect(mailHandler.inbox).toHaveLength(1)
-
-    const [sentEmail] = mailHandler.inbox
-
-    expect({
-      ...sentEmail,
-      htmlContent: undefined,
-      textContent: undefined,
-    }).toMatchInlineSnapshot(`
-      {
-        "attachments": [],
-        "bcc": [],
-        "cc": [],
-        "from": "contact-us@example.com",
-        "handler": "nodemailer",
-        "handlerOptions": undefined,
-        "headers": {},
-        "htmlContent": undefined,
-        "renderer": "reactEmail",
-        "rendererOptions": {},
-        "replyTo": "${contact.email}",
-        "subject": "New Contact Form Submission",
-        "textContent": undefined,
-        "to": [
-          "me@example.com",
-        ],
-      }
-    `)
-
-    expect(sentEmail.htmlContent).toMatchSnapshot()
-    expect(sentEmail.textContent).toMatchSnapshot()
   })
 
   scenario('contact name is optional', async (scenario: StandardScenario) => {

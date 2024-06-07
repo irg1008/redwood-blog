@@ -1,3 +1,5 @@
+import { NextUIProvider } from '@nextui-org/react'
+
 import { FatalErrorBoundary, RedwoodProvider } from '@redwoodjs/web'
 import { RedwoodApolloProvider } from '@redwoodjs/web/apollo'
 
@@ -6,15 +8,17 @@ import Routes from 'src/Routes'
 
 import { AuthProvider, useAuth } from './auth'
 
-import './scaffold.css'
 import './index.css'
+import './scaffold.css'
 
 const App = () => (
   <FatalErrorBoundary page={FatalErrorPage}>
     <RedwoodProvider titleTemplate="%PageTitle | %AppTitle">
       <AuthProvider>
         <RedwoodApolloProvider useAuth={useAuth}>
-          <Routes />
+          <NextUIProvider>
+            <Routes />
+          </NextUIProvider>
         </RedwoodApolloProvider>
       </AuthProvider>
     </RedwoodProvider>

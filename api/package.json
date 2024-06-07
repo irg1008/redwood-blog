@@ -11,15 +11,13 @@
     "@redwoodjs/mailer-handler-nodemailer": "7.6.2",
     "@redwoodjs/mailer-renderer-react-email": "7.6.2",
     "cookie": "0.6.0",
-    "crypto-js": "4.2.0",
     "set-cookie-parser": "2.6.0"
   },
   "devDependencies": {
     "@redwoodjs/mailer-handler-in-memory": "7.6.2",
     "@redwoodjs/mailer-handler-studio": "7.6.2",
-    "@types/cookie": "^0",
-    "@types/crypto-js": "^4",
-    "@types/set-cookie-parser": "^2"
+    "@types/cookie": "0.6.0",
+    "@types/set-cookie-parser": "2.4.7"
   },
   "eslintConfig": {
     "rules": {

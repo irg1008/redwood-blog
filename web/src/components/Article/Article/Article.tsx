@@ -1,10 +1,10 @@
+import { cn } from '@nextui-org/react'
 import type { FindArticleQuery } from 'types/graphql'
 
 import { Link, routes } from '@redwoodjs/router'
 
 import CommentForm from 'src/components/Comment/CommentForm'
 import CommentsCell from 'src/components/Comment/CommentsCell'
-import { cn } from 'src/lib/cn'
 
 type ArticleProps = {
   article: FindArticleQuery['article']

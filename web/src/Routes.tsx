@@ -4,7 +4,6 @@ import BlogLayout from 'src/layouts/BlogLayout/BlogLayout'
 import ScaffoldLayout from 'src/layouts/ScaffoldLayout'
 
 import { useAuth } from './auth'
-import PostsPage from './pages/Post/PostsPage/PostsPage'
 
 const Routes = () => {
   return (
@@ -13,8 +12,8 @@ const Routes = () => {
         <Set wrap={ScaffoldLayout} title="Posts" titleTo="posts" buttonLabel="New Post" buttonTo="newPost">
           <Route path="/admin/posts/new" page={PostNewPostPage} name="newPost" prerender />
           <Route path="/admin/posts/{id:Int}/edit" page={PostEditPostPage} name="editPost" />
-          <Route path="/admin/posts/{id:Int}" page={PostPostPage} name="post" />
-          <Route path="/admin/posts" page={PostsPage} name="posts" />
+          <Route path="/admin/posts/{id:Int}" page={PostPostsPage} name="post" />
+          <Route path="/admin/posts" page={PostPostsPage} name="posts" />
         </Set>
       </PrivateSet>
 

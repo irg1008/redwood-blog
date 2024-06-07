@@ -16,10 +16,7 @@ describe('SocialLogin', () => {
 
     expect(googleLink).toBeInTheDocument()
     expect(googleLink).toBeInstanceOf(HTMLAnchorElement)
-    expect(googleLink).toHaveAttribute(
-      'href',
-      '/.redwood/functions/oauth/google/redirect'
-    )
+    expect(googleLink).toHaveAttribute('href', '/oauth/google/redirect')
   })
 
   it('contains a link to the GitHub OAuth provider', () => {
@@ -29,10 +26,7 @@ describe('SocialLogin', () => {
 
     expect(githubLink).toBeInTheDocument()
     expect(githubLink).toBeInstanceOf(HTMLAnchorElement)
-    expect(githubLink).toHaveAttribute(
-      'href',
-      '/.redwood/functions/oauth/github/redirect'
-    )
+    expect(githubLink).toHaveAttribute('href', '/oauth/github/redirect')
   })
 
   it('contains a link to the Twitch OAuth provider', () => {
@@ -42,9 +36,6 @@ describe('SocialLogin', () => {
 
     expect(twitchLink).toBeInTheDocument()
     expect(twitchLink).toBeInstanceOf(HTMLAnchorElement)
-    expect(twitchLink).toHaveAttribute(
-      'href',
-      '/.redwood/functions/oauth/twitch/redirect'
-    )
+    expect(twitchLink).toHaveAttribute('href', '/oauth/twitch/redirect')
   })
 })

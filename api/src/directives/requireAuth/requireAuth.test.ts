@@ -1,4 +1,4 @@
-import { mockRedwoodDirective, getDirectiveName } from '@redwoodjs/testing/api'
+import { getDirectiveName, mockRedwoodDirective } from '@redwoodjs/testing/api'
 
 import requireAuth from './requireAuth'
 
@@ -11,7 +11,7 @@ describe('requireAuth directive', () => {
   it('requireAuth has stub implementation. Should not throw when current user', () => {
     const mockExecution = mockRedwoodDirective(requireAuth, {
       context: {
-        currentUser: { id: 1, email: 'Lebron McGretzky' },
+        currentUser: { id: 1, email: 'Lebron McGretzky', roles: 'user' },
       },
     })
 

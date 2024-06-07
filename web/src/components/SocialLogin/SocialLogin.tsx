@@ -1,5 +1,7 @@
 import { ComponentProps } from 'react'
 
+import { Button, Link } from '@nextui-org/react'
+
 const GithubIcon = (props: ComponentProps<'svg'>) => (
   <svg
     role="img"
@@ -37,29 +39,38 @@ const TwitchIcon = (props: ComponentProps<'svg'>) => (
 const SocialLogin = () => {
   return (
     <div className="flex justify-center gap-2">
-      <a
+      <Button
+        href={`${window.RWJS_API_URL}/oauth/github/redirect`}
+        as={Link}
+        variant="solid"
+        size="lg"
+        className="bg-[#333] text-gray-50"
         title="Log In with Github"
-        href="/.redwood/functions/oauth/github/redirect"
-        className="block rounded bg-gray-800 px-4 py-2 text-center text-xs font-semibold uppercase tracking-wide text-white"
       >
         <GithubIcon className="size-5" />
-      </a>
+      </Button>
 
-      <a
+      <Button
+        href={`${window.RWJS_API_URL}/oauth/google/redirect`}
+        as={Link}
+        variant="solid"
+        size="lg"
+        className="bg-[#4285F4] text-gray-50"
         title="Log In with Google"
-        href="/.redwood/functions/oauth/google/redirect"
-        className="block rounded bg-blue-800 px-4 py-2 text-center text-xs font-semibold uppercase tracking-wide text-white"
       >
         <GoogleIcon className="size-5" />
-      </a>
+      </Button>
 
-      <a
+      <Button
+        href={`${window.RWJS_API_URL}/oauth/twitch/redirect`}
+        as={Link}
+        variant="solid"
+        size="lg"
+        className="bg-[#6441A4] text-gray-50"
         title="Log In with Twitch"
-        href="/.redwood/functions/oauth/twitch/redirect"
-        className="block rounded bg-purple-800 px-4 py-2 text-center text-xs font-semibold uppercase tracking-wide text-white"
       >
         <TwitchIcon className="size-5" />
-      </a>
+      </Button>
     </div>
   )
 }

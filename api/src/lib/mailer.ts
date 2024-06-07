@@ -4,6 +4,13 @@ import { ReactEmailRenderer } from '@redwoodjs/mailer-renderer-react-email'
 
 import { logger } from 'src/lib/logger'
 
+export const DOMAIN = 'example.com'
+
+export const mailDirections = {
+  noReply: `no-reply@${DOMAIN}`,
+  contactReceiver: `contact@${DOMAIN}`,
+} satisfies Record<string, `${string}@${typeof DOMAIN}`>
+
 export const mailer = new Mailer({
   handling: {
     handlers: {
@@ -11,7 +18,7 @@ export const mailer = new Mailer({
         transport: {
           host: process.env.SMTP_HOST,
           port: process.env.SMTP_PORT,
-          secure: true,
+          secure: process.env.SMTP_PORT === '465',
           auth: {
             user: process.env.SMTP_USER,
             pass: process.env.SMTP_PASS,
@@ -35,6 +42,7 @@ export const mailer = new Mailer({
   logger,
 
   defaults: {
-    replyTo: 'no-reply@example.com',
+    replyTo: mailDirections.noReply,
+    from: `"No Reply" <${mailDirections.noReply}>`,
   },
 })

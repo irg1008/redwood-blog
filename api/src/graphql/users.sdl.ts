@@ -3,10 +3,6 @@ export const schema = gql`
     id: Int!
     name: String
     email: String!
-    # hashedPassword: String!
-    # salt: String!
-    # resetToken: String
-    # resetTokenExpiresAt: DateTime
     roles: Role!
     posts: [Post]!
   }
@@ -20,5 +16,15 @@ export const schema = gql`
   type Query {
     users: [User!]! @requireAuth(roles: "admin")
     user(id: Int!): User @requireAuth
+  }
+
+  input ConfirmUserInput {
+    email: String!
+    code: Int!
+  }
+
+  type Mutation {
+    confirmUser(input: ConfirmUserInput!): User @skipAuth
+    sendConfirmCode(email: String!): Boolean @skipAuth
   }
 `

@@ -1,5 +1,6 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
+import { SignupAttributes } from '@redwoodjs/auth-dbauth-web'
 import {
   FieldError,
   Form,
@@ -7,16 +8,20 @@ import {
   PasswordField,
   Submit,
   TextField,
+  useForm,
 } from '@redwoodjs/forms'
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { useAuth } from 'src/auth'
+import ConfirmUserModal from 'src/components/Confirm/ConfirmUserModal/ConfirmUserModal'
 import SocialLogin from 'src/components/SocialLogin/SocialLogin'
 
 const SignupPage = () => {
-  const { isAuthenticated, signUp } = useAuth()
+  const formMethods = useForm<SignupAttributes>({ mode: 'onBlur' })
+  const { isAuthenticated, signUp, logIn } = useAuth()
+  const [confirmOpen, setConfirmOpen] = useState(false)
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -30,19 +35,30 @@ const SignupPage = () => {
     usernameRef.current?.focus()
   }, [])
 
-  const onSubmit = async (data: Record<string, string>) => {
-    const response = await signUp({
-      username: data.username,
-      password: data.password,
-    })
+  const onSubmit = async (data: SignupAttributes) => {
+    const response = await signUp(data)
 
     if (response.message) {
-      toast(response.message)
-    } else if (response.error) {
-      toast.error(response.error)
-    } else {
-      // user is signed in automatically
-      toast.success('Welcome!')
+      return toast(response.message)
+    }
+
+    if (response.error) {
+      return toast.error(response.error)
+    }
+
+    toast.success('Check your inbox for a confirmation code', {
+      id: 'signup-confirm',
+    })
+    setConfirmOpen(true)
+  }
+
+  const onUserConfirmed = async (success: boolean) => {
+    setConfirmOpen(false)
+    if (!success) return
+
+    const response = await logIn(formMethods.getValues())
+    if (response.error) {
+      return toast.error(response.error)
     }
   }
 
@@ -59,7 +75,11 @@ const SignupPage = () => {
 
             <div className="rw-segment-main">
               <div className="rw-form-wrapper">
-                <Form onSubmit={onSubmit} className="rw-form-wrapper">
+                <Form
+                  onSubmit={onSubmit}
+                  className="rw-form-wrapper"
+                  formMethods={formMethods}
+                >
                   <Label
                     name="username"
                     className="rw-label"
@@ -98,6 +118,11 @@ const SignupPage = () => {
                         value: true,
                         message: 'Password is required',
                       },
+                      pattern: {
+                        value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
+                        message:
+                          'Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number',
+                      },
                     }}
                   />
                   <FieldError name="password" className="rw-field-error" />
@@ -118,6 +143,12 @@ const SignupPage = () => {
             </Link>
           </div>
         </div>
+
+        <ConfirmUserModal
+          isOpen={confirmOpen}
+          email={formMethods.getValues().username}
+          onClose={onUserConfirmed}
+        />
 
         <SocialLogin />
       </main>

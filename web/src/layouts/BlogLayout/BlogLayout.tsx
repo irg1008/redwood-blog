@@ -1,5 +1,5 @@
 import { Link, routes } from '@redwoodjs/router'
-import { Toaster } from '@redwoodjs/web/dist/toast'
+import { Toaster } from '@redwoodjs/web/toast'
 
 import { useAuth } from 'src/auth'
 
@@ -12,7 +12,7 @@ const BlogLayout = ({ children }: BlogLayoutProps) => {
 
   return (
     <>
-      <Toaster />
+      <Toaster toastOptions={{ position: 'bottom-center', duration: 5000 }} />
 
       <header className="relative flex items-center justify-between bg-blue-700 px-8 py-4 text-white">
         <h1 className="text-3xl font-semibold tracking-tight">

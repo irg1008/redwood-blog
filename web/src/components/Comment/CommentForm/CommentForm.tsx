@@ -5,18 +5,18 @@ import {
 } from 'types/graphql'
 
 import {
-  Form,
-  Label,
-  TextField,
-  TextAreaField,
-  Submit,
-  useForm,
-  SubmitHandler,
-  FormError,
   FieldError,
+  Form,
+  FormError,
+  Label,
+  Submit,
+  SubmitHandler,
+  TextAreaField,
+  TextField,
+  useForm,
 } from '@redwoodjs/forms'
 import { useMutation } from '@redwoodjs/web'
-import { toast } from '@redwoodjs/web/dist/toast'
+import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY as CommentsQuery } from 'src/components/Comment/CommentsCell/CommentsCell'
 

@@ -1,7 +1,7 @@
 import { Provider } from '@prisma/client'
 import type { APIGatewayEvent } from 'aws-lambda'
 
-import { getCSRFCookie, providerCallback, redirectToLocation } from './common'
+import { getCSRFCookie, providerCallback, redirectToLocation } from '../common'
 
 type GoogleUser = {
   id: string

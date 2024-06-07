@@ -1,0 +1,93 @@
+import { Button, Input, Tooltip } from '@nextui-org/react'
+import { ClipboardPasteIcon } from 'lucide-react'
+
+import { FieldError, Form, Submit, useForm } from '@redwoodjs/forms'
+
+import Controller, { ApolloError } from 'src/components/Controller/Controller'
+
+type ConfirmCodeInput = {
+  code: string
+}
+
+type ConfirmCodeProps = {
+  onConfirm?: (input: ConfirmCodeInput) => void
+  error?: ApolloError
+  loading?: boolean
+}
+
+const ConfirmCodeForm = ({ onConfirm, error, loading }: ConfirmCodeProps) => {
+  const formMethods = useForm<ConfirmCodeInput>({
+    mode: 'onTouched',
+    defaultValues: {
+      code: '',
+    },
+  })
+
+  const onSubmit = (data: ConfirmCodeInput) => {
+    onConfirm?.(data)
+  }
+
+  const pasteFromClipboard = async () => {
+    try {
+      const text = await navigator.clipboard.readText()
+      formMethods.setValue('code', text)
+    } catch (err) {
+      console.error('Failed to read clipboard contents: ', err)
+    }
+  }
+
+  return (
+    <Form<ConfirmCodeInput>
+      onSubmit={onSubmit}
+      error={error}
+      formMethods={formMethods}
+    >
+      <Controller
+        name="code"
+        rules={{
+          required: { value: true, message: 'Code is empty' },
+          pattern: {
+            value: /^[0-9]{6}$/,
+            message: 'Invalid code format. Must be a 6 digit code',
+          },
+        }}
+        render={({ field, fieldState: { invalid } }) => (
+          <div>
+            <Input
+              {...field}
+              type="number"
+              label="Code"
+              variant="bordered"
+              placeholder="Enter the code you received in your email"
+              isInvalid={invalid} // This is not working becouse we culd have some other errors and this would be red
+              endContent={
+                <Tooltip content="Paste from clipboard">
+                  <Button
+                    onClick={pasteFromClipboard}
+                    isIconOnly
+                    variant="light"
+                    aria-label="Paste from clipboard"
+                  >
+                    <ClipboardPasteIcon />
+                  </Button>
+                </Tooltip>
+              }
+              errorMessage={<FieldError name="code" />}
+            />
+          </div>
+        )}
+      />
+
+      <Button
+        color="primary"
+        className="mt-6 w-full"
+        as={Submit}
+        isLoading={loading}
+      >
+        Confirm
+      </Button>
+    </Form>
+  )
+}
+
+export default ConfirmCodeForm

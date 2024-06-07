@@ -40,16 +40,19 @@ model Contact {
 }
 
 model User {
-  id                  Int        @id @default(autoincrement())
-  name                String?
-  email               String     @unique
-  hashedPassword      String?
-  salt                String?
-  resetToken          String?
-  resetTokenExpiresAt DateTime?
-  roles               Role       @default(user)
-  posts               Post[]
-  identities          Identity[]
+  id                    Int        @id @default(autoincrement())
+  name                  String?
+  email                 String     @unique
+  hashedPassword        String?
+  salt                  String?
+  resetToken            String?
+  resetTokenExpiresAt   DateTime?
+  confirmed             Boolean    @default(false)
+  confirmToken          String?
+  confirmTokenExpiresAt DateTime?
+  roles                 Role       @default(user)
+  posts                 Post[]
+  identities            Identity[]
 }
 
 model Comment {

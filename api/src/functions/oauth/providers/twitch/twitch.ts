@@ -6,7 +6,7 @@ import {
   getCSRFCookie,
   providerCallback,
   redirectToLocation,
-} from './common'
+} from '../common'
 
 type TwitchUser = {
   id: string
@@ -39,6 +39,11 @@ const getTwitchUser = async (accessToken: string): Promise<ProviderUser> => {
       'Client-ID': process.env.TWITCH_OAUTH_CLIENT_ID,
     },
   })
+
+  if (!twitchUserResponse.ok) {
+    const data = await twitchUserResponse.json()
+    throw new Error(data.message)
+  }
 
   const twitchUserData: { data: TwitchUser[] } = await twitchUserResponse.json()
   if (!twitchUserData) throw new Error('No user data returned from Twitch')
