@@ -24,6 +24,7 @@ export const createContactSchema = v.object<Schema<CreateContactInput>>({
 
 export const codeSchema = v.pipe(
   v.string(),
+  v.nonEmpty('Please enter the code'),
   v.regex(/^[0-9]{6}$/, 'Invalid code format. Must be a 6 digit code')
 )
 
