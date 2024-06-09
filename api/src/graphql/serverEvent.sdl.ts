@@ -1,17 +1,17 @@
 export const schema = gql`
-  input ServerEventInput {
+  input SendServerEventInput {
     userId: Int
     message: String!
     topic: String!
   }
 
-  type ServerEvent {
+  type ServerEventResult {
     message: String!
     topic: String!
   }
 
   extend type Mutation {
-    sendServerEvent(input: ServerEventInput!): ServerEvent!
+    sendServerEvent(input: SendServerEventInput!): ServerEventResult!
       @requireAuth(roles: ["worker"])
   }
 `

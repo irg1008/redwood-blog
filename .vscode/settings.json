@@ -12,13 +12,13 @@
     "editor.formatOnSave": true
   },
   "files.exclude": {
-    "**/.classpath": false,
-    "**/.project": false,
-    "**/.settings": false,
-    "**/.factorypath": false,
-    "**/node_modules": false,
-    ".yarn": false,
-    ".redwood": false
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true,
+    "**/node_modules": true,
+    ".yarn": true,
+    ".redwood": true
   },
   "explorerExclude.backup": {},
   "typescript.tsdk": "node_modules\\typescript\\lib",

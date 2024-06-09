@@ -1,6 +1,9 @@
 import { useMemo } from 'react'
 
-import { ServerEvent } from 'types/graphql'
+import {
+  ListenForServerEvents,
+  ListenForServerEventsVariables,
+} from 'types/graphql'
 import type { Task, TaskResponse } from 'types/tasks'
 
 import { useSubscription } from '@redwoodjs/web'
@@ -8,23 +11,29 @@ import { useSubscription } from '@redwoodjs/web'
 import { useAuth } from 'src/auth'
 
 const SERVER_EVENTS_SUB = gql`
-  subscription ListenForServerEvents($userId: Int!) {
-    serverEvent(userId: $userId) {
+  subscription ListenForServerEvents($input: ServerEventInput!) {
+    serverEvent(input: $input) {
       topic
       message
     }
   }
 `
 
-// TODO: Add topic to subscribe to specific events the same as with id??. Or maybe we can subscribe to all and filter
-
-export const useServerEvent = <TK extends Task>(): TaskResponse[TK] => {
+export const useServerEvent = <TK extends Task>(
+  topic: TK
+): TaskResponse[TK] => {
   const { currentUser } = useAuth()
 
-  const { data } = useSubscription<{
-    serverEvent: ServerEvent
-  }>(SERVER_EVENTS_SUB, {
-    variables: { userId: currentUser?.id },
+  const { data } = useSubscription<
+    ListenForServerEvents,
+    ListenForServerEventsVariables
+  >(SERVER_EVENTS_SUB, {
+    variables: {
+      input: {
+        userId: currentUser?.id,
+        topic,
+      },
+    },
     skip: !currentUser,
   })
 
