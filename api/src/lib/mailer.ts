@@ -29,9 +29,6 @@ export const mailer = new Mailer({
     default: 'nodemailer',
   },
 
-  development: {},
-  test: {},
-
   rendering: {
     renderers: {
       reactEmail: new ReactEmailRenderer(),

@@ -30,10 +30,11 @@
     "g:function": "rw g function",
     "g:sdl": "rw g sdl",
     "g:sdl:bare": "rw g sdl --no-crud",
+    "g:secret": "rw g secret",
     "types": "rw g types",
     "auth:set": "rw setup auth dbAuth",
     "auth:g": "rw g dbAuth",
-    "auth:secret": "rw g secret",
+    "server:set": "rw setup server-file",
     "db": "rw prisma db",
     "db:gen": "rw prisma generate",
     "db:mig": "rw prisma migrate dev",
@@ -54,7 +55,7 @@
     "@redwoodjs/core": "7.6.3",
     "@redwoodjs/project-config": "7.6.3",
     "@redwoodjs/realtime": "7.6.3",
-    "@redwoodjs/studio": "11",
+    "@redwoodjs/studio": "11.4.0",
     "prettier-plugin-tailwindcss": "0.4.1"
   },
   "eslintConfig": {

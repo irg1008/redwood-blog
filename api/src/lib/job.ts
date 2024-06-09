@@ -1,7 +1,7 @@
-import { WorkerUtilsOptions, quickAddJob } from 'graphile-worker'
+import { TaskSpec, WorkerUtilsOptions, quickAddJob } from 'graphile-worker'
+import type { Task, TaskPayload } from 'types/tasks'
 
-type JobParams = Parameters<typeof quickAddJob>
-type Args = JobParams extends [WorkerUtilsOptions, ...infer U] ? U : never
+const DEFAULT_QUEUE = 'default'
 
 const options: WorkerUtilsOptions = {
   connectionString:
@@ -10,4 +10,13 @@ const options: WorkerUtilsOptions = {
       : process.env.DATABASE_URL,
 }
 
-export const job = (...args: Args) => quickAddJob(options, ...args)
+export const job = <TK extends Task>(
+  taskId: TK,
+  payload: TK extends keyof GraphileWorker.Tasks ? TaskPayload[TK] : unknown,
+  spec?: TaskSpec
+) => {
+  return quickAddJob(options, taskId, payload, {
+    ...spec,
+    queueName: context.currentUser?.id.toString() || DEFAULT_QUEUE,
+  })
+}

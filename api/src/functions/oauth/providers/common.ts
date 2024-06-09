@@ -116,7 +116,7 @@ export const getUser = async ({
   return user
 }
 
-export const secureCookie = (user: User) => {
+export const secureCookie = (user: Pick<User, 'id'>) => {
   const data = JSON.stringify({ id: user.id }) // Only user ID, no sensitive data
   const encrypted = encryptSession(data)
   const cookieNameWithPort = getCookieName(cookieName)

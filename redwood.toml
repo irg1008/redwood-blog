@@ -6,7 +6,7 @@
 [web]
 title = "Redwood App"
 port = "${WEB_DEV_PORT:8910}"
-apiUrl = "/.redwood/functions"
+apiUrl = "/api"
 includeEnvironmentVariables = []
 
 [api]
@@ -17,3 +17,9 @@ open = true
 
 [notifications]
 versionUpdates = ["latest"]
+
+[studio.graphiql.authImpersonation]
+authProvider = "dbAuth"
+email = "ivansudevlop@gmail.com"
+userId = "1"
+roles = ["admin"]

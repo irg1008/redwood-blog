@@ -1,4 +1,5 @@
-import { Role } from '@prisma/client'
+import { useExtendContext } from '@envelop/core'
+import { Role } from 'types/graphql'
 
 import type { Decoded } from '@redwoodjs/api'
 import { AuthenticationError, ForbiddenError } from '@redwoodjs/graphql-server'
@@ -113,3 +114,13 @@ export const requireAuth = ({ roles }: { roles?: AllowedRoles } = {}) => {
     throw new ForbiddenError("You don't have access to do that.")
   }
 }
+
+export const workerAuthPlugin = useExtendContext(async (c) => {
+  const authHeader = c.request.headers.get('Authorization')
+  const bearer = authHeader?.split('Bearer ')[1]
+
+  if (bearer === process.env.WORKER_SECRET)
+    return { ...c, currentUser: { roles: 'worker' } }
+
+  return c
+})

@@ -29,7 +29,7 @@
     "typeRoots": [
       "../node_modules/@types",
       "./node_modules/@types",
-      "../node_modules/@testing-library"
+      "../node_modules/@testing-library",
     ],
     "types": ["jest", "jest-dom"],
     "jsx": "preserve"
@@ -40,6 +40,6 @@
     "../.redwood/types/includes/all-*",
     "../.redwood/types/includes/web-*",
     "../types",
-    "./types"
+    "./types",
   ]
 }

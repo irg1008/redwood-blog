@@ -13,8 +13,6 @@
       "api/*": ["../api/*"],
       "$web/*": ["../web/*"],
       "web/*": ["../web/*"],
-      "$schemas/*": ["../schemas/*"],
-      "schemas/*": ["../schemas/*"],
       "$web/src/*": ["../web/src/*", "../.redwood/types/mirror/web/src/*"],
       "web/src/*": ["../web/src/*", "../.redwood/types/mirror/web/src/*"],
       "types/*": ["../types/*", "../web/types/*", "../api/types/*"]
