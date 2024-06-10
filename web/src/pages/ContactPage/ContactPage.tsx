@@ -40,7 +40,7 @@ const ContactPage = () => {
   >(CREATE_CONTACT, {
     onCompleted: () => {
       toast.success('Thank you for your submission!')
-      // formMethods.reset()
+      formMethods.reset()
     },
   })
 

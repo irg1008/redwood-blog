@@ -1,6 +1,6 @@
 export const schema = gql`
   input SendServerEventInput {
-    userId: Int
+    userId: Int!
     message: String!
     topic: String!
   }

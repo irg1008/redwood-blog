@@ -1,4 +1,9 @@
-import { TaskSpec, WorkerUtilsOptions, quickAddJob } from 'graphile-worker'
+import {
+  TaskSpec,
+  WorkerUtils,
+  WorkerUtilsOptions,
+  makeWorkerUtils,
+} from 'graphile-worker'
 import type { Task, TaskPayload } from 'types/tasks'
 
 const DEFAULT_QUEUE = 'default'
@@ -10,12 +15,19 @@ const options: WorkerUtilsOptions = {
       : process.env.DATABASE_URL,
 }
 
-export const job = <TK extends Task>(
+export let workerUtils: WorkerUtils
+
+const startUtilsSingleton = async () => {
+  workerUtils = await makeWorkerUtils(options)
+}
+
+export const job = async <TK extends Task>(
   taskId: TK,
   payload: TK extends keyof GraphileWorker.Tasks ? TaskPayload[TK] : unknown,
   spec?: TaskSpec
 ) => {
-  return quickAddJob(options, taskId, payload, {
+  if (!workerUtils) await startUtilsSingleton()
+  return workerUtils.addJob(taskId, payload, {
     ...spec,
     queueName: context.currentUser?.id.toString() || DEFAULT_QUEUE,
   })

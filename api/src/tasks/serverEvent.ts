@@ -4,7 +4,9 @@ import { SendServerEventInput, ServerEventResult, User } from 'types/graphql'
 import { CustomTask, Task, TaskPayload } from 'types/tasks'
 
 const apolloClient = new ApolloClient({
-  uri: `${process.env.WEB_URI}/api/graphql`,
+  name: 'worker',
+  uri: `http://[::]:${process.env.API_PORT}/graphql`,
+  ssrMode: true,
   cache: new InMemoryCache(),
   headers: { Authorization: `Bearer ${process.env.WORKER_SECRET}` },
 })

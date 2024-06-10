@@ -1,3 +1,4 @@
+import { events } from 'api/src/tasks/events'
 import { tasks } from 'api/src/tasks/tasks'
 import { Logger, run } from 'graphile-worker'
 import pinoLogger from 'pino'
@@ -20,19 +21,20 @@ const loggerAdapter = new Logger((scope) => {
   }
 })
 
-const startWorker = async () => {
-  const connectionString =
-    process.env.NODE_ENV === 'test'
-      ? process.env.TEST_DATABASE_URL
-      : process.env.DATABASE_URL
+const connectionString =
+  process.env.NODE_ENV === 'test'
+    ? process.env.TEST_DATABASE_URL
+    : process.env.DATABASE_URL
 
+const startWorker = async () => {
   const runner = await run({
     connectionString,
-    concurrency: 5,
+    concurrency: 50,
     noHandleSignals: false,
     pollInterval: 1000,
     logger: loggerAdapter,
     taskList: tasks,
+    events,
   })
 
   await runner.promise

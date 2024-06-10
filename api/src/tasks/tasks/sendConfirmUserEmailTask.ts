@@ -3,7 +3,7 @@ import { CustomTask } from 'types/tasks'
 
 import { sendConfirmUserEmail } from 'src/services/mails/mails'
 
-import { withClientNotification } from '../notifyClient'
+import { withClientNotification } from '../serverEvent'
 
 export const sendConfirmUserEmailTask: CustomTask<
   'send_confirm_user_email'

@@ -5,12 +5,12 @@
 
 [web]
 title = "Redwood App"
-port = "${WEB_DEV_PORT:8910}"
+port = "${WEB_PORT:8910}"
 apiUrl = "/api"
 includeEnvironmentVariables = []
 
 [api]
-port = "${API_DEV_PORT:8911}"
+port = "${API_PORT:8911}"
 
 [browser]
 open = true

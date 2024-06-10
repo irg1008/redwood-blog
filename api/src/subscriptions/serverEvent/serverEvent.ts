@@ -41,6 +41,8 @@ type ServerEventSub = SubscriptionObject<
   MutationsendServerEventArgs
 >
 
+// TODO: I think I could be able to export the pubsub to use across app. But I wouldn't be able to use from the background worker
+
 const serverEventsub: ServerEventSub = {
   subscribe: (_, { input }, { pubSub }) => {
     verifySubAccess(input.userId)

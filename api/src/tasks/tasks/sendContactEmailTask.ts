@@ -3,7 +3,7 @@ import { CustomTask } from 'types/tasks'
 
 import { sendContactEmail } from 'src/services/mails/mails'
 
-import { withClientNotification } from '../notifyClient'
+import { withClientNotification } from '../serverEvent'
 
 const sendContactEmailTask: CustomTask<'send_contact_email'> = async (
   payload,
