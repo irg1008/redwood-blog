@@ -17,7 +17,9 @@ const App = () => (
       <AuthProvider>
         <RedwoodApolloProvider useAuth={useAuth}>
           <NextUIProvider>
-            <Routes />
+            <main className="min-h-dvh bg-background text-foreground">
+              <Routes />
+            </main>
           </NextUIProvider>
         </RedwoodApolloProvider>
       </AuthProvider>
