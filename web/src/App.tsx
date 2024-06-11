@@ -1,9 +1,9 @@
 import { NextUIProvider } from '@nextui-org/react'
 
 import { FatalErrorBoundary, RedwoodProvider } from '@redwoodjs/web'
-import possibleTypes from 'src/graphql/possibleTypes'
 import { RedwoodApolloProvider } from '@redwoodjs/web/apollo'
 
+import possibleTypes from 'src/graphql/possibleTypes'
 import FatalErrorPage from 'src/pages/FatalErrorPage'
 import Routes from 'src/Routes'
 
@@ -27,7 +27,7 @@ const App = () => (
           graphQLClientConfig={graphQLClientConfig}
         >
           <NextUIProvider>
-            <main className="min-h-dvh bg-background text-foreground">
+            <main className="flex min-h-dvh flex-col bg-background text-foreground">
               <Routes />
             </main>
           </NextUIProvider>

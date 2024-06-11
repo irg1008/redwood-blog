@@ -1,3 +1,5 @@
+import { useRef } from 'react'
+
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import { Button, Input } from '@nextui-org/react'
 import { SendIcon } from 'lucide-react'
@@ -41,11 +43,14 @@ const ChatInput = ({ chatRoomId }: ChatInputProps) => {
     resolver: valibotResolver(sendChatMessageSchema),
   })
 
+  const inputRef = useRef<HTMLInputElement>(null)
+
   const onMessageSent = async (data: ChatFromData) => {
     await sendChatMessage({
       variables: { input: { ...data, chatRoomId } },
       onCompleted: () => {
         formMethods.reset()
+        inputRef.current?.focus()
       },
     })
   }
@@ -55,20 +60,23 @@ const ChatInput = ({ chatRoomId }: ChatInputProps) => {
       formMethods={formMethods}
       error={error}
       onSubmit={onMessageSent}
+      className="w-full"
     >
       <Controller
         name="body"
         render={({ field }) => (
           <Input
             {...field}
+            ref={inputRef}
             type="text"
+            color="secondary"
             label="Message"
             variant="bordered"
             placeholder="Type a message"
             endContent={
               <Button
                 as={Submit}
-                color="primary"
+                color="secondary"
                 variant="light"
                 radius="lg"
                 isIconOnly

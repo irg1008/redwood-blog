@@ -1,23 +1,36 @@
+import { Card, CardBody, CardFooter, Divider } from '@nextui-org/react'
+
 import { Metadata } from '@redwoodjs/web'
 
+import { useAuth } from 'src/auth'
 import ChatInput from 'src/components/Chat/ChatInput/ChatInput'
 import ChatMessagesCell from 'src/components/Chat/ChatMessagesCell'
 
 const ChatPage = () => {
-  const chatRoomId = '42'
+  const chatRoomId = '40'
+
+  const { isAuthenticated } = useAuth()
 
   return (
     <>
       <Metadata title="Chat" description="Chat page" />
 
-      <section className="flex flex-col gap-4">
-        <h1 className="mb-10">ChatPage</h1>
+      <h1 className="mb-10">ChatPage</h1>
 
-        <ChatInput chatRoomId={chatRoomId} />
+      <Card isFooterBlurred>
+        <CardBody>
+          <ChatMessagesCell chatRoomId={chatRoomId} />
+        </CardBody>
 
-        <hr />
-        <ChatMessagesCell chatRoomId={chatRoomId} />
-      </section>
+        {isAuthenticated && (
+          <>
+            <Divider />
+            <CardFooter className="bg-background/50">
+              <ChatInput chatRoomId={chatRoomId} />
+            </CardFooter>
+          </>
+        )}
+      </Card>
     </>
   )
 }

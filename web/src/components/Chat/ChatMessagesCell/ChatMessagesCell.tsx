@@ -82,11 +82,12 @@ export const Success = ({
   }
 
   return (
-    <ul className="flex flex-col gap-5">
-      {messages.map((item) => (
+    <ul className="flex max-h-[600px] flex-col-reverse gap-5 overflow-auto p-2">
+      {messages.toReversed().map((item) => (
         <li
           key={item.createdAt}
           className={cn(
+            'animate-appearance-in',
             'flex w-fit flex-col gap-1 rounded-lg bg-primary-600 p-4 text-primary-50',
             item.user.id === currentUser?.id &&
               'self-end bg-secondary-600 text-secondary-50'
