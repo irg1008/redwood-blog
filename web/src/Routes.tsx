@@ -8,7 +8,6 @@ import { useAuth } from './auth'
 const Routes = () => {
   return (
     <Router useAuth={useAuth}>
-      <Route path="/chat" page={ChatPage} name="chat" />
       <PrivateSet unauthenticated="login" roles="admin">
         <Set wrap={ScaffoldLayout} title="Posts" titleTo="posts" buttonLabel="New Post" buttonTo="newPost">
           <Route path="/admin/posts/new" page={PostNewPostPage} name="newPost" prerender />
@@ -23,6 +22,7 @@ const Routes = () => {
         <Route path="/about" page={AboutPage} name="about" prerender />
         <Route path="/contact" page={ContactPage} name="contact" prerender />
         <Route path="/article/{slug:String}" page={ArticlePage} name="article" />
+        <Route path="/chat" page={ChatPage} name="chat" />
 
         <Set prerender>
           <Route path="/login" page={LoginPage} name="login" />

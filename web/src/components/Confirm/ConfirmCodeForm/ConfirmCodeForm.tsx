@@ -3,9 +3,9 @@ import { Button, Input, Tooltip } from '@nextui-org/react'
 import { ClipboardPasteIcon } from 'lucide-react'
 import { confirmCodeSchema } from 'schemas/schemas'
 
-import { FieldError, Form, Submit, useForm } from '@redwoodjs/forms'
+import { Controller, FieldError, Form, Submit, useForm } from '@redwoodjs/forms'
 
-import Controller, { ApolloError } from 'src/components/Controller/Controller'
+import { ApolloError } from 'src/components/UI/Controller/Controller'
 
 type ConfirmCodeInput = {
   code: string
@@ -48,29 +48,27 @@ const ConfirmCodeForm = ({ onConfirm, error, loading }: ConfirmCodeProps) => {
       <Controller
         name="code"
         render={({ field, fieldState: { invalid } }) => (
-          <div>
-            <Input
-              {...field}
-              type="number"
-              label="Code"
-              variant="bordered"
-              placeholder="Enter the code you received in your email"
-              isInvalid={invalid} // This is not working becouse we culd have some other errors and this would be red
-              endContent={
-                <Tooltip content="Paste from clipboard">
-                  <Button
-                    onClick={pasteFromClipboard}
-                    isIconOnly
-                    variant="light"
-                    aria-label="Paste from clipboard"
-                  >
-                    <ClipboardPasteIcon />
-                  </Button>
-                </Tooltip>
-              }
-              errorMessage={<FieldError name="code" />}
-            />
-          </div>
+          <Input
+            {...field}
+            type="number"
+            label="Code"
+            variant="bordered"
+            placeholder="Enter the code you received in your email"
+            isInvalid={invalid} // This is not working becouse we culd have some other errors and this would be red
+            endContent={
+              <Tooltip content="Paste from clipboard">
+                <Button
+                  onClick={pasteFromClipboard}
+                  isIconOnly
+                  variant="light"
+                  aria-label="Paste from clipboard"
+                >
+                  <ClipboardPasteIcon />
+                </Button>
+              </Tooltip>
+            }
+            errorMessage={<FieldError name="code" />}
+          />
         )}
       />
 

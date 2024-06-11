@@ -23,3 +23,6 @@ authProvider = "dbAuth"
 email = "ivansudevlop@gmail.com"
 userId = "1"
 roles = ["admin"]
+
+[graphql]
+  fragments = true

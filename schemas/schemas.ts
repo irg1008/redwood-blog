@@ -36,3 +36,11 @@ export const confirmUserSchema = v.object<Schema<ConfirmUserInput>>({
   code: v.number(),
   email: emailSchema,
 })
+
+export const sendChatMessageSchema = v.object<Schema<{ body: string }>>({
+  body: v.pipe(
+    v.string(),
+    v.nonEmpty('Please enter a message'),
+    v.maxLength(5000, 'The message is too long')
+  ),
+})

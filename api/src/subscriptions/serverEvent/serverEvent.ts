@@ -1,5 +1,5 @@
 import {
-  MutationsendServerEventArgs,
+  SendServerEventInput,
   ServerEventResult,
   SubscriptionObject,
   User,
@@ -8,7 +8,7 @@ import {
 import { ForbiddenError } from '@redwoodjs/graphql-server'
 import { PubSub } from '@redwoodjs/realtime'
 
-import { hasRole } from 'src/lib/auth'
+import { hasRole, requireAuth } from 'src/lib/auth'
 import { getRoomIdForServerEvent } from 'src/services/serverEvent/serverEvent'
 
 export const schema = gql`
@@ -27,6 +27,8 @@ export type ServerEventChannel = PubSub<{
 }>
 
 const verifySubAccess = (useId: User['id']) => {
+  requireAuth()
+
   if (hasRole('admin')) return
 
   if (useId !== context.currentUser?.id)
@@ -38,12 +40,12 @@ type ServerEventSub = SubscriptionObject<
   string,
   never,
   { pubSub: ServerEventChannel },
-  MutationsendServerEventArgs
+  { input: SendServerEventInput }
 >
 
-// TODO: I think I could be able to export the pubsub to use across app. But I wouldn't be able to use from the background worker
+// You could export the sub on subscription start to use across entire app.
 
-const serverEventsub: ServerEventSub = {
+const serverEventSub: ServerEventSub = {
   subscribe: (_, { input }, { pubSub }) => {
     verifySubAccess(input.userId)
     return pubSub.subscribe('serverEvent', getRoomIdForServerEvent(input))
@@ -52,5 +54,5 @@ const serverEventsub: ServerEventSub = {
 }
 
 export const serverEvent = {
-  serverEvent: serverEventsub,
+  serverEvent: serverEventSub,
 }
