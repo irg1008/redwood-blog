@@ -1,4 +1,4 @@
-import { Card, CardBody, CardFooter, Divider } from '@nextui-org/react'
+import { Card, CardFooter, Divider } from '@nextui-org/react'
 
 import { useAuth } from 'src/auth'
 
@@ -10,9 +10,7 @@ const ChatBox = ({ chatRoomId }: ChatMessagesCellProps) => {
 
   return (
     <Card isFooterBlurred className="w-full" radius="none">
-      <CardBody className="flex-col-reverse overflow-auto">
-        <ChatMessagesCell chatRoomId={chatRoomId} />
-      </CardBody>
+      <ChatMessagesCell chatRoomId={chatRoomId} />
 
       {isAuthenticated && (
         <>

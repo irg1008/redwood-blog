@@ -48,5 +48,5 @@ export const chatMessages: QueryResolvers['chatMessages'] = ({
   chatRoomId,
 }) => {
   verifyCanReadMessages()
-  return chatRooms.get(chatRoomId) || []
+  return chatRooms.get(chatRoomId)?.slice(-100) || []
 }

@@ -27,7 +27,7 @@ const App = () => (
           graphQLClientConfig={graphQLClientConfig}
         >
           <NextUIProvider>
-            <main className="flex min-h-dvh flex-col bg-background text-foreground dark">
+            <main className="flex min-h-dvh flex-col bg-background text-foreground">
               <Routes />
             </main>
           </NextUIProvider>

@@ -10,4 +10,14 @@ export default meta
 
 type Story = StoryObj<typeof ChatPage>
 
-export const Primary: Story = {}
+export const Primary: Story = {
+  render: (args) => {
+    mockCurrentUser({
+      id: 1,
+      email: 'User 1',
+      roles: 'user',
+    })
+
+    return <ChatPage {...args} />
+  },
+}
