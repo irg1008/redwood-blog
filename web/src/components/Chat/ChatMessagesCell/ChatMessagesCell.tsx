@@ -1,7 +1,9 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import { cn } from '@nextui-org/react'
+import { Avatar, cn } from '@nextui-org/react'
+import { CatIcon } from 'lucide-react'
 import type {
+  ChatMessageInput,
   ChatMessagesQuery,
   ChatMessagesQueryVariables,
   ChatMessagesSub,
@@ -14,16 +16,15 @@ import {
   type CellSuccessProps,
   type TypedDocumentNode,
 } from '@redwoodjs/web'
-import { registerFragment } from '@redwoodjs/web/dist/apollo'
+import { registerFragment } from '@redwoodjs/web/apollo'
 
 import { useAuth } from 'src/auth'
 
-type ChatMessagesCellProps = {
-  chatRoomId: string
-}
+export type ChatMessagesCellProps = Pick<ChatMessageInput, 'chatRoomId'>
 
 registerFragment(gql`
   fragment ChatMessageFragment on ChatMessage {
+    id
     body
     createdAt
     user {
@@ -65,39 +66,52 @@ export const Success = ({
   chatMessages,
   chatRoomId,
 }: CellSuccessProps<ChatMessagesQuery> & ChatMessagesCellProps) => {
+  const { currentUser } = useAuth()
   const [messages, setMessages] = useState(chatMessages)
 
-  const { currentUser } = useAuth()
+  useEffect(() => {
+    if (messages.length < chatMessages.length) {
+      setMessages(chatMessages)
+    }
+  }, [messages.length, chatMessages])
 
   useSubscription(CHAT_MESSAGES_SUB, {
     variables: { input: { chatRoomId } },
     onData: ({ data: result }) => {
-      setMessages((previous) => previous.concat(result.data.newChatMessage))
+      setMessages((previous) => [...previous, result.data.newChatMessage])
     },
-    shouldResubscribe: true,
   })
 
-  if (chatMessages.length === 0) {
+  if (messages.length === 0) {
     return <div>No messages yet</div>
   }
 
   return (
-    <ul className="flex max-h-[600px] flex-col-reverse gap-5 overflow-auto p-2">
-      {messages.toReversed().map((item) => (
+    <ul className="flex flex-col items-end gap-3">
+      {messages.map((item) => (
         <li
-          key={item.createdAt}
+          key={item.id}
           className={cn(
             'animate-appearance-in',
-            'flex w-fit flex-col gap-1 rounded-lg bg-primary-600 p-4 text-primary-50',
-            item.user.id === currentUser?.id &&
-              'self-end bg-secondary-600 text-secondary-50'
+            'flex w-full flex-wrap gap-1 text-small'
           )}
         >
-          <small>{item.user.displayName}</small>
-          <strong>{item.body}</strong>
-          <small className="self-end opacity-50">
-            {new Date(item.createdAt).toLocaleString()}
-          </small>
+          <span
+            className={cn(
+              'inline-flex h-6',
+              item.user.id === currentUser?.id && 'text-primary-600'
+            )}
+          >
+            <Avatar
+              color={item.user.id === currentUser?.id ? 'primary' : 'default'}
+              radius="sm"
+              showFallback
+              fallback={<CatIcon className="size-3" />}
+              className="me-2 h-5 w-5 text-tiny"
+            />
+            {item.user.displayName}:
+          </span>
+          <span className="[word-break:break-word]">{item.body}</span>
         </li>
       ))}
     </ul>

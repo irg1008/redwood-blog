@@ -5,6 +5,7 @@ export const schema = gql`
   }
 
   type ChatMessage {
+    id: Int!
     chatRoomId: String!
     user: ChatUser!
     body: String!

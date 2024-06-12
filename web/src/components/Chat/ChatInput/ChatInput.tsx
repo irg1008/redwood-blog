@@ -10,12 +10,13 @@ import type {
   SendChatMessageMutationVariables,
 } from 'types/graphql'
 
-import { FieldError, Form, Submit, useForm } from '@redwoodjs/forms'
+import { Form, Submit, useForm } from '@redwoodjs/forms'
 import { TypedDocumentNode, useMutation } from '@redwoodjs/web'
 
 import Controller from 'src/components/UI/Controller/Controller'
 
-type ChatInputProps = Pick<ChatMessageInput, 'chatRoomId'>
+import { ChatMessagesCellProps } from '../ChatMessagesCell'
+
 type ChatFromData = Pick<ChatMessageInput, 'body'>
 
 export const SEND_CHAT_MESSAGE: TypedDocumentNode<
@@ -29,7 +30,7 @@ export const SEND_CHAT_MESSAGE: TypedDocumentNode<
   }
 `
 
-const ChatInput = ({ chatRoomId }: ChatInputProps) => {
+const ChatInput = ({ chatRoomId }: ChatMessagesCellProps) => {
   const [sendChatMessage, { error }] = useMutation<
     SendChatMessageMutation,
     SendChatMessageMutationVariables
@@ -69,22 +70,21 @@ const ChatInput = ({ chatRoomId }: ChatInputProps) => {
             {...field}
             ref={inputRef}
             type="text"
-            color="secondary"
-            label="Message"
+            size="md"
+            color="primary"
             variant="bordered"
             placeholder="Type a message"
             endContent={
               <Button
                 as={Submit}
-                color="secondary"
+                color="primary"
                 variant="light"
                 radius="lg"
                 isIconOnly
               >
-                <SendIcon className="s-5" />
+                <SendIcon className="size-5" />
               </Button>
             }
-            errorMessage={<FieldError name="body" />}
           />
         )}
       />

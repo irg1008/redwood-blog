@@ -27,6 +27,7 @@ export const sendChatMessage = (
 
   const newChatMessage: ChatMessage = {
     ...input,
+    id: Math.floor(Math.random() * 1000000),
     createdAt: new Date().toISOString(),
     user: {
       id: user.id,

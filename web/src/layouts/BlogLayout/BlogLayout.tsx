@@ -24,7 +24,7 @@ const BlogLayout = ({ children }: BlogLayoutProps) => {
     <>
       <Toaster toastOptions={{ position: 'bottom-center', duration: 5000 }} />
 
-      <Navbar isBordered>
+      <Navbar isBordered className="h-16">
         <NavbarBrand>
           <Link
             className="text-3xl font-semibold tracking-tight text-blue-400"
@@ -36,7 +36,13 @@ const BlogLayout = ({ children }: BlogLayoutProps) => {
 
         <NavbarContent justify="end">
           <NavLink to={routes.about()}>About</NavLink>
-          <NavLink to={routes.chat()}>Chat</NavLink>
+          <NavLink
+            to={routes.chat({
+              chatRoomId: '1',
+            })}
+          >
+            Chat
+          </NavLink>
           <NavLink to={routes.contact()}>Contact</NavLink>
           {hasRole('admin') && <NavLink to={routes.posts()}>Posts</NavLink>}
 

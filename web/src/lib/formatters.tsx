@@ -1,5 +1,3 @@
-import React from 'react'
-
 import humanize from 'humanize-string'
 
 const MAX_STRING_LENGTH = 150
