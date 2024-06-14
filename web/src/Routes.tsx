@@ -11,8 +11,8 @@ const Routes = () => {
       <PrivateSet unauthenticated="login" roles="admin">
         <Set wrap={ScaffoldLayout} title="Posts" titleTo="posts" buttonLabel="New Post" buttonTo="newPost">
           <Route path="/admin/posts/new" page={PostNewPostPage} name="newPost" prerender />
-          <Route path="/admin/posts/{id:Int!}/edit" page={PostEditPostPage} name="editPost" />
-          <Route path="/admin/posts/{id:Int!}" page={PostPostsPage} name="post" />
+          <Route path="/admin/posts/{id:Int}/edit" page={PostEditPostPage} name="editPost" />
+          <Route path="/admin/posts/{id:Int}" page={PostPostsPage} name="post" />
           <Route path="/admin/posts" page={PostPostsPage} name="posts" />
         </Set>
       </PrivateSet>
@@ -21,8 +21,8 @@ const Routes = () => {
         <Route path="/" page={HomePage} name="home" />
         <Route path="/about" page={AboutPage} name="about" prerender />
         <Route path="/contact" page={ContactPage} name="contact" prerender />
-        <Route path="/article/{slug:String!}" page={ArticlePage} name="article" />
-        <Route path="/chat/{chatRoomId:String!}" page={ChatPage} name="chat" />
+        <Route path="/article/{slug:String}" page={ArticlePage} name="article" />
+        <Route path="/chat/{streamId:Int}" page={ChatPage} name="chat" />
 
         <Set prerender>
           <Route path="/login" page={LoginPage} name="login" />

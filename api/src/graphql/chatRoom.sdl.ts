@@ -1,25 +1,26 @@
 export const schema = gql`
   type ChatUser {
     id: Int!
-    displayName: String!
+    email: String!
   }
 
   type ChatMessage {
-    id: Int!
-    chatRoomId: String!
+    id: String!
+    streamId: Int!
     user: ChatUser!
+    userId: Int!
     body: String!
     createdAt: DateTime!
     # We could have properties for message for different user roles on the room, like isHidden
   }
 
   type Query {
-    chatMessages(chatRoomId: String!): [ChatMessage!]! @skipAuth
+    chatMessages(streamId: Int!): [ChatMessage!]! @skipAuth
   }
 
   input ChatMessageInput {
     body: String!
-    chatRoomId: String!
+    streamId: Int!
   }
 
   type Mutation {

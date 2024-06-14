@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { RatIcon } from 'lucide-react'
 import type {
+  ChatMessageFragment,
   ChatMessageInput,
   ChatMessagesQuery,
   ChatMessagesQueryVariables,
@@ -19,7 +20,7 @@ import { registerFragment } from '@redwoodjs/web/apollo'
 
 import ChatMessages from '../ChatMessages/ChatMessages'
 
-export type ChatMessagesCellProps = Pick<ChatMessageInput, 'chatRoomId'>
+export type ChatMessagesCellProps = Pick<ChatMessageInput, 'streamId'>
 
 registerFragment(gql`
   fragment ChatMessageFragment on ChatMessage {
@@ -28,7 +29,7 @@ registerFragment(gql`
     createdAt
     user {
       id
-      displayName
+      email
     }
   }
 `)
@@ -37,9 +38,8 @@ export const QUERY: TypedDocumentNode<
   ChatMessagesQuery,
   ChatMessagesQueryVariables
 > = gql`
-  query ChatMessagesQuery($chatRoomId: String!) {
-    chatMessages(chatRoomId: $chatRoomId) {
-      # FIXME: Storybook doesn't work when using fragment: https://github.com/redwoodjs/redwood/issues/10807
+  query ChatMessagesQuery($streamId: Int!) {
+    chatMessages(streamId: $streamId) {
       ...ChatMessageFragment
     }
   }
@@ -56,38 +56,55 @@ export const CHAT_MESSAGES_SUB: TypedDocumentNode<
   }
 `
 
-export const Loading = () => <div>Loading messages</div>
+export const Loading = () => <div className="h-full">Loading messages</div>
 
 export const Failure = ({ error }: CellFailureProps) => (
   <div className="text-danger">Error: {error?.message}</div>
 )
 
+const pushToQueue = (
+  queue: ChatMessageFragment[],
+  limit: number,
+  ...messages: ChatMessageFragment[]
+) => {
+  const elementsToRemove = queue.length + messages.length - limit
+  if (elementsToRemove > 0) queue.splice(0, elementsToRemove)
+
+  queue.push(...messages)
+  return queue
+}
+
 export const Success = ({
   chatMessages,
-  chatRoomId,
+  streamId,
 }: CellSuccessProps<ChatMessagesQuery> & ChatMessagesCellProps) => {
   const [messages, setMessages] = useState(chatMessages)
-  const [isScrolling, setIsScrolling] = useState(false)
+  const [isScrollingAway, setIsScrolling] = useState(false)
+  const messageLimit = isScrollingAway ? 500 : 200
+
+  const injectNewMessages = (...messages: ChatMessageFragment[]) => {
+    setMessages((previous) =>
+      pushToQueue([...previous], messageLimit, ...messages)
+    )
+  }
+
+  useSubscription<ChatMessagesSub, ChatMessagesSubVariables>(
+    CHAT_MESSAGES_SUB,
+    {
+      variables: { input: { streamId } },
+      onData: ({ data: result }) => {
+        if (!result.data) return
+        const { newChatMessage } = result.data
+        injectNewMessages(newChatMessage)
+      },
+    }
+  )
 
   useEffect(() => {
     if (messages.length < chatMessages.length) {
       setMessages(chatMessages)
     }
   }, [messages.length, chatMessages])
-
-  useSubscription<ChatMessagesSub, ChatMessagesSubVariables>(
-    CHAT_MESSAGES_SUB,
-    {
-      variables: { input: { chatRoomId } },
-      onData: ({ data: result }) => {
-        setMessages((previous) => {
-          if (!result.data) return previous
-          if (previous.length >= 100) previous = previous.slice(1)
-          return [...previous, result.data.newChatMessage]
-        })
-      },
-    }
-  )
 
   if (messages.length === 0) {
     return (
@@ -98,5 +115,5 @@ export const Success = ({
     )
   }
 
-  return <ChatMessages chatMessages={messages} />
+  return <ChatMessages chatMessages={messages} onScrollAway={setIsScrolling} />
 }

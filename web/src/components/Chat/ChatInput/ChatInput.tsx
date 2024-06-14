@@ -30,7 +30,7 @@ export const SEND_CHAT_MESSAGE: TypedDocumentNode<
   }
 `
 
-const ChatInput = ({ chatRoomId }: ChatMessagesCellProps) => {
+const ChatInput = ({ streamId }: ChatMessagesCellProps) => {
   const [sendChatMessage, { error }] = useMutation<
     SendChatMessageMutation,
     SendChatMessageMutationVariables
@@ -48,7 +48,7 @@ const ChatInput = ({ chatRoomId }: ChatMessagesCellProps) => {
 
   const onMessageSent = async (data: ChatFromData) => {
     await sendChatMessage({
-      variables: { input: { ...data, chatRoomId } },
+      variables: { input: { ...data, streamId } },
       onCompleted: () => {
         formMethods.reset()
         inputRef.current?.focus()

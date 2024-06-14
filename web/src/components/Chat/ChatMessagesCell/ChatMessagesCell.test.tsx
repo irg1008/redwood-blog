@@ -30,7 +30,7 @@ describe('ChatMessagesCell', () => {
 
   it('renders Success successfully', async () => {
     expect(() => {
-      render(<Success chatRoomId="42" chatMessages={standard().chatMessages} />)
+      render(<Success streamId={42} chatMessages={standard().chatMessages} />)
     }).not.toThrow()
   })
 })

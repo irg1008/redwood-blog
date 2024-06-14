@@ -41,7 +41,7 @@ export const Primary: Story = {
           createdAt: new Date().toISOString(),
           id: Math.floor(Math.random() * 1000),
           user: {
-            displayName: 'User 1',
+            email: 'User 1',
             id: 1,
           },
         },

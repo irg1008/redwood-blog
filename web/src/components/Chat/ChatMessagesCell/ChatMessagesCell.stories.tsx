@@ -40,8 +40,11 @@ export const loading: StoryObj<typeof Loading> = {
 }
 
 export const empty: StoryObj<typeof Success> = {
+  args: {
+    chatMessages: [],
+  },
   render: (args) => {
-    return Success ? <Success chatMessages={[]} {...args} /> : <></>
+    return Success ? <Success {...args} /> : <></>
   },
 }
 

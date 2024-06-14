@@ -1,7 +1,15 @@
+import { randomUUID } from 'crypto'
+import path from 'node:path'
+
 import { ChatMessage, QueryResolvers } from 'types/graphql'
+import { pool } from 'workerpool'
 
 import { requireAuth } from 'src/lib/auth'
 import { ChatRoomChannel } from 'src/subscriptions/chatRoom/chatRoom'
+
+import { ChatWorker } from './chatRoom.worker'
+
+const chatWorkerPool = pool(path.join(__dirname, 'chatRoom.worker.js'))
 
 export const verifyCanSendChatMessage = () => {
   requireAuth()
@@ -15,8 +23,6 @@ export const verifyCanReadMessages = () => {
   // But maybe we restrict acess for logged in users only
 }
 
-const chatRooms = new Map<string, ChatMessage[]>()
-
 export const sendChatMessage = (
   { input }: { input: ChatMessage },
   { context: subContext }: { context: { pubSub: ChatRoomChannel } }
@@ -24,29 +30,29 @@ export const sendChatMessage = (
   verifyCanSendChatMessage()
 
   const user = context.currentUser
-
   const newChatMessage: ChatMessage = {
     ...input,
-    id: Math.floor(Math.random() * 1000000),
+    id: randomUUID(),
     createdAt: new Date().toISOString(),
-    user: {
-      id: user.id,
-      displayName: user.email,
-    },
+    userId: user.id,
+    user,
   }
 
-  const chatRoom = chatRooms.get(input.chatRoomId) || []
-  chatRoom.push(newChatMessage)
-  chatRooms.set(input.chatRoomId, chatRoom)
+  chatWorkerPool
+    .proxy<ChatWorker>()
+    .then((worker) => worker.loadNewMessageToBuffer(newChatMessage))
 
-  subContext.pubSub.publish('chatRoom', input.chatRoomId, newChatMessage)
+  subContext.pubSub.publish('chatRoom', input.streamId, newChatMessage)
 
   return newChatMessage
 }
 
-export const chatMessages: QueryResolvers['chatMessages'] = ({
-  chatRoomId,
+export const chatMessages: QueryResolvers['chatMessages'] = async ({
+  streamId,
 }) => {
   verifyCanReadMessages()
-  return chatRooms.get(chatRoomId)?.slice(-100) || []
+
+  return await chatWorkerPool
+    .proxy<ChatWorker>()
+    .then((worker) => worker.retrieveMessagesFromBuffer(streamId))
 }

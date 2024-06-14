@@ -30,7 +30,7 @@ export const Primary: Story = {
       createdAt: new Date(2021, 9, 1, 12, 0, 0).toISOString(),
       id: index + 1,
       user: {
-        displayName: `User ${(index % 5) + 1}`, // Cycle through 5 different users
+        email: `User ${(index % 5) + 1}`, // Cycle through 5 different users
         id: (index % 5) + 1,
       },
     })),

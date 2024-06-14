@@ -38,7 +38,7 @@ const BlogLayout = ({ children }: BlogLayoutProps) => {
           <NavLink to={routes.about()}>About</NavLink>
           <NavLink
             to={routes.chat({
-              chatRoomId: '1',
+              streamId: 1,
             })}
           >
             Chat
@@ -57,7 +57,9 @@ const BlogLayout = ({ children }: BlogLayoutProps) => {
           )}
 
           {isAuthenticated && (
-            <div className="text-xs text-blue-300">{currentUser?.email}</div>
+            <div className="text-xs text-blue-300">
+              {String(currentUser?.email)}
+            </div>
           )}
         </NavbarContent>
       </Navbar>

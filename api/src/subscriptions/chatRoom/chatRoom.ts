@@ -10,7 +10,7 @@ import { hasRole } from 'src/lib/auth'
 
 export const schema = gql`
   input ChatSubscriptionInput {
-    chatRoomId: String!
+    streamId: Int!
   }
 
   type Subscription {
@@ -19,7 +19,7 @@ export const schema = gql`
 `
 
 export type ChatRoomChannel = PubSub<{
-  chatRoom: [chatRoomId: string, message: ChatMessage]
+  chatRoom: [streamId: number, message: ChatMessage]
 }>
 
 const verifyRoomAccess = () => {
@@ -41,7 +41,7 @@ type ChatRoomSub = SubscriptionObject<
 const chatRoomSub: ChatRoomSub = {
   subscribe: (_, { input }, { pubSub }) => {
     verifyRoomAccess()
-    return pubSub.subscribe('chatRoom', input.chatRoomId)
+    return pubSub.subscribe('chatRoom', input.streamId)
   },
   resolve: (payload: ChatMessage) => payload,
 }
