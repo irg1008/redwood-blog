@@ -9,7 +9,7 @@ import { useAuth } from 'src/auth'
 type ChatMessagesProps = {
   chatMessages: ChatMessageFragment[]
   scrollOffset?: number
-  onScrollAway: (scrollingAway: boolean) => void
+  onScrollAway?: (scrollingAway: boolean) => void
 }
 
 const ChatMessages = ({

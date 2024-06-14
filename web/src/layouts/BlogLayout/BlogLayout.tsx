@@ -64,9 +64,7 @@ const BlogLayout = ({ children }: BlogLayoutProps) => {
         </NavbarContent>
       </Navbar>
 
-      <div className="mx-auto flex w-full max-w-4xl grow flex-col p-12">
-        {children}
-      </div>
+      <div className="mx-auto flex w-full grow flex-col">{children}</div>
     </>
   )
 }

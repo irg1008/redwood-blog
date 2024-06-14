@@ -8,7 +8,8 @@ import ChatMessages from './ChatMessages'
 describe('ChatMessages', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<ChatMessages />)
+      Element.prototype.scrollTo = () => {}
+      render(<ChatMessages chatMessages={[]} />)
     }).not.toThrow()
   })
 })

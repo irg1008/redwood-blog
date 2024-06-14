@@ -30,6 +30,7 @@ describe('ChatMessagesCell', () => {
 
   it('renders Success successfully', async () => {
     expect(() => {
+      Element.prototype.scrollTo = () => {}
       render(<Success streamId={42} chatMessages={standard().chatMessages} />)
     }).not.toThrow()
   })
