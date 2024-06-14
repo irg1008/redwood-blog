@@ -16,7 +16,8 @@
     "graphile-worker": "0.16.6",
     "ioredis": "^5",
     "schemas": "workspace:*",
-    "set-cookie-parser": "2.6.0"
+    "set-cookie-parser": "2.6.0",
+    "workerpool": "9.1.2"
   },
   "devDependencies": {
     "@redwoodjs/mailer-handler-in-memory": "7.6.3",

@@ -12900,6 +12900,7 @@ __metadata:
     ioredis: "npm:^5"
     schemas: "workspace:*"
     set-cookie-parser: "npm:2.6.0"
+    workerpool: "npm:9.1.2"
   languageName: unknown
   linkType: soft
 
@@ -30282,6 +30283,13 @@ __metadata:
   dependencies:
     errno: "npm:~0.1.7"
   checksum: 10c0/069a032f9198a07273a7608dc0c23d7288c1c25256b66008e1ae95838cda6fa2c7aefb3b7ba760f975c8d18120ca54eb193afb66d7237b2a05e5da12c1c961f7
+  languageName: node
+  linkType: hard
+
+"workerpool@npm:9.1.2":
+  version: 9.1.2
+  resolution: "workerpool@npm:9.1.2"
+  checksum: 10c0/3437bfc3e2e9e6ee6d328ec4a81a24fa1dc63f6b1f0400a265026283d4a48d5a7c1eafcae13ad7146d184b7dd7c090ef57abbbfdba52504ed6fd04e2f6cca27f
   languageName: node
   linkType: hard
 
