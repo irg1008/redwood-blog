@@ -40,19 +40,20 @@ model Contact {
 }
 
 model User {
-  id                    Int        @id @default(autoincrement())
+  id                    Int             @id @default(autoincrement())
   name                  String?
-  email                 String     @unique
+  email                 String          @unique
   hashedPassword        String?
   salt                  String?
   resetToken            String?
   resetTokenExpiresAt   DateTime?
-  confirmed             Boolean    @default(false)
+  confirmed             Boolean         @default(false)
   confirmToken          String?
   confirmTokenExpiresAt DateTime?
-  roles                 Role       @default(user)
+  roles                 Role            @default(user)
   posts                 Post[]
   identities            Identity[]
+  streamMessages        StreamMessage[]
 }
 
 model Comment {
@@ -84,4 +85,19 @@ model Identity {
 
   @@unique([provider, uid])
   @@index(userId)
+}
+
+model Stream {
+  id             Int             @id @default(autoincrement())
+  StreamMessages StreamMessage[]
+}
+
+model StreamMessage {
+  id        String   @id @default(cuid())
+  stream    Stream   @relation(fields: [streamId], references: [id])
+  streamId  Int
+  body      String
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+  userId    Int
 }
