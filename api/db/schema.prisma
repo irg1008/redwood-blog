@@ -54,6 +54,7 @@ model User {
   posts                 Post[]
   identities            Identity[]
   streamMessages        StreamMessage[]
+  streamer              Streamer?
 }
 
 model Comment {
@@ -89,7 +90,12 @@ model Identity {
 
 model Stream {
   id             Int             @id @default(autoincrement())
-  StreamMessages StreamMessage[]
+  connectionId   String          @unique
+  streamMessages StreamMessage[]
+  streamer       Streamer        @relation(fields: [streamerId], references: [id])
+  streamerId     Int
+  createdAt      DateTime        @default(now())
+  closedAt       DateTime?
 }
 
 model StreamMessage {
@@ -100,4 +106,16 @@ model StreamMessage {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   userId    Int
+}
+
+model Streamer {
+  id              Int       @id @default(autoincrement())
+  user            User      @relation(fields: [userId], references: [id])
+  userId          Int       @unique
+  streams         Stream[]
+  banned          Boolean   @default(false)
+  timeout         DateTime?
+  streamPath      String    @unique @default(cuid())
+  hashedStreamKey String?
+  live            Boolean   @default(false)
 }
