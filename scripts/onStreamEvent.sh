@@ -17,8 +17,7 @@ JSON_PAYLOAD=$(cat <<EOF
 EOF
 )
 
-SECONDS_TO_VERIFY=10
-TIMESTAMP=$(( $(date +%s%3N) + $SECONDS_TO_VERIFY * 1000 ))
+TIMESTAMP=$(date +%s%3N)
 
 SIGNATURE=$(echo -n "$TIMESTAMP.$JSON_PAYLOAD" | \
   openssl dgst -sha256 -hmac "$MEDIA_SERVER_SECRET" | \

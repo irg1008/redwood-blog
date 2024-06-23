@@ -24,16 +24,17 @@ export const handler: APIGatewayProxyHandler = async (event) => {
     }
   }
 
-  verifyEvent('timestampSchemeVerifier', {
-    event,
-    secret: process.env.MEDIA_SERVER_SECRET,
-    options: {
-      signatureHeader: process.env.MEDIA_SERVER_SIGNATURE,
-    },
-  })
-
   try {
     const payload = JSON.parse(event.body)
+
+    verifyEvent('timestampSchemeVerifier', {
+      event,
+      secret: process.env.MEDIA_SERVER_SECRET,
+      options: {
+        signatureHeader: process.env.MEDIA_SERVER_SIGNATURE,
+        tolerance: 10_000,
+      },
+    })
 
     validatePayload(payload)
     handleEvent(payload)
