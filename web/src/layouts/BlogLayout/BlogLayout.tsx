@@ -21,7 +21,7 @@ const BlogLayout = ({ children }: BlogLayoutProps) => {
   const { isAuthenticated, currentUser, logOut, hasRole } = useAuth()
 
   return (
-    <>
+    <main className="flex min-h-dvh flex-col bg-background text-foreground">
       <Toaster toastOptions={{ position: 'bottom-center', duration: 5000 }} />
 
       <Navbar isBordered className="h-16">
@@ -65,7 +65,7 @@ const BlogLayout = ({ children }: BlogLayoutProps) => {
       </Navbar>
 
       <div className="mx-auto flex w-full grow flex-col">{children}</div>
-    </>
+    </main>
   )
 }
 
