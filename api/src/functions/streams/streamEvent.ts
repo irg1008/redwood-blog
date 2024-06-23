@@ -32,7 +32,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       secret: process.env.MEDIA_SERVER_SECRET,
       options: {
         signatureHeader: process.env.MEDIA_SERVER_SIGNATURE,
-        tolerance: 10_000,
+        tolerance: 10_000, // 10 seconds
       },
     })
 

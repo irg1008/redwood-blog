@@ -12,6 +12,6 @@ export const schema = gql`
 
   extend type Mutation {
     sendServerEvent(input: SendServerEventInput!): ServerEventResult!
-      @requireAuth(roles: ["worker"])
+      @requireWorker
   }
 `

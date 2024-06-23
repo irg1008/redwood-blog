@@ -1,7 +1,8 @@
-import { useExtendContext } from '@envelop/core'
+import type { APIGatewayProxyEvent } from 'aws-lambda'
 import { Role } from 'types/graphql'
 
 import type { Decoded } from '@redwoodjs/api'
+import { verifyEvent } from '@redwoodjs/api/dist/webhooks'
 import { AuthenticationError, ForbiddenError } from '@redwoodjs/graphql-server'
 
 import { db } from './db'
@@ -115,12 +116,21 @@ export const requireAuth = ({ roles }: { roles?: AllowedRoles } = {}) => {
   }
 }
 
-export const workerAuthPlugin = useExtendContext(async (c) => {
-  const authHeader = c.request.headers.get('Authorization')
-  const bearer = authHeader?.split('Bearer ')[1]
+export const requireWorker = ({ event }: { event: APIGatewayProxyEvent }) => {
+  try {
+    const payload = JSON.parse(event.body)
+    if (!payload.variables) throw new Error('No variables found in payload')
 
-  if (bearer === process.env.WORKER_SECRET)
-    return { ...c, currentUser: { roles: 'worker' } }
-
-  return c
-})
+    verifyEvent('timestampSchemeVerifier', {
+      event,
+      payload: JSON.stringify(payload.variables),
+      secret: process.env.WORKER_SECRET,
+      options: {
+        signatureHeader: process.env.WORKER_SIGNATURE,
+        tolerance: 30_000, // 30 seconds
+      },
+    })
+  } catch (error) {
+    throw new AuthenticationError('Only job workers can access this resource.')
+  }
+}
