@@ -26,5 +26,13 @@ declare namespace NodeJS {
     TWITCH_OAUTH_SCOPES: string
     TWITCH_OAUTH_REDIRECT_URI: string
     WORKER_SECRET: string
+    JWT_PRIVATE_KEY: string
+    JWT_PUBLIC_KEY: string
+    MEDIA_SERVER_SECRET: string
+    MEDIA_SERVER_SIGNATURE: string
+    MEDIA_SERVER_WHIP_URL: string
+    MEDIA_SERVER_WEBRTC_URL: string
+    MEDIA_SERVER_HLS_URL: string
+    MEDIA_SERVER_API_URL: string
   }
 }
