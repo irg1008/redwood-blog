@@ -14,9 +14,6 @@ const authLink = setContext((req, { headers }) => {
   const workerSingnature = signPayload('timestampSchemeVerifier', {
     payload: JSON.stringify(req.variables),
     secret: process.env.WORKER_SECRET,
-    options: {
-      signatureHeader: process.env.WORKER_SIGNATURE,
-    },
   })
 
   return {
