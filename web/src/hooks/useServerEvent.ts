@@ -30,7 +30,7 @@ export const useServerEvent = <TK extends Task>(
   >(SERVER_EVENTS_SUB, {
     variables: {
       input: {
-        userId: currentUser?.id,
+        userId: Number(currentUser?.id),
         topic,
       },
     },

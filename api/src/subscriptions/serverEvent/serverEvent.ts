@@ -43,10 +43,12 @@ type ServerEventSub = SubscriptionObject<
   { input: SendServerEventInput }
 >
 
-// You could export the sub on subscription start to use across entire app.
+export let serverEventPubSub: ServerEventChannel
 
 const serverEventSub: ServerEventSub = {
   subscribe: (_, { input }, { pubSub }) => {
+    serverEventPubSub ??= pubSub
+
     verifySubAccess(input.userId)
     return pubSub.subscribe('serverEvent', getRoomIdForServerEvent(input))
   },

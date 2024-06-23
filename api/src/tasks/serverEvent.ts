@@ -5,7 +5,7 @@ import { CustomTask, Task, TaskPayload } from 'types/tasks'
 
 const apolloClient = new ApolloClient({
   name: 'worker',
-  uri: `http://[::]:${process.env.API_PORT}/graphql`,
+  uri: `http://0.0.0.0:${process.env.API_PORT}/graphql`,
   ssrMode: true,
   cache: new InMemoryCache(),
   headers: { Authorization: `Bearer ${process.env.WORKER_SECRET}` },

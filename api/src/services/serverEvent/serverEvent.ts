@@ -7,12 +7,8 @@ export const getRoomIdForServerEvent = (input: ServerEventInput) =>
 
 export const sendServerEvent = async (
   { input }: { input: SendServerEventInput },
-  { context: subContext }: { context: { pubSub: ServerEventChannel } }
+  { context }: { context: { pubSub: ServerEventChannel } }
 ) => {
-  subContext.pubSub.publish(
-    'serverEvent',
-    getRoomIdForServerEvent(input),
-    input
-  )
+  context.pubSub.publish('serverEvent', getRoomIdForServerEvent(input), input)
   return input
 }

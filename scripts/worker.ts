@@ -1,4 +1,3 @@
-import { events } from 'api/src/tasks/events'
 import { tasks } from 'api/src/tasks/tasks'
 import { Logger, run } from 'graphile-worker'
 import pinoLogger from 'pino'
@@ -34,7 +33,6 @@ const startWorker = async () => {
     pollInterval: 1000,
     logger: loggerAdapter,
     taskList: tasks,
-    events,
   })
 
   await runner.promise
