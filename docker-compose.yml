@@ -28,6 +28,30 @@ services:
       timeout: 5s
       retries: 5
 
+  media-server:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile.media-server
+    container_name: redwood-blog-media-server
+    restart: unless-stopped
+    networks:
+      - redwood-blog-network
+    volumes:
+      - ./mediamtx.yml:/mediamtx.yml
+      - ./scripts/onStreamEvent.sh:/onStreamEvent.sh
+      - ./certs/server.key:/server.key
+      - ./certs/server.crt:/server.crt
+    env_file:
+      - .env
+    ports:
+      # - "1935:1935" # RTMP
+      - "8888:8888" # HLS
+      - "9997:9997" # API
+      # - "8554:8554" # RTSP
+      - "8889:8889" # WebRTC
+      # - "8890:8890/udp" # SRT/UDP
+      - "8189:8189/udp" # WebRTC/UDP
+
 networks:
   redwood-blog-network:
     driver: bridge
