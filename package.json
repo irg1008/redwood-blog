@@ -45,16 +45,21 @@
     "deploy:set": "rw setup deploy netlify",
     "ui:set": "rw setup ui tailwind",
     "mail:set": "rw setup mailer",
-    "storybook": "rw storybook",
+    "storybook": "rw sbv",
     "add:web": "yarn workspace web add -E",
-    "add:api": "yarn workspace api add -E"
+    "add:api": "yarn workspace api add -E",
+    "d:up": "docker compose up -d",
+    "d:down": "docker compose down",
+    "d:restart": "docker compose restart",
+    "d:build": "docker compose up -d --build"
   },
   "devDependencies": {
-    "@redwoodjs/auth-dbauth-setup": "7.6.3",
-    "@redwoodjs/cli-storybook": "7.6.3",
-    "@redwoodjs/core": "7.6.3",
-    "@redwoodjs/project-config": "7.6.3",
-    "@redwoodjs/realtime": "7.6.3",
+    "@redwoodjs/auth-dbauth-setup": "7.7.1",
+    "@redwoodjs/cli-storybook": "7.7.1",
+    "@redwoodjs/cli-storybook-vite": "7.7.1",
+    "@redwoodjs/core": "7.7.1",
+    "@redwoodjs/project-config": "7.7.1",
+    "@redwoodjs/realtime": "7.7.1",
     "@redwoodjs/studio": "11.4.0",
     "prettier-plugin-tailwindcss": "0.4.1"
   },
