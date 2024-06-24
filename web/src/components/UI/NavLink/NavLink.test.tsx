@@ -1,3 +1,5 @@
+import { Navbar } from '@nextui-org/react'
+
 import { render } from '@redwoodjs/testing/web'
 
 import NavLink from './NavLink'
@@ -8,7 +10,11 @@ import NavLink from './NavLink'
 describe('NavLink', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<NavLink />)
+      render(
+        <Navbar>
+          <NavLink to="/" />
+        </Navbar>
+      )
     }).not.toThrow()
   })
 })

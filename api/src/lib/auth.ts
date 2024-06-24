@@ -119,11 +119,10 @@ export const requireAuth = ({ roles }: { roles?: AllowedRoles } = {}) => {
 export const requireWorker = ({ event }: { event: APIGatewayProxyEvent }) => {
   try {
     const payload = JSON.parse(event.body)
-    if (!payload.variables) throw new Error('No variables found in payload')
 
     verifyEvent('timestampSchemeVerifier', {
       event,
-      payload: JSON.stringify(payload.variables),
+      payload: JSON.stringify(payload?.variables),
       secret: process.env.WORKER_SECRET,
       options: {
         signatureHeader: process.env.WORKER_SIGNATURE,

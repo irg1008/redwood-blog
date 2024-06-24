@@ -3,9 +3,11 @@ import { Button, Input, Tooltip } from '@nextui-org/react'
 import { ClipboardPasteIcon } from 'lucide-react'
 import { confirmCodeSchema } from 'schemas/schemas'
 
-import { Controller, FieldError, Form, Submit, useForm } from '@redwoodjs/forms'
+import { FieldError, Form, Submit, useForm } from '@redwoodjs/forms'
 
-import { ApolloError } from 'src/components/UI/Controller/Controller'
+import Controller, {
+  ApolloError,
+} from 'src/components/UI/Controller/Controller'
 
 type ConfirmCodeInput = {
   code: string
@@ -54,7 +56,7 @@ const ConfirmCodeForm = ({ onConfirm, error, loading }: ConfirmCodeProps) => {
             label="Code"
             variant="bordered"
             placeholder="Enter the code you received in your email"
-            isInvalid={invalid} // This is not working becouse we culd have some other errors and this would be red
+            isInvalid={invalid}
             endContent={
               <Tooltip content="Paste from clipboard">
                 <Button

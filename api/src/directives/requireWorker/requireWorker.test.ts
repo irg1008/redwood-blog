@@ -1,17 +1,30 @@
+import { signPayload } from '@redwoodjs/api/dist/webhooks'
 import { getDirectiveName, mockRedwoodDirective } from '@redwoodjs/testing/api'
 
-import requireAuth from './requireWorker'
+import requireWorker from './requireWorker'
 
 describe('requireAuth directive', () => {
   it('declares the directive sdl as schema, with the correct name', () => {
-    expect(requireAuth.schema).toBeTruthy()
-    expect(getDirectiveName(requireAuth.schema)).toBe('requireAuth')
+    expect(requireWorker.schema).toBeTruthy()
+    expect(getDirectiveName(requireWorker.schema)).toBe('requireWorker')
   })
 
-  it('requireAuth has stub implementation. Should not throw when current user', () => {
-    const mockExecution = mockRedwoodDirective(requireAuth, {
+  it('requireAuth has stub implementation. Should not throw when valid event and signature', () => {
+    const signature = signPayload('timestampSchemeVerifier', {
+      payload: JSON.stringify({ example: 'example' }),
+      secret: process.env.WORKER_SECRET,
+    })
+
+    const mockExecution = mockRedwoodDirective(requireWorker, {
       context: {
-        currentUser: { id: 1, email: 'Lebron McGretzky', roles: 'user' },
+        event: {
+          headers: {
+            [process.env.WORKER_SIGNATURE]: signature,
+          },
+          body: JSON.stringify({
+            variables: { example: 'example' },
+          }),
+        },
       },
     })
 
