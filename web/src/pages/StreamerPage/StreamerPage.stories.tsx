@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import ChatPage from './ChatPage'
+import StreamerPage from './StreamerPage'
 
-const meta: Meta<typeof ChatPage> = {
-  component: ChatPage,
+const meta: Meta<typeof StreamerPage> = {
+  component: StreamerPage,
 }
 
 export default meta
 
-type Story = StoryObj<typeof ChatPage>
+type Story = StoryObj<typeof StreamerPage>
 
 export const Primary: Story = {
   render: (args) => {
@@ -18,6 +18,6 @@ export const Primary: Story = {
       roles: 'user',
     })
 
-    return <ChatPage {...args} />
+    return <StreamerPage {...args} />
   },
 }

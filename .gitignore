@@ -26,3 +26,4 @@ api/src/lib/generateGraphiQLHeader.*
 coverage
 .hintrc
 certs
+dump

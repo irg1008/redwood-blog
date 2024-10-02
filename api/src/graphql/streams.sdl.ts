@@ -1,17 +1,14 @@
 export const schema = gql`
-  type Streamer {
-    id: Int!
-    streamPath: String!
-    live: Boolean!
-  }
-
   type StreamToken {
     streamToken: String!
   }
 
+  type StreamUrl {
+    streamUrl: String!
+  }
+
   type Query {
-    streamer(id: Int!): Streamer @skipAuth
-    readStream(streamPath: String!): [String!]! @skipAuth
+    readStream(streamId: Int!): StreamUrl! @skipAuth
   }
 
   input CreateStreamTokenInput {

@@ -37,8 +37,8 @@ const BlogLayout = ({ children }: BlogLayoutProps) => {
         <NavbarContent justify="end">
           <NavLink to={routes.about()}>About</NavLink>
           <NavLink
-            to={routes.chat({
-              streamId: 1,
+            to={routes.streamer({
+              streamerId: 1,
             })}
           >
             Chat

@@ -220,7 +220,7 @@ playbackTrustedProxies: []
 # Global settings -> RTSP server
 
 # Enable publishing and reading streams with the RTSP protocol.
-rtsp: no
+rtsp: yes
 # List of enabled RTSP transport protocols.
 # UDP is the most performant, but doesn't work when there's a NAT/firewall between
 # server and clients, and doesn't support encryption.
@@ -230,7 +230,7 @@ rtsp: no
 protocols: [udp, multicast, tcp]
 # Encrypt handshakes and TCP streams with TLS (RTSPS).
 # Available values are "no", "strict", "optional".
-encryption: 'no'
+encryption: 'strict'
 # Address of the TCP/RTSP listener. This is needed only when encryption is "no" or "optional".
 rtspAddress: :8554
 # Address of the TCP/TLS/RTSPS listener. This is needed only when encryption is "strict" or "optional".
@@ -302,7 +302,7 @@ hlsAllowOrigin:
 hlsTrustedProxies: []
 # By default, HLS is generated only when requested by a user.
 # This option allows to generate it always, avoiding the delay between request and generation.
-hlsAlwaysRemux: no
+hlsAlwaysRemux: yes
 # Variant of the HLS protocol to use. Available options are:
 # * mpegts - uses MPEG-TS segments, for maximum compatibility.
 # * fmp4 - uses fragmented MP4 segments, more efficient.
@@ -323,7 +323,7 @@ hlsSegmentDuration: 1s
 # Parts are used in Low-Latency HLS in place of segments.
 # Part duration is influenced by the distance between video/audio samples
 # and is adjusted in order to produce segments with a similar duration.
-hlsPartDuration: 1500ms
+hlsPartDuration: 500ms
 # Maximum size of each segment.
 # This prevents RAM exhaustion.
 hlsSegmentMaxSize: 50M
@@ -372,7 +372,7 @@ webrtcIPsFromInterfaces: yes
 # An empty value means to use all available interfaces.
 webrtcIPsFromInterfacesList: []
 # List of additional hosts or IPs to send to clients.
-webrtcAdditionalHosts: []
+webrtcAdditionalHosts: ['192.168.50.42']
 # ICE servers. Needed only when local listeners can't be reached by clients.
 # STUN servers allows to obtain and share the public IP of the server.
 # TURN/TURNS servers forces all traffic through them.
@@ -697,3 +697,9 @@ paths:
   # Settings under path "all_others" are applied to all paths that
   # do not match another entry.
   all_others:
+
+  # On o2jgfnx4gs7v8h0upv2ttvq7 ready, create a o2jgfnx4gs7v8h0upv2ttvq7-720 stream from webrtc whip remuxed to that quality and export to whip webrtx as well
+  # o2jgfnx4gs7v8h0upv2ttvq7:
+  #   runOnReady: ffmpeg -i $MEDIA_SERVER_WEBRTC_URL/$MTX_PATH/whip?$MTX_QUERY -c copy -f webrtc $MEDIA_SERVER_WEBRTC_URL/$MTX_PATH-720/whip?$MTX_QUERY
+
+  o2jgfnx4gs7v8h0upv2ttvq7-720:

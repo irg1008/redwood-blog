@@ -4,17 +4,10 @@ import { validate } from '@redwoodjs/api'
 import { verifyEvent } from '@redwoodjs/api/webhooks'
 
 import {
+  MediaServerEvent,
   closeStreamEvent,
   publishStreamEvent,
 } from 'src/services/streams/streams'
-
-type Event = 'publish' | 'close'
-
-type StreamEventPayload = {
-  connectionId: string
-  streamPath: string
-  event: Event
-}
 
 export const handler: APIGatewayProxyHandler = async (event) => {
   if (!event.body) {
@@ -53,7 +46,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   }
 }
 
-const handleEvent = async (payload: StreamEventPayload) => {
+const handleEvent = async (payload: MediaServerEvent) => {
   switch (payload.event) {
     case 'publish':
       publishStreamEvent(payload)
@@ -65,8 +58,8 @@ const handleEvent = async (payload: StreamEventPayload) => {
 }
 
 function validatePayload(
-  payload: StreamEventPayload
-): asserts payload is StreamEventPayload {
+  payload: MediaServerEvent
+): asserts payload is MediaServerEvent {
   const { connectionId, streamPath, event } = payload
 
   validate(streamPath, {
@@ -91,7 +84,7 @@ function validatePayload(
       message: 'Event is required',
     },
     inclusion: {
-      in: ['publish', 'close'] satisfies Event[],
+      in: ['publish', 'close'] satisfies MediaServerEvent['event'][],
       message: 'Event must be either start or end',
     },
   })

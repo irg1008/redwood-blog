@@ -1,7 +1,7 @@
 import { createServer } from '@redwoodjs/api-server'
 
 import { logger } from 'src/lib/logger'
-import { registerStreamsProxy } from 'src/proxies/streams'
+import { registerStreamsProxy } from 'src/proxies/stream'
 
 async function main() {
   const server = await createServer({

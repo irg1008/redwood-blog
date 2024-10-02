@@ -93,6 +93,7 @@ model Stream {
   connectionId   String          @unique
   streamMessages StreamMessage[]
   streamer       Streamer        @relation(fields: [streamerId], references: [id])
+  streamerLive   Streamer?       @relation("LiveStream")
   streamerId     Int
   createdAt      DateTime        @default(now())
   closedAt       DateTime?
@@ -115,7 +116,10 @@ model Streamer {
   streams         Stream[]
   banned          Boolean   @default(false)
   timeout         DateTime?
-  streamPath      String    @unique @default(cuid())
+  streamPath      String    @unique
   hashedStreamKey String?
-  live            Boolean   @default(false)
+  liveStream      Stream?   @relation("LiveStream", fields: [liveStreamId], references: [id])
+  liveStreamId    Int?      @unique
+
+  @@index(userId)
 }

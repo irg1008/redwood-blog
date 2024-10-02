@@ -22,7 +22,7 @@ const Routes = () => {
         <Route path="/about" page={AboutPage} name="about" prerender />
         <Route path="/contact" page={ContactPage} name="contact" prerender />
         <Route path="/article/{slug:String}" page={ArticlePage} name="article" />
-        <Route path="/chat/{streamId:Int}" page={ChatPage} name="chat" />
+        <Route path="/streamer/{streamerId:Int}" page={StreamerPage} name="streamer" />
 
         <Set prerender>
           <Route path="/login" page={LoginPage} name="login" />

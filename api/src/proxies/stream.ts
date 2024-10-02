@@ -11,7 +11,7 @@ export const registerStreamsProxy = async (server: FastifyInstance) => {
   )
 
   await server.register(replyFrom, {
-    base: process.env.MEDIA_SERVER_WHIP_URL,
+    base: process.env.MEDIA_SERVER_WEBRTC_URL,
     disableRequestLogging: true,
     prefix: '/stream',
   })

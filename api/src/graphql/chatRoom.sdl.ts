@@ -11,7 +11,6 @@ export const schema = gql`
     userId: Int!
     body: String!
     createdAt: DateTime!
-    # We could have properties for message for different user roles on the room, like isHidden
   }
 
   type Query {
