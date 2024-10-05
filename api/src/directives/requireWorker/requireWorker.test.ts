@@ -1,4 +1,4 @@
-import { signPayload } from '@redwoodjs/api/dist/webhooks'
+import { signPayload } from '@redwoodjs/api/webhooks'
 import { getDirectiveName, mockRedwoodDirective } from '@redwoodjs/testing/api'
 
 import requireWorker from './requireWorker'

@@ -54,14 +54,12 @@
     "d:build": "docker compose up -d --build"
   },
   "devDependencies": {
-    "@redwoodjs/auth-dbauth-setup": "7.7.1",
-    "@redwoodjs/cli-storybook": "7.7.1",
-    "@redwoodjs/cli-storybook-vite": "7.7.1",
-    "@redwoodjs/core": "7.7.1",
-    "@redwoodjs/project-config": "7.7.1",
-    "@redwoodjs/realtime": "7.7.1",
-    "@redwoodjs/studio": "11.4.0",
-    "prettier-plugin-tailwindcss": "0.4.1"
+    "@redwoodjs/auth-dbauth-setup": "8.3.0",
+    "@redwoodjs/core": "8.3.0",
+    "@redwoodjs/project-config": "8.3.0",
+    "@redwoodjs/realtime": "8.3.0",
+    "@redwoodjs/studio": "12.0.0",
+    "prettier-plugin-tailwindcss": "0.6.8"
   },
   "eslintConfig": {
     "extends": "@redwoodjs/eslint-config",
@@ -73,5 +71,5 @@
   "prisma": {
     "seed": "rw exec seed"
   },
-  "packageManager": "yarn@4.2.2"
+  "packageManager": "yarn@4.4.0"
 }

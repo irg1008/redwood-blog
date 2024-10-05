@@ -2,7 +2,7 @@ import type { APIGatewayProxyEvent } from 'aws-lambda'
 import { Role } from 'types/graphql'
 
 import type { Decoded } from '@redwoodjs/api'
-import { verifyEvent } from '@redwoodjs/api/dist/webhooks'
+import { verifyEvent } from '@redwoodjs/api/webhooks'
 import { AuthenticationError, ForbiddenError } from '@redwoodjs/graphql-server'
 
 import { db } from './db'

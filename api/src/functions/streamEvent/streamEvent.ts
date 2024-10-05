@@ -1,7 +1,7 @@
 import type { APIGatewayProxyEvent, APIGatewayProxyHandler } from 'aws-lambda'
 
 import { validate } from '@redwoodjs/api'
-import { verifyEvent } from '@redwoodjs/api/dist/webhooks'
+import { verifyEvent } from '@redwoodjs/api/webhooks'
 
 import { handleStreamEvent } from 'src/services/streams/streams'
 
