@@ -90,13 +90,14 @@ model Identity {
 
 model Stream {
   id             Int             @id @default(autoincrement())
-  connectionId   String          @unique
   streamMessages StreamMessage[]
   streamer       Streamer        @relation(fields: [streamerId], references: [id])
   streamerLive   Streamer?       @relation("LiveStream")
   streamerId     Int
   createdAt      DateTime        @default(now())
   closedAt       DateTime?
+
+  @@unique([streamerId, closedAt])
 }
 
 model StreamMessage {
@@ -110,16 +111,16 @@ model StreamMessage {
 }
 
 model Streamer {
-  id              Int       @id @default(autoincrement())
-  user            User      @relation(fields: [userId], references: [id])
-  userId          Int       @unique
-  streams         Stream[]
-  banned          Boolean   @default(false)
-  timeout         DateTime?
-  streamPath      String    @unique
-  hashedStreamKey String?
-  liveStream      Stream?   @relation("LiveStream", fields: [liveStreamId], references: [id])
-  liveStreamId    Int?      @unique
+  id                 Int       @id @default(autoincrement())
+  user               User      @relation(fields: [userId], references: [id])
+  userId             Int       @unique
+  streams            Stream[]
+  banned             Boolean   @default(false)
+  timeout            DateTime?
+  streamPath         String    @unique @default(cuid())
+  hashedStreamSecret String?
+  liveStream         Stream?   @relation("LiveStream", fields: [liveStreamId], references: [id])
+  liveStreamId       Int?      @unique
 
   @@index(userId)
 }

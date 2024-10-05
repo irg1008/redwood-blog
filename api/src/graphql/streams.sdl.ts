@@ -1,6 +1,6 @@
 export const schema = gql`
-  type StreamToken {
-    streamToken: String!
+  type StreamKey {
+    streamKey: String!
   }
 
   type StreamUrl {
@@ -11,13 +11,13 @@ export const schema = gql`
     readStream(streamId: Int!): StreamUrl! @skipAuth
   }
 
-  input CreateStreamTokenInput {
+  input CreateStreamKeyInput {
     userId: Int!
   }
 
   type Mutation {
-    adminCreateStreamToken(input: CreateStreamTokenInput!): StreamToken
+    adminCreateStreamKey(input: CreateStreamKeyInput!): StreamKey
       @requireAuth(roles: ["admin"])
-    createStreamToken: StreamToken @requireAuth
+    createStreamKey: StreamKey @requireAuth
   }
 `

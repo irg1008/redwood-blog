@@ -1,0 +1,262 @@
+{
+  "account": {
+    "mistserver_admin": {
+      "password": "f921f36ae73c47c8fcbd8414ecb441ff"
+    }
+  },
+  "autopushes": null,
+  "bandwidth": {
+    "exceptions": [
+      "::1",
+      "127.0.0.0/8",
+      "10.0.0.0/8",
+      "192.168.0.0/16",
+      "172.16.0.0/12"
+    ],
+    "limit": 0
+  },
+  "config": {
+    "accesslog": "LOG",
+    "controller": {
+      "interface": null,
+      "port": null,
+      "username": null
+    },
+    "debug": null,
+    "defaultStream": null,
+    "limits": null,
+    "location": {
+      "lat": 0.0000000000,
+      "lon": 0.0000000000,
+      "name": ""
+    },
+    "prometheus": "",
+    "protocols": [
+      {
+        "connector": "AAC"
+      },
+      {
+        "connector": "CMAF",
+        "default_track_sorting": "res_htl",
+        "mergesessions": false,
+        "nonchunked": false
+      },
+      {
+        "connector": "DTSC"
+      },
+      {
+        "connector": "EBML"
+      },
+      {
+        "connector": "FLAC"
+      },
+      {
+        "connector": "FLV"
+      },
+      {
+        "connector": "H264"
+      },
+      {
+        "connector": "HDS"
+      },
+      {
+        "connector": "HLS",
+        "default_track_sorting": "res_htl",
+        "nonchunked": false
+      },
+      {
+        "connector": "HTTP",
+        "pubaddr": []
+      },
+      {
+        "connector": "HTTPTS",
+        "default_track_sorting": "res_htl"
+      },
+      {
+        "connector": "JPG"
+      },
+      {
+        "connector": "JSON"
+      },
+      {
+        "connector": "MP3"
+      },
+      {
+        "connector": "MP4"
+      },
+      {
+        "connector": "OGG"
+      },
+      {
+        "connector": "RTMP"
+      },
+      {
+        "connector": "RTSP"
+      },
+      {
+        "connector": "SDP"
+      },
+      {
+        "connector": "SubRip"
+      },
+      {
+        "connector": "TSRIST"
+      },
+      {
+        "connector": "TSSRT"
+      },
+      {
+        "connector": "WAV"
+      },
+      {
+        "connector": "WebRTC",
+        "jitterlog": false,
+        "mergesessions": false,
+        "nackdisable": false,
+        "packetlog": false
+      }
+    ],
+    "serverid": null,
+    "sessionInputMode": 15,
+    "sessionOutputMode": 15,
+    "sessionStreamInfoMode": 1,
+    "sessionUnspecifiedMode": 0,
+    "sessionViewerMode": 14,
+    "tknMode": 15,
+    "triggers": {
+      "PUSH_REWRITE": [
+        {
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [],
+          "sync": true
+        }
+      ],
+      "STREAM_ADD": [
+        {
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [],
+          "sync": true
+        }
+      ],
+      "STREAM_END": [],
+      "STREAM_LOAD": [],
+      "STREAM_READY": [
+        {
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [],
+          "sync": true
+        }
+      ],
+      "STREAM_REMOVE": [
+        {
+          "default": "true",
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [],
+          "sync": false
+        }
+      ],
+      "STREAM_UNLOAD": [
+        {
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [],
+          "sync": true
+        }
+      ],
+      "SYSTEM_START": [
+        {
+          "default": "true",
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [],
+          "sync": false
+        }
+      ],
+      "SYSTEM_STOP": [
+        {
+          "default": "true",
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [],
+          "sync": false
+        }
+      ],
+      "USER_END": [
+        {
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [],
+          "sync": true
+        }
+      ],
+      "USER_NEW": [
+        {
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [],
+          "sync": true
+        }
+      ]
+    },
+    "trustedproxy": []
+  },
+  "extwriters": null,
+  "push_settings": {
+    "maxspeed": 0,
+    "wait": 3
+  },
+  "streams": {
+    "stream": {
+      "name": "default_stream",
+      "processes": [
+        {
+          "codec": "H264",
+          "exit_unmask": false,
+          "flags": "-b:v 8000k -s:v 1920x1080",
+          "inconsequential": false,
+          "preset": "ultrafast",
+          "process": "FFMPEG",
+          "resolution": "1920x1080",
+          "restart_type": "fixed",
+          "sources": [],
+          "track_inhibit": "video=1080p",
+          "x-LSP-kind": "video",
+          "x-LSP-name": "1080p"
+        },
+        {
+          "codec": "H264",
+          "exit_unmask": false,
+          "flags": "-b:v 2000k -s:v 1280x720",
+          "inconsequential": false,
+          "preset": "ultrafast",
+          "process": "FFMPEG",
+          "resolution": "1280x720",
+          "restart_type": "fixed",
+          "sources": [],
+          "track_inhibit": "video=720p",
+          "x-LSP-kind": "video",
+          "x-LSP-name": "720p"
+        },
+        {
+          "codec": "H264",
+          "crf": 25,
+          "exit_unmask": false,
+          "flags": "-s:v 854x480",
+          "inconsequential": false,
+          "preset": "ultrafast",
+          "process": "FFMPEG",
+          "resolution": "854x480",
+          "restart_type": "fixed",
+          "sources": [],
+          "track_inhibit": "video=480p",
+          "x-LSP-kind": "video",
+          "x-LSP-name": "480p",
+          "x-LSP-rate_or_crf": "crf"
+        }
+      ],
+      "resume": "0",
+      "source": "push://",
+      "stop_sessions": false
+    }
+  },
+  "ui_settings": {
+    "HTTPUrl": "http://localhost:8080/",
+    "viewmode": "list"
+  },
+  "variables": []
+}

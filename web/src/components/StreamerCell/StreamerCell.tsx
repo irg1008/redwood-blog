@@ -3,10 +3,10 @@ import type {
   FindStreamerQueryVariables,
 } from 'types/graphql'
 
-import type {
-  CellFailureProps,
-  CellSuccessProps,
-  TypedDocumentNode,
+import {
+  type CellFailureProps,
+  type CellSuccessProps,
+  type TypedDocumentNode,
 } from '@redwoodjs/web'
 
 import Stream from '../Stream/Stream/Stream'
@@ -19,6 +19,7 @@ export const QUERY: TypedDocumentNode<
     streamer(id: $id) {
       id
       liveStreamId
+      streamPath
       user {
         email
       }

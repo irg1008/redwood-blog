@@ -1,3 +1,19 @@
-FROM bluenviron/mediamtx:1.8.3-ffmpeg AS media-server
+FROM alpine:3.20 AS builder
 
-RUN apk --no-cache add curl openssl coreutils
+ARG MISTSERVER=mistserver_64V3.4.tar.gz
+
+ADD https://r.mistserver.org/dl/${MISTSERVER} /${MISTSERVER}
+RUN mkdir /mistserver && tar -xvzf /${MISTSERVER} -C /mistserver
+
+FROM bitnami/minideb:bullseye
+
+# Install used tools in stream scripts
+RUN apt-get update
+RUN apt-get install curl openssl coreutils ffmpeg -yq
+
+# Cleam up
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+COPY --from=builder /mistserver /mistserver
+CMD /mistserver/MistController -c /config/config.json
+

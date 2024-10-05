@@ -29,10 +29,11 @@ declare namespace NodeJS {
     WORKER_SECRET: string
     JWT_PRIVATE_KEY: string
     JWT_PUBLIC_KEY: string
+    MEDIA_SERVER_SIGNATURE_HEADER: string
+    MEDIA_SERVER_TRIGGER_HEADER: string
     MEDIA_SERVER_SECRET: string
-    MEDIA_SERVER_SIGNATURE: string
-    MEDIA_SERVER_WEBRTC_URL: string
-    MEDIA_SERVER_HLS_URL: string
+    MEDIA_SERVER_HTTPS_URL: string
     MEDIA_SERVER_API_URL: string
+    MEDIA_SERVER_EVENT_URI: string
   }
 }

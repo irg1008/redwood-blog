@@ -15,15 +15,7 @@ services:
     ports:
       - "${POSTGRES_PORT}:5432"
     healthcheck:
-      test:
-        [
-          "CMD",
-          "pg_isready",
-          "-d",
-          "${POSTGRES_DB}",
-          "-U",
-          "${POSTGRES_USER}"
-        ]
+      test: [ "CMD", "pg_isready", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -34,23 +26,23 @@ services:
       dockerfile: Dockerfile.media-server
     container_name: redwood-blog-media-server
     restart: unless-stopped
+    shm_size: 4g
     networks:
       - redwood-blog-network
     volumes:
-      - ./mediamtx.yml:/mediamtx.yml
-      - ./scripts/onStreamEvent.sh:/onStreamEvent.sh
+      - media-server-config:/config
+      - ./scripts/on-stream-event.sh:/scripts/on-stream-event.sh
       - ./certs/server.key:/server.key
       - ./certs/server.crt:/server.crt
     env_file:
       - .env
     ports:
-      # - "1935:1935" # RTMP
-      - "8888:8888" # HLS
-      - "9997:9997" # API
-      # - "8554:8554" # RTSP
-      - "8889:8889" # WebRTC
-      # - "8890:8890/udp" # SRT/UDP
-      - "8189:8189/udp" # WebRTC/UDP
+      - 4242:4242 # API/UI
+      - 1935:1935 # RTMP
+      # - 8080:8080/tcp # HTTP
+      - 4433:4433/tcp # HTTPS
+      - 8889:8889/udp # SRT
+      - 5554:5554 # RTSP
 
 networks:
   redwood-blog-network:
@@ -58,3 +50,4 @@ networks:
 
 volumes:
   pgdata:
+  media-server-config:
