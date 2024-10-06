@@ -1,8 +1,6 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
 import { setContext } from '@apollo/client/link/context'
-import type { Task as GraphileTask } from 'graphile-worker'
 import { SendServerEventInput, ServerEventResult, User } from 'types/graphql'
-import { CustomTask, Task, TaskPayload } from 'types/tasks'
 
 import { signPayload } from '@redwoodjs/api/webhooks'
 
@@ -56,23 +54,4 @@ export const notifyClient = async (
       },
     },
   })
-}
-
-export const withClientNotification = <TK extends Task>(
-  customTask: CustomTask<TK>
-): GraphileTask => {
-  return async (payload: TaskPayload[TK], handlers) => {
-    const response = await customTask(payload, handlers)
-
-    const queueName = await handlers.getQueueName()
-    const userId = parseInt(queueName)
-
-    if (Number.isNaN(userId)) {
-      return handlers.logger.error(
-        `Empty or invalid user ID. Skipping notification.`
-      )
-    }
-
-    await notifyClient(userId, handlers.job.task_identifier, response)
-  }
 }

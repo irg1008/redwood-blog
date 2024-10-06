@@ -1,5 +1,7 @@
+import path from 'node:path'
+
 import { ChatMessage } from 'types/graphql'
-import workerpool from 'workerpool'
+import workerpool, { pool } from 'workerpool'
 
 import { db } from 'src/lib/db'
 
@@ -11,12 +13,13 @@ export const chatRooms = new Map<
   }
 >()
 
-const MAX_CHAT_BUFFER_SIZE = 20
+const MAX_CHAT_BUFFER_SIZE = 200
 
-// TODO: Implement persist on room close?
+// TODO: Implement persist on room close or when some time without message has pass?
+// Also when does the worker dissapears
 
 const persistMessages = (messages: ChatMessage[]) => {
-  console.log('persisitn messages', messages)
+  console.log('Persisting messages', messages)
   return db.streamMessage.createMany({
     data: messages,
   })
@@ -47,12 +50,29 @@ const retrieveMessagesFromBuffer = (streamId: ChatMessage['streamId']) => {
   return chatRooms.get(streamId)?.messages || []
 }
 
-export type ChatWorker = {
-  loadNewMessageToBuffer: typeof loadNewMessageToBuffer
-  retrieveMessagesFromBuffer: typeof retrieveMessagesFromBuffer
-}
-
-workerpool.worker({
+const workerMethods = {
   loadNewMessageToBuffer,
   retrieveMessagesFromBuffer,
-})
+}
+
+type WorkerMethods = typeof workerMethods
+
+workerpool.worker(workerMethods)
+
+const startWorkerPool = () => {
+  const workerFile = path.basename(__filename)
+  return pool(path.join(__dirname, workerFile))
+}
+
+const chatWorkerManager = () => {
+  const chatWorkerPool = startWorkerPool()
+
+  return new Proxy(workerMethods, {
+    get: (_: WorkerMethods, method: keyof WorkerMethods) => {
+      return (...args: Parameters<WorkerMethods[typeof method]>) =>
+        chatWorkerPool.exec(method, args)
+    },
+  })
+}
+
+export const chatWorker = chatWorkerManager()

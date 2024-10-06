@@ -1,15 +1,11 @@
 import { randomUUID } from 'crypto'
-import path from 'node:path'
 
 import { ChatMessage, QueryResolvers } from 'types/graphql'
-import { pool } from 'workerpool'
 
 import { requireAuth } from 'src/lib/auth'
 import { ChatRoomChannel } from 'src/subscriptions/chatRoom/chatRoom'
 
-import { ChatWorker } from './chatRoom.worker'
-
-const chatWorkerPool = pool(path.join(__dirname, 'chatRoom.worker.js'))
+import { chatWorker } from './chatRoom.worker'
 
 export const verifyCanSendChatMessage = () => {
   requireAuth()
@@ -38,9 +34,7 @@ export const sendChatMessage = (
     user,
   }
 
-  chatWorkerPool
-    .proxy<ChatWorker>()
-    .then((worker) => worker.loadNewMessageToBuffer(newChatMessage))
+  chatWorker.loadNewMessageToBuffer(newChatMessage)
 
   subContext.pubSub.publish('chatRoom', input.streamId, newChatMessage)
 
@@ -51,8 +45,5 @@ export const chatMessages: QueryResolvers['chatMessages'] = async ({
   streamId,
 }) => {
   verifyCanReadMessages()
-
-  return await chatWorkerPool
-    .proxy<ChatWorker>()
-    .then((worker) => worker.retrieveMessagesFromBuffer(streamId))
+  return chatWorker.retrieveMessagesFromBuffer(streamId)
 }

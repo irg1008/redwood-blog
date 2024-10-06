@@ -15,7 +15,6 @@
     "@redwoodjs/mailer-renderer-react-email": "8.3.0",
     "@redwoodjs/realtime": "8.3.0",
     "cookie": "0.6.0",
-    "graphile-worker": "0.16.6",
     "ioredis": "^5",
     "jose": "5.4.1",
     "schemas": "workspace:*",
