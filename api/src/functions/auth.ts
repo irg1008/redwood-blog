@@ -7,8 +7,7 @@ import { DbAuthHandler } from '@redwoodjs/auth-dbauth-api'
 
 import { cookieName } from 'src/lib/auth'
 import { db } from 'src/lib/db'
-import { sendResetPasswordEmail } from 'src/services/mails/mails'
-import { sendConfirmCode } from 'src/services/users'
+import { sendConfirmCode, sendResetPassword } from 'src/services/users'
 
 export const handler = async (
   event: APIGatewayProxyEvent,
@@ -33,7 +32,7 @@ export const handler = async (
     // `user` here has been sanitized to only include the fields listed in
     // `allowedUserFields` so it should be safe to return as-is.
     handler: async (user, resetToken) => {
-      await sendResetPasswordEmail({ email: user.email, resetToken })
+      await sendResetPassword({ email: user.email, resetToken })
       return user
     },
 

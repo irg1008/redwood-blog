@@ -7,8 +7,10 @@ import type {
 import { validate } from '@redwoodjs/api'
 import { hashToken } from '@redwoodjs/auth-dbauth-api'
 
+import { SendConfirmUserEmailJob } from 'src/jobs/SendConfirmUserEmailJob/SendConfirmUserEmailJob'
+import { SendResetPasswordEmailJob } from 'src/jobs/SendResetPasswordEmailJob/SendResetPasswordEmailJob'
 import { db } from 'src/lib/db'
-import { job } from 'src/lib/job'
+import { later } from 'src/lib/jobs'
 
 export const users: QueryResolvers['users'] = () => {
   return db.user.findMany()
@@ -58,7 +60,7 @@ export const sendConfirmCode: MutationResolvers['sendConfirmCode'] = async ({
   if (isStillValid) return true
 
   const code = Math.floor(100000 + Math.random() * 900000)
-  await job('send_confirm_user_email', { email, code })
+  await later(SendConfirmUserEmailJob, [{ email, code }])
 
   await db.user.update({
     where: { email },
@@ -69,6 +71,13 @@ export const sendConfirmCode: MutationResolvers['sendConfirmCode'] = async ({
   })
 
   return true
+}
+
+export const sendResetPassword = async (data: {
+  email: string
+  resetToken: string
+}) => {
+  await later(SendResetPasswordEmailJob, [data])
 }
 
 export const User: UserRelationResolvers = {
