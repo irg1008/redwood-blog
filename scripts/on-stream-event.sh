@@ -33,7 +33,4 @@ RESPONSE=$(curl -s -X POST \
   -d "$PAYLOAD" \
   "$MEDIA_SERVER_EVENT_URI")
 
-echo "RESPONSE:$RESPONSE" >>ex.txt
-
-echo "$RESPONSE"
-exit 0
+echo -n "$RESPONSE"
