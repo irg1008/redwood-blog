@@ -32,14 +32,13 @@ services:
     volumes:
       - media-server-config:/config
       - ./scripts/on-stream-event.sh:/scripts/on-stream-event.sh
-      - ./certs/server.key:/server.key
-      - ./certs/server.crt:/server.crt
+      - ./certs:/certs
     env_file:
       - .env
     ports:
       - 4242:4242 # API/UI
       - 1935:1935 # RTMP
-      # - 8080:8080/tcp # HTTP
+      - 8080:8080/tcp # HTTP
       - 4433:4433/tcp # HTTPS
       - 8889:8889/udp # SRT
       - 5554:5554 # RTSP

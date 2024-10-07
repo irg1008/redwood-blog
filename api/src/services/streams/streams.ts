@@ -7,111 +7,26 @@ import { ForbiddenError, UserInputError } from '@redwoodjs/graphql-server'
 
 import { requireAuth } from 'src/lib/auth'
 import { db } from 'src/lib/db'
-
-export enum StreamEvent {
-  PushAuth = 'PUSH_REWRITE',
-  Ready = 'STREAM_READY',
-  Close = 'STREAM_UNLOAD',
-  Shutdown = 'SYSTEM_STOP',
-  Boot = 'SYSTEM_START',
-  Add = 'STREAM_ADD',
-  Remove = 'STREAM_REMOVE',
-  View = 'USER_NEW',
-  Leave = 'USER_END',
-}
-
-type StreamEventData =
-  | {
-      event: StreamEvent.Close | StreamEvent.Remove
-      streamPath: string
-    }
-  | {
-      event: StreamEvent.Shutdown | StreamEvent.Boot
-      reason: string
-    }
-  | {
-      event: StreamEvent.Add
-      streamPath: string
-      config?: unknown
-    }
-  | {
-      event: StreamEvent.View
-      streamPath: string
-      connectionAddress: string
-      connectionId: number
-      connector: string
-      requestUrl: string
-      sessionId: string
-    }
-  | {
-      event: StreamEvent.Leave
-      sesionId: string
-      streamName: string
-      connectionAddress: string
-      viewDuration: number
-      uploadedBytes: number
-      downloadedBytes: number
-      tags: string
-    }
-  | {
-      event: StreamEvent.PushAuth
-      pushUrl: string
-      hostname: string
-      streamKey: string
-    }
-  | {
-      event: StreamEvent.Ready
-      streamPath: string
-      inputType: string
-    }
-
-type HandlerOptions<D = StreamEventData> = {
-  parseBody: (body: string[]) => D
-  validateData?: (data: D) => void
-  handle?: (data: D) => Awaited<unknown>
-  tap?: (data: D) => void
-}
-
-const defaultDataValidator = <D extends StreamEventData>(data: D) => {
-  validate(data, {
-    presence: {
-      message: `Invalid data for ${data.event}`,
-    },
-  })
-}
-
-const defaultHandler = () => true
-
-const createEventHandler =
-  <D extends StreamEventData>(options: HandlerOptions<D>) =>
-  (plainBody: string) => {
-    const {
-      parseBody,
-      validateData = defaultDataValidator,
-      handle = defaultHandler,
-      tap,
-    } = options
-
-    const bodyData = plainBody.split('\n')
-
-    const data = parseBody(bodyData)
-    validateData(data)
-
-    tap?.(data)
-
-    return {
-      data,
-      handle: () => handle(data),
-    }
-  }
+import {
+  createEventHandler,
+  StreamEvent,
+} from 'src/lib/stream/streamEventHandler'
+import {
+  createStreamName,
+  parseStreamName,
+  StreamType,
+  validateStreamName,
+} from 'src/lib/stream/streamName'
 
 const readyEventHandler = createEventHandler({
   parseBody(body) {
-    const [streamPath, inputType] = body
-    return { event: StreamEvent.Ready, streamPath, inputType }
+    const [streamName, inputType] = body
+    validateStreamName(streamName)
+    return { event: StreamEvent.Ready, streamName, inputType }
   },
   async tap(data) {
-    const { streamPath } = data
+    const { streamName } = data
+    const { streamPath } = parseStreamName(streamName)
 
     await db.stream.create({
       data: {
@@ -124,11 +39,13 @@ const readyEventHandler = createEventHandler({
 
 const closeEventHandler = createEventHandler({
   parseBody(body) {
-    const [streamPath] = body
-    return { event: StreamEvent.Close, streamPath }
+    const [streamName] = body
+    validateStreamName(streamName)
+    return { event: StreamEvent.Close, streamName }
   },
   async tap(data) {
-    const { streamPath } = data
+    const { streamName } = data
+    const { streamPath } = parseStreamName(streamName)
 
     await db.streamer.update({
       where: { streamPath },
@@ -139,13 +56,6 @@ const closeEventHandler = createEventHandler({
         },
       },
     })
-  },
-})
-
-const removeEventHandler = createEventHandler({
-  parseBody(body) {
-    const [streamPath] = body
-    return { event: StreamEvent.Remove, streamPath }
   },
 })
 
@@ -168,30 +78,22 @@ const bootEventHandler = createEventHandler({
   },
 })
 
-const addEventHandler = createEventHandler({
-  parseBody(body) {
-    const [streamPath, config] = body
-    return {
-      event: StreamEvent.Add,
-      streamPath,
-      config: config ? JSON.parse(config) : undefined,
-    }
-  },
-})
-
 const viewEventHandler = createEventHandler({
   parseBody(body) {
     const [
-      streamPath,
+      streamName,
       connectionAddress,
       connectionId,
       connector,
       requestUrl,
       sessionId,
     ] = body
+
+    validateStreamName(streamName)
+
     return {
       event: StreamEvent.View,
-      streamPath,
+      streamName,
       connectionAddress,
       connectionId: parseInt(connectionId),
       connector,
@@ -219,9 +121,12 @@ const leaveEventHandler = createEventHandler({
       downloadedBytes,
       tags,
     ] = body
+
+    validateStreamName(streamName)
+
     return {
       event: StreamEvent.Leave,
-      sesionId: sessionId,
+      sessionId,
       streamName,
       connectionAddress,
       viewDuration: parseInt(viewDuration),
@@ -290,8 +195,7 @@ const pushAuthEventHandler = createEventHandler({
       )
     }
 
-    // If all correct allow to publish on streamer path.
-    return streamPath
+    return createStreamName(StreamType.Live, streamPath, createId())
   },
 })
 
@@ -301,14 +205,10 @@ const getHandlerForEvent = (event: StreamEvent) => {
       return readyEventHandler
     case StreamEvent.Close:
       return closeEventHandler
-    case StreamEvent.Remove:
-      return removeEventHandler
     case StreamEvent.Shutdown:
       return shutdownEventHandler
     case StreamEvent.Boot:
       return bootEventHandler
-    case StreamEvent.Add:
-      return addEventHandler
     case StreamEvent.View:
       return viewEventHandler
     case StreamEvent.Leave:
