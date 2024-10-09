@@ -2,7 +2,7 @@
 
 if [ -z "$MEDIA_SERVER_SECRET" ] ||
   [ -z "$MEDIA_SERVER_SIGNATURE_HEADER" ] ||
-  [ -z "$MEDIA_SERVER_EVENT_URI" ] ||
+  [ -z "$MEDIA_SERVER_EVENT_URL" ] ||
   [ -z "$MEDIA_SERVER_TRIGGER_HEADER" ]; then
   echo "Missing required environment variables."
   exit 1
@@ -31,6 +31,6 @@ RESPONSE=$(curl -s -X POST \
   -H "$MEDIA_SERVER_SIGNATURE_HEADER: $AUTH_HEADER" \
   -H "$MEDIA_SERVER_TRIGGER_HEADER: $TRIGGER_NAME" \
   -d "$PAYLOAD" \
-  "$MEDIA_SERVER_EVENT_URI")
+  "$MEDIA_SERVER_EVENT_URL")
 
 echo -n "$RESPONSE"

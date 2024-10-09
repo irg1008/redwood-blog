@@ -34,6 +34,6 @@ declare namespace NodeJS {
     MEDIA_SERVER_SECRET: string
     MEDIA_SERVER_HTTPS_URL: string
     MEDIA_SERVER_API_URL: string
-    MEDIA_SERVER_EVENT_URI: string
+    MEDIA_SERVER_EVENT_URL: string
   }
 }
