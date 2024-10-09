@@ -72,6 +72,13 @@ enum Provider {
   twitch
 }
 
+enum StreamState {
+  empty
+  full
+  dry
+  reover
+}
+
 model Identity {
   id          Int       @id @default(autoincrement())
   provider    Provider
@@ -90,14 +97,17 @@ model Identity {
 
 model Stream {
   id             Int             @id @default(autoincrement())
+  recordingId    String          @unique @default(cuid())
   streamMessages StreamMessage[]
   streamer       Streamer        @relation(fields: [streamerId], references: [id])
   streamerLive   Streamer?       @relation("LiveStream")
   streamerId     Int
+  state          StreamState?
   createdAt      DateTime        @default(now())
   closedAt       DateTime?
 
   @@unique([streamerId, closedAt])
+  @@index(recordingId)
 }
 
 model StreamMessage {
