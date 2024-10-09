@@ -1,4 +1,5 @@
 import { createId } from '@paralleldrive/cuid2'
+import { StreamState } from '@prisma/client'
 import { MutationResolvers, QueryResolvers } from 'types/graphql'
 
 import { validate } from '@redwoodjs/api'
@@ -17,25 +18,6 @@ import {
   StreamType,
   validateStreamName,
 } from 'src/lib/stream/streamName'
-
-const readyEventHandler = createEventHandler({
-  parseBody(body) {
-    const [streamName, inputType] = body
-    validateStreamName(streamName)
-    return { event: StreamEvent.Ready, streamName, inputType }
-  },
-  async tap(data) {
-    const { streamName } = data
-    const { streamPath } = parseStreamName(streamName)
-
-    await db.stream.create({
-      data: {
-        streamer: { connect: { streamPath } },
-        streamerLive: { connect: { streamPath } },
-      },
-    })
-  },
-})
 
 const closeEventHandler = createEventHandler({
   parseBody(body) {
@@ -137,10 +119,31 @@ const leaveEventHandler = createEventHandler({
   },
 })
 
+const readyEventHandler = createEventHandler({
+  parseBody(body) {
+    const [streamName, inputType] = body
+    validateStreamName(streamName)
+    return { event: StreamEvent.Ready, streamName, inputType }
+  },
+  async tap(data) {
+    const { streamName } = data
+    const { streamPath, recordingId } = parseStreamName(streamName)
+
+    await db.stream.create({
+      data: {
+        recordingId,
+        streamer: { connect: { streamPath } },
+        streamerLive: { connect: { streamPath } },
+      },
+    })
+  },
+})
+
 const pushAuthEventHandler = createEventHandler({
   parseBody(body) {
     const [pushUrl, hostname, streamKey] = body
     const fallbackStreamKey = pushUrl.split('/').pop()
+
     return {
       event: StreamEvent.PushAuth,
       pushUrl,
@@ -195,7 +198,47 @@ const pushAuthEventHandler = createEventHandler({
       )
     }
 
-    return createStreamName(StreamType.Live, streamPath, createId())
+    return createStreamName({
+      type: StreamType.Live,
+      streamPath,
+      recordingId: createId(),
+    })
+  },
+})
+
+function validateStreamState(state: string): asserts state is StreamState {
+  const validStates = Object.values(StreamState)
+  validate(state, {
+    inclusion: {
+      in: validStates,
+      message: `Invalid state. Must be one of ${validStates.join(', ')}`,
+    },
+  })
+}
+
+const streamStateEventHandler = createEventHandler({
+  parseBody(body) {
+    const [streamName, state, healthInfo] = body
+
+    validateStreamName(streamName)
+
+    const validState = state.toLowerCase()
+    validateStreamState(validState)
+
+    return {
+      event: StreamEvent.StateChange,
+      streamName,
+      state: validState,
+      healthInfo: healthInfo && JSON.parse(healthInfo),
+    }
+  },
+  async tap({ streamName, state }) {
+    const { recordingId } = parseStreamName(streamName)
+
+    await db.stream.update({
+      where: { recordingId },
+      data: { state },
+    })
   },
 })
 
@@ -215,6 +258,8 @@ const getHandlerForEvent = (event: StreamEvent) => {
       return leaveEventHandler
     case StreamEvent.PushAuth:
       return pushAuthEventHandler
+    case StreamEvent.StateChange:
+      return streamStateEventHandler
     default:
       throw new Error(`No handler for event ${event}`)
   }
@@ -280,15 +325,43 @@ export const createStreamKey: MutationResolvers['createStreamKey'] =
 export const readStream: QueryResolvers['readStream'] = async ({
   streamId,
 }) => {
-  const streamer = await db.streamer.findFirst({
-    where: { liveStreamId: streamId },
+  // We don't need that much security since this url is public or could be very easily
+  // We shall make authorizaton on media server trigger. See `viewEventHandler` function above
+
+  const stream = await db.stream.findUnique({
+    where: { id: streamId },
+    include: {
+      streamer: {
+        select: {
+          streamPath: true,
+          liveStreamId: true,
+        },
+      },
+    },
   })
 
-  validate(streamer, {
-    presence: { message: 'Streamer is not live' },
+  validate(stream, {
+    presence: {
+      message: 'Stream not found',
+    },
   })
+
+  const isLive =
+    stream.streamer.liveStreamId === streamId &&
+    stream.closedAt === null &&
+    stream.state !== StreamState.empty
+
+  const steramType = isLive ? StreamType.Live : StreamType.Recording
+
+  const streamName = createStreamName({
+    recordingId: stream.recordingId,
+    streamPath: stream.streamer.streamPath,
+    type: steramType,
+  })
+
+  const encodedName = encodeURIComponent(streamName)
 
   return {
-    streamUrl: `${process.env.MEDIA_SERVER_HTTPS_URL}/cmaf/${streamer.streamPath}/index.m3u8`,
+    streamUrl: `${process.env.MEDIA_SERVER_HTTPS_URL}/cmaf/${encodedName}/index.m3u8`,
   }
 }

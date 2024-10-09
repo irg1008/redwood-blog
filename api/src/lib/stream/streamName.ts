@@ -19,20 +19,40 @@ export function validateStreamName(
   })
 }
 
-export const parseStreamName = (streamName: StreamName) => {
+export function validateStreamType(
+  streamType: string
+): asserts streamType is StreamType {
+  validate(streamType, {
+    inclusion: {
+      in: Object.values(StreamType),
+      message: 'Invalid stream type',
+    },
+  })
+}
+
+type StreamNameParts = {
+  type: StreamType
+  streamPath: string
+  recordingId: string
+}
+
+export const parseStreamName = (streamName: StreamName): StreamNameParts => {
   const [type, wildcard] = streamName.split('+')
-  const [streamPath, uniqueId] = wildcard.split('_')
+  const [streamPath, recordingId] = wildcard.split('_')
+
+  validateStreamType(type)
+
   return {
     type,
     streamPath,
-    uniqueId,
+    recordingId,
   }
 }
 
-export const createStreamName = (
-  streamType: StreamType,
-  streamPath: string,
-  uniqueId: string
-): StreamName => {
-  return `${streamType}+${streamPath}_${uniqueId}`
+export const createStreamName = ({
+  streamPath,
+  type,
+  recordingId,
+}: StreamNameParts): StreamName => {
+  return `${type}+${streamPath}_${recordingId}`
 }

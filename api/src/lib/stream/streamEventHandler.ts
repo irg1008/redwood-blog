@@ -1,3 +1,5 @@
+import { StreamState } from '@prisma/client'
+
 import { validate } from '@redwoodjs/api'
 
 import { StreamName } from './streamName'
@@ -10,6 +12,7 @@ export enum StreamEvent {
   Boot = 'SYSTEM_START',
   View = 'USER_NEW',
   Leave = 'USER_END',
+  StateChange = 'STREAM_BUFFER',
 }
 
 type StreamEventData =
@@ -50,6 +53,12 @@ type StreamEventData =
       event: StreamEvent.Ready
       streamName: StreamName
       inputType: string
+    }
+  | {
+      event: StreamEvent.StateChange
+      streamName: StreamName
+      state: StreamState
+      healthInfo?: object
     }
 
 type StreamHandleResponse = {
