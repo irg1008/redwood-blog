@@ -69,7 +69,7 @@ export const Success = ({
       hls.loadSource(stream.streamUrl)
     })
 
-    hls.on(Hls.Events.MANIFEST_LOADED, () => {
+    hls.on(Hls.Events.MANIFEST_PARSED, () => {
       videoRef.current?.play()
       hls.levels.sort((a, b) => b.height - a.height)
       setQualities(hls.levels)
