@@ -62,10 +62,10 @@
     "d:build": "docker compose up -d --build"
   },
   "devDependencies": {
-    "@redwoodjs/auth-dbauth-setup": "8.3.0",
-    "@redwoodjs/core": "8.3.0",
-    "@redwoodjs/project-config": "8.3.0",
-    "@redwoodjs/realtime": "8.3.0",
+    "@redwoodjs/auth-dbauth-setup": "8.4.0",
+    "@redwoodjs/core": "8.4.0",
+    "@redwoodjs/project-config": "8.4.0",
+    "@redwoodjs/realtime": "8.4.0",
     "@redwoodjs/studio": "12.0.0",
     "prettier-plugin-tailwindcss": "0.6.8"
   },
