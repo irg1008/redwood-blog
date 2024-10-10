@@ -41,9 +41,7 @@ export const sendChatMessage = (
   return newChatMessage
 }
 
-export const chatMessages: QueryResolvers['chatMessages'] = async ({
-  streamId,
-}) => {
+export const chatMessages: QueryResolvers['chatMessages'] = ({ streamId }) => {
   verifyCanReadMessages()
   return chatWorker.retrieveMessagesFromBuffer(streamId)
 }
