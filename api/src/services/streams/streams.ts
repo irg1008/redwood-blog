@@ -351,12 +351,12 @@ export const readStream: QueryResolvers['readStream'] = async ({
     stream.closedAt === null &&
     stream.state !== StreamState.empty
 
-  const steramType = isLive ? StreamType.Live : StreamType.Recording
+  const streamType = isLive ? StreamType.Live : StreamType.Recording
 
   const streamName = createStreamName({
     recordingId: stream.recordingId,
     streamPath: stream.streamer.streamPath,
-    type: steramType,
+    type: streamType,
   })
 
   const encodedName = encodeURIComponent(streamName)
