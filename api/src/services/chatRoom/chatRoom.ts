@@ -7,7 +7,7 @@ import { ChatRoomChannel } from 'src/subscriptions/chatRoom/chatRoom'
 
 import { chatWorker } from './chatRoom.worker'
 
-export const verifyCanSendChatMessage = () => {
+export const verifyCanSendMessage = () => {
   requireAuth()
 
   // Maybe user needs to "like" the room before sending message
@@ -23,7 +23,7 @@ export const sendChatMessage = (
   { input }: { input: ChatMessage },
   { context: subContext }: { context: { pubSub: ChatRoomChannel } }
 ) => {
-  verifyCanSendChatMessage()
+  verifyCanSendMessage()
 
   const user = context.currentUser
   const newChatMessage: ChatMessage = {
