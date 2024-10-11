@@ -3,7 +3,7 @@ import { useRef } from 'react'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import { Button, Input } from '@nextui-org/react'
 import { SendIcon } from 'lucide-react'
-import { sendChatMessageSchema } from 'schemas/schemas'
+import { sendChatMessageSchema } from 'schemas'
 import type {
   ChatMessageInput,
   SendChatMessageMutation,

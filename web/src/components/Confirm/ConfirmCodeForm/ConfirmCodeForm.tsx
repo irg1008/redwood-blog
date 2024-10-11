@@ -1,7 +1,7 @@
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import { Button, Input, Tooltip } from '@nextui-org/react'
 import { ClipboardPasteIcon } from 'lucide-react'
-import { confirmCodeSchema } from 'schemas/schemas'
+import { confirmCodeSchema } from 'schemas'
 
 import { FieldError, Form, Submit, useForm } from '@redwoodjs/forms'
 

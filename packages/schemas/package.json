@@ -1,0 +1,41 @@
+{
+  "name": "schemas",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "dist/cjs/index.js",
+  "module": "dist/mjs/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "dev": "tsup --watch --silent --onSuccess \"echo Detected changes in database, rebuilding...\"",
+    "build": "tsup"
+  },
+  "tsup": {
+    "entry": [
+      "./*.ts"
+    ],
+    "dts": true,
+    "format": [
+      "cjs",
+      "esm"
+    ],
+    "sourceMap": true,
+    "clean": true,
+    "lagacyOutput": true
+  },
+  "dependencies": {
+    "valibot": "0.42.1"
+  },
+  "devDependencies": {
+    "tsup": "8.3.0",
+    "typescript": "5.6.3"
+  }
+}

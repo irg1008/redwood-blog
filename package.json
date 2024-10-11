@@ -4,7 +4,7 @@
     "packages": [
       "api",
       "web",
-      "schemas"
+      "packages/*"
     ]
   },
   "scripts": {
@@ -59,7 +59,9 @@
     "docker:set": "rw setup docker",
     "d:down": "docker compose down",
     "d:restart": "docker compose restart",
-    "d:build": "docker compose up -d --build"
+    "d:build": "docker compose up -d --build",
+    "packages": "yarn workspace schemas build",
+    "dev:packages": "yarn workspace schemas dev"
   },
   "devDependencies": {
     "@redwoodjs/auth-dbauth-setup": "8.4.0",

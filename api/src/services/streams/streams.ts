@@ -27,15 +27,13 @@ const closeEventHandler = createEventHandler({
   },
   async tap(data) {
     const { streamName } = data
-    const { streamPath } = parseStreamName(streamName)
+    const { recordingId } = parseStreamName(streamName)
 
-    await db.streamer.update({
-      where: { streamPath },
+    await db.stream.update({
+      where: { recordingId },
       data: {
-        liveStream: {
-          disconnect: true,
-          update: { closedAt: new Date() },
-        },
+        closedAt: new Date(),
+        streamerLive: { disconnect: true },
       },
     })
   },

@@ -6,7 +6,7 @@ export const standard = (/* vars, { ctx, req } */) => ({
     __typename: 'ChatMessage',
     body: `Message ${index + 1}`,
     createdAt: '2021-07-01T00:00:00.000Z',
-    id: index + 1,
+    id: `${index + 1}`,
     user: {
       __typename: 'ChatUser',
       email: `User ${(index % 5) + 1}`, // Cycle through 5 different users

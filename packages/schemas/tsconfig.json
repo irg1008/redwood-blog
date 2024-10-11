@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "noEmit": false,
+    "allowJs": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "declaration": true,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "outDir": "./dist",
+    "paths": {
+      "types/*": ["../../types/*", "../../web/types/*", "../../api/types/*"]
+    },
+    "typeRoots": ["../../node_modules/@types"],
+  },
+  "include": [
+    "*.ts",
+  ]
+}

@@ -1,5 +1,5 @@
 import { valibotResolver } from '@hookform/resolvers/valibot'
-import { createContactSchema } from 'schemas/schemas'
+import { createContactSchema } from 'schemas'
 import {
   CreateContactInput,
   CreateContactMutation,
