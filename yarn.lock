@@ -10701,7 +10701,6 @@ __metadata:
     jose: "npm:5.4.1"
     schemas: "workspace:*"
     set-cookie-parser: "npm:2.6.0"
-    workerpool: "npm:9.1.2"
   languageName: unknown
   linkType: soft
 
@@ -24127,13 +24126,6 @@ __metadata:
   version: 1.2.5
   resolution: "word-wrap@npm:1.2.5"
   checksum: 10c0/e0e4a1ca27599c92a6ca4c32260e8a92e8a44f4ef6ef93f803f8ed823f486e0889fc0b93be4db59c8d51b3064951d25e43d434e95dc8c960cc3a63d65d00ba20
-  languageName: node
-  linkType: hard
-
-"workerpool@npm:9.1.2":
-  version: 9.1.2
-  resolution: "workerpool@npm:9.1.2"
-  checksum: 10c0/3437bfc3e2e9e6ee6d328ec4a81a24fa1dc63f6b1f0400a265026283d4a48d5a7c1eafcae13ad7146d184b7dd7c090ef57abbbfdba52504ed6fd04e2f6cca27f
   languageName: node
   linkType: hard
 
