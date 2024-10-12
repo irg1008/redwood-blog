@@ -17,7 +17,7 @@ import Controller from 'src/components/UI/Controller/Controller'
 
 import { ChatMessagesCellProps } from '../ChatMessagesCell'
 
-type ChatFromData = Pick<ChatMessageInput, 'body'>
+type ChatFormData = Pick<ChatMessageInput, 'body'>
 
 export const SEND_CHAT_MESSAGE: TypedDocumentNode<
   SendChatMessageMutation,
@@ -36,7 +36,7 @@ const ChatInput = ({ streamId }: ChatMessagesCellProps) => {
     SendChatMessageMutationVariables
   >(SEND_CHAT_MESSAGE)
 
-  const formMethods = useForm<ChatFromData>({
+  const formMethods = useForm<ChatFormData>({
     mode: 'onTouched',
     defaultValues: {
       body: '',
@@ -46,7 +46,7 @@ const ChatInput = ({ streamId }: ChatMessagesCellProps) => {
 
   const inputRef = useRef<HTMLInputElement>(null)
 
-  const onMessageSent = async (data: ChatFromData) => {
+  const onMessageSent = async (data: ChatFormData) => {
     await sendChatMessage({
       variables: { input: { ...data, streamId } },
       onCompleted: () => {
@@ -57,7 +57,7 @@ const ChatInput = ({ streamId }: ChatMessagesCellProps) => {
   }
 
   return (
-    <Form<ChatFromData>
+    <Form<ChatFormData>
       formMethods={formMethods}
       error={error}
       onSubmit={onMessageSent}
