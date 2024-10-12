@@ -18,8 +18,7 @@
     "ioredis": "^5",
     "jose": "5.4.1",
     "schemas": "workspace:*",
-    "set-cookie-parser": "2.6.0",
-    "workerpool": "9.1.2"
+    "set-cookie-parser": "2.6.0"
   },
   "devDependencies": {
     "@redwoodjs/mailer-handler-in-memory": "8.4.0",

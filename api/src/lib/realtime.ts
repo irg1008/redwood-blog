@@ -1,11 +1,18 @@
+import { Redis, RedisOptions } from 'ioredis'
+
 import { RedwoodRealtimeOptions } from '@redwoodjs/realtime'
 
 import subscriptions from 'src/subscriptions/**/*.{js,ts}'
 
-// if using a Redis store
-// import { Redis } from 'ioredis'
-// const publishClient = new Redis()
-// const subscribeClient = new Redis()
+const redisOptions: RedisOptions = {
+  port: parseInt(process.env.REDIS_PORT),
+  password: process.env.REDIS_HOST_PASSWORD,
+}
+
+export const KV = new Redis(redisOptions)
+
+const publishClient = new Redis(redisOptions)
+const subscribeClient = new Redis(redisOptions)
 
 /**
  * Configure RedwoodJS Realtime
@@ -32,14 +39,12 @@ import subscriptions from 'src/subscriptions/**/*.{js,ts}'
 export const realtime: RedwoodRealtimeOptions = {
   subscriptions: {
     subscriptions,
-    store: 'in-memory',
-    // if using a Redis store
-    // store: { redis: { publishClient, subscribeClient } },
+    // store: 'in-memory',
+    store: { redis: { publishClient, subscribeClient } },
   },
   liveQueries: {
-    store: 'in-memory',
-    // if using a Redis store
-    // store: { redis: { publishClient, subscribeClient } },
+    // store: 'in-memory',
+    store: { redis: { publishClient, subscribeClient } },
   },
   // To enable defer and streaming, set to true.
   // enableDeferStream: true,

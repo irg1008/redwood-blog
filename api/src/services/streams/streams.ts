@@ -19,6 +19,11 @@ import {
   validateStreamName,
 } from 'src/lib/stream/streamName'
 
+import {
+  persistAndDeleteAllMessagesCache,
+  persistAndDeleteMessagesCache,
+} from '../chatRoom/chatRoom.cache'
+
 const closeEventHandler = createEventHandler({
   parseBody(body) {
     const [streamName] = body
@@ -29,13 +34,15 @@ const closeEventHandler = createEventHandler({
     const { streamName } = data
     const { recordingId } = parseStreamName(streamName)
 
-    await db.stream.update({
+    const stream = await db.stream.update({
       where: { recordingId },
       data: {
         closedAt: new Date(),
         streamerLive: { disconnect: true },
       },
     })
+
+    await persistAndDeleteMessagesCache(stream.id)
   },
 })
 
@@ -46,8 +53,11 @@ const shutdownEventHandler = createEventHandler({
   },
   async tap() {
     await db.streamer.updateMany({
+      where: { liveStream: { isNot: null } },
       data: { liveStreamId: null },
     })
+
+    await persistAndDeleteAllMessagesCache()
   },
 })
 

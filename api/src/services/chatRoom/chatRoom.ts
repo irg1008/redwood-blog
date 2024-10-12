@@ -1,11 +1,14 @@
-import { randomUUID } from 'crypto'
-
-import { ChatMessage, QueryResolvers } from 'types/graphql'
+import { createId } from '@paralleldrive/cuid2'
+import {
+  ChatMessage,
+  ChatMessageInput,
+  MutationsendChatMessageArgs,
+} from 'types/graphql'
 
 import { requireAuth } from 'src/lib/auth'
-import { ChatRoomChannel } from 'src/subscriptions/chatRoom/chatRoom'
+import { ChatRoomContext } from 'src/subscriptions/chatRoom/chatRoom'
 
-import { chatWorker } from './chatRoom.worker'
+import { getLastMessagesFromCache, saveMessagesToCache } from './chatRoom.cache'
 
 export const verifyCanSendMessage = () => {
   requireAuth()
@@ -19,29 +22,31 @@ export const verifyCanReadMessages = () => {
   // But maybe we restrict acess for logged in users only
 }
 
-export const sendChatMessage = (
-  { input }: { input: ChatMessage },
-  { context: subContext }: { context: { pubSub: ChatRoomChannel } }
+export const sendChatMessage = async (
+  { input }: MutationsendChatMessageArgs,
+  { context: { pubSub } }: { context: ChatRoomContext }
 ) => {
   verifyCanSendMessage()
 
   const user = context.currentUser
   const newChatMessage: ChatMessage = {
     ...input,
-    id: randomUUID(),
+    id: createId(),
     createdAt: new Date().toISOString(),
     userId: user.id,
     user,
   }
 
-  chatWorker.loadNewMessageToBuffer(newChatMessage)
+  // Send message to all subscribers
+  pubSub.publish('chatRoom', input.streamId, newChatMessage)
 
-  subContext.pubSub.publish('chatRoom', input.streamId, newChatMessage)
+  // Save message to KV store
+  await saveMessagesToCache(input.streamId, [newChatMessage])
 
   return newChatMessage
 }
 
-export const chatMessages: QueryResolvers['chatMessages'] = ({ streamId }) => {
+export const chatMessages = ({ streamId }: ChatMessageInput) => {
   verifyCanReadMessages()
-  return chatWorker.retrieveMessagesFromBuffer(streamId)
+  return getLastMessagesFromCache(streamId)
 }
