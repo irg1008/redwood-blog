@@ -5,6 +5,7 @@ import Hls, { Level } from 'hls.js'
 const AUTO_LEVEL = -1
 const AUTOPLAY = true
 const INITIAL_MUTED = true
+const MIN_MUXED_HEIGHT = 480
 
 export const useHls = (streamUrl: string) => {
   const videoRef = useRef<HTMLVideoElement>(null)
@@ -21,14 +22,15 @@ export const useHls = (streamUrl: string) => {
 
   const hlsRef = useRef(
     new Hls({
-      debug: true,
+      debug: false,
       enableWorker: true,
       lowLatencyMode: true,
       backBufferLength: 90,
+      maxBufferLength: 300,
       autoStartLoad: true,
       startLevel: 0,
       liveSyncDuration: -2000, // Delay. Negative value to squeeze the buffer
-      liveMaxLatencyDuration: 5_000, // Max delay until seek live
+      liveMaxLatencyDuration: 10_000, // Max delay until seek live
     })
   )
 
@@ -54,12 +56,23 @@ export const useHls = (streamUrl: string) => {
       hls.loadSource(streamUrl)
     })
 
-    hls.on(Hls.Events.MANIFEST_PARSED, () => {
+    hls.on(Hls.Events.MANIFEST_PARSED, (_e, data) => {
+      const hasOneVideoTrack = data.levels.length === 1
+
+      if (hasOneVideoTrack) {
+        const canBeMuxed = data.levels[0].height > MIN_MUXED_HEIGHT
+
+        // If we only have one track and can be muxed (rescaled down on quality), wait for remuxed tracks to come by.
+        if (canBeMuxed) {
+          hls.recoverMediaError()
+          return
+        }
+      }
+
       play()
 
       hls.levels.sort((a, b) => b.height - a.height)
-
-      setQualities(hls.levels)
+      setQualities(data.levels)
       setAutoEnabled(hls.autoLevelEnabled)
       setLatency(hls.latency)
     })
