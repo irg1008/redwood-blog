@@ -1,6 +1,10 @@
 import { createId } from '@paralleldrive/cuid2'
 import { StreamState } from '@prisma/client'
-import { MutationResolvers, QueryResolvers } from 'types/graphql'
+import {
+  MutationResolvers,
+  QueryResolvers,
+  StreamRelationResolvers,
+} from 'types/graphql'
 
 import { validate } from '@redwoodjs/api'
 import { hashPassword } from '@redwoodjs/auth-dbauth-api'
@@ -372,4 +376,13 @@ export const readStream: QueryResolvers['readStream'] = async ({
   return {
     streamUrl: `${process.env.MEDIA_SERVER_HTTPS_URL}/cmaf/${encodedName}/index.m3u8`,
   }
+}
+
+export const Stream: StreamRelationResolvers = {
+  streamer: (_obj, { root }) => {
+    return db.stream.findUnique({ where: { id: root?.id } }).streamer()
+  },
+  streamerLive: (_obj, { root }) => {
+    return db.stream.findUnique({ where: { id: root?.id } }).streamerLive()
+  },
 }

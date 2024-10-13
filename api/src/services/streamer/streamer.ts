@@ -12,4 +12,7 @@ export const Streamer: StreamerRelationResolvers = {
   user: (_obj, { root }) => {
     return db.streamer.findUnique({ where: { id: root?.id } }).user()
   },
+  liveStream: (_obj, { root }) => {
+    return db.streamer.findUnique({ where: { id: root?.id } }).liveStream()
+  },
 }
