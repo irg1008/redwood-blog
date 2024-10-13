@@ -214,5 +214,6 @@ export const useHls = (streamUrl: string) => {
     latency,
     playingDate: hlsRef.current.playingDate,
     muted,
+    isHlsSupported: Hls.isSupported(),
   }
 }
