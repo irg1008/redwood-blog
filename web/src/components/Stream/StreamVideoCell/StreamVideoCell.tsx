@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useRef } from 'react'
 
 import {
   Button,
@@ -7,8 +7,10 @@ import {
   DropdownMenu,
   DropdownTrigger,
   SelectItem,
+  Slider,
+  Spinner,
 } from '@nextui-org/react'
-import Hls, { Level } from 'hls.js'
+import Hls from 'hls.js'
 import type { ReadStreamQuery, ReadStreamQueryVariables } from 'types/graphql'
 
 import {
@@ -17,13 +19,7 @@ import {
   type TypedDocumentNode,
 } from '@redwoodjs/web'
 
-const hls = new Hls({
-  debug: false,
-  enableWorker: true,
-  lowLatencyMode: true,
-})
-
-const AUTO_LEVEL = -1
+import { useHls } from 'src/hooks/useHls'
 
 export const QUERY: TypedDocumentNode<
   ReadStreamQuery,
@@ -49,68 +45,76 @@ export const Failure = ({
 export const Success = ({
   stream,
 }: CellSuccessProps<ReadStreamQuery, ReadStreamQueryVariables>) => {
-  const videoRef = useRef<HTMLVideoElement>(null)
+  const {
+    autoEnabled,
+    autoLevel,
+    currentQuality,
+    qualities,
+    videoRef,
+    selectedLevel,
+    currentSpeed,
+    loading,
+    play,
+    pause,
+    paused,
+    changePlaybackSpeed,
+    seekLive,
+    setSelectedLevel,
+    volume,
+    mute,
+    unmute,
+    changeVolume,
+    toggleFullscreen,
+    togglePictureInPicture,
+    muted,
+    latency,
+  } = useHls(stream.streamUrl)
 
-  const [qualities, setQualities] = useState<Level[]>([])
-  const [currentQuality, setCurrentQuality] = useState<Level>()
-  const [autoEnabled, setAutoEnabled] = useState(true)
-
-  useEffect(() => {
-    if (!videoRef.current) return
-
-    if (!Hls.isSupported()) {
-      videoRef.current.src = stream.streamUrl
-      return
-    }
-
-    hls.attachMedia(videoRef.current)
-
-    hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-      hls.loadSource(stream.streamUrl)
-    })
-
-    hls.on(Hls.Events.MANIFEST_PARSED, () => {
-      videoRef.current?.play()
-      hls.levels.sort((a, b) => b.height - a.height)
-      setQualities(hls.levels)
-      setAutoEnabled(hls.autoLevelEnabled)
-    })
-
-    hls.on(Hls.Events.LEVEL_SWITCHED, (_event, data) => {
-      setCurrentQuality(hls.levels[data.level])
-      seekLive()
-    })
-
-    hls.on(Hls.Events.ERROR, (_event, err) => {
-      console.error(err)
-    })
-  }, [stream.streamUrl])
-
-  const seekLive = () => {
-    if (videoRef.current && hls.liveSyncPosition) {
-      videoRef.current.currentTime = hls.liveSyncPosition
-    }
-  }
+  const containerRef = useRef<HTMLHeadingElement>(null)
 
   return (
     <>
-      <div className="flex w-full flex-col">
-        <header className="flex h-full w-full">
-          <video
-            autoPlay
-            playsInline
-            muted
-            ref={videoRef}
-            controls={false}
-            className="mx-auto w-full"
-          >
+      <div className="flex w-full flex-col" ref={containerRef}>
+        <header className="relative flex h-full w-full">
+          {loading && (
+            <span className="absolute grid size-full place-content-center">
+              <Spinner size="lg" />
+            </span>
+          )}
+
+          <video ref={videoRef} className="mx-auto w-full">
             <track kind="captions" />
           </video>
         </header>
-
+        Latency: {latency}
+        <Button onClick={togglePictureInPicture}>
+          Toggle Picture in Picture
+        </Button>
+        <Button onClick={() => toggleFullscreen(containerRef)}>
+          Toggle Fullscreen
+        </Button>
+        Volume: {volume}
+        <Slider
+          aria-label="Volume"
+          minValue={0}
+          maxValue={1}
+          step={0.01}
+          size="lg"
+          color="success"
+          value={volume}
+          onChange={(value) => {
+            if (typeof value === 'number') changeVolume(value)
+          }}
+        />
+        <Button onClick={muted ? unmute : mute}>
+          {muted ? 'Unmute' : 'Mute'}
+        </Button>
+        <Button onClick={paused ? play : pause}>
+          {paused ? 'Play' : 'Pause'}
+        </Button>
         <Dropdown>
           <DropdownTrigger>
-            <Button variant="bordered" className="capitalize">
+            <Button variant="bordered">
               Resolución {currentQuality && `(${currentQuality.height}p)`}
             </Button>
           </DropdownTrigger>
@@ -119,27 +123,47 @@ export const Success = ({
             variant="flat"
             disallowEmptySelection
             selectionMode="single"
-            selectedKeys={[
-              autoEnabled ? AUTO_LEVEL.toString() : hls.currentLevel.toString(),
-            ]}
+            selectedKeys={[selectedLevel.toString()]}
             onSelectionChange={(keys) => {
               const newLevel = parseInt(Array.from(keys)[0].toString())
-              hls.currentLevel = newLevel
-              setAutoEnabled(hls.autoLevelEnabled)
+              setSelectedLevel(newLevel)
             }}
           >
             {[
-              <DropdownItem key={AUTO_LEVEL}>
+              <DropdownItem key={autoLevel}>
                 Auto{' '}
                 {autoEnabled && currentQuality && `(${currentQuality.height}p)`}
               </DropdownItem>,
               ...qualities.map((quality, i) => (
-                <SelectItem key={i}>{quality.height}p</SelectItem>
+                <SelectItem key={i}>
+                  {quality.height}p {i === 0 ? '(Original)' : ''}
+                </SelectItem>
               )),
             ]}
           </DropdownMenu>
         </Dropdown>
-
+        <Dropdown>
+          <DropdownTrigger>
+            <Button variant="bordered">
+              Velocidad de reproducción {currentSpeed}x
+            </Button>
+          </DropdownTrigger>
+          <DropdownMenu
+            aria-label="Playback speed selection"
+            variant="flat"
+            disallowEmptySelection
+            selectionMode="single"
+            selectedKeys={[currentSpeed.toString()]}
+            onSelectionChange={(keys) => {
+              const newSpeed = parseFloat(Array.from(keys)[0].toString())
+              changePlaybackSpeed(newSpeed)
+            }}
+          >
+            {[0.25, 0.5, 1, 1.5, 2].map((speed) => (
+              <DropdownItem key={speed}>{speed}x</DropdownItem>
+            ))}
+          </DropdownMenu>
+        </Dropdown>
         {Hls.isSupported() && <Button onClick={seekLive}>Seek live</Button>}
       </div>
     </>
