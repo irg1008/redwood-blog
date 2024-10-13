@@ -8,7 +8,15 @@ import Stream from './Stream'
 describe('Stream', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<Stream streamId={0} />)
+      render(
+        <Stream
+          stream={{
+            createdAt: '2022-02-02T02:02:02Z',
+            id: 1,
+            recordingId: '',
+          }}
+        />
+      )
     }).not.toThrow()
   })
 })
