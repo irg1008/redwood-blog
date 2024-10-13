@@ -9,7 +9,7 @@ import {
   type TypedDocumentNode,
 } from '@redwoodjs/web'
 
-import Stream from '../Stream/Stream/Stream'
+import Streamer from '../Streamer/Streamer'
 
 export const QUERY: TypedDocumentNode<
   FindStreamerQuery,
@@ -19,8 +19,16 @@ export const QUERY: TypedDocumentNode<
     streamer(id: $id) {
       id
       liveStreamId
+      liveStream {
+        id
+        createdAt
+        closedAt
+        recordingId
+      }
       streamPath
+      userId
       user {
+        id
         email
       }
     }
@@ -40,10 +48,5 @@ export const Failure = ({
 export const Success = ({
   streamer,
 }: CellSuccessProps<FindStreamerQuery, FindStreamerQueryVariables>) => {
-  return (
-    <div>
-      Streamer {streamer.user.email}
-      {streamer.liveStreamId && <Stream streamId={streamer.liveStreamId} />}
-    </div>
-  )
+  return <Streamer streamer={streamer} />
 }

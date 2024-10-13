@@ -1,6 +1,6 @@
 import { Metadata } from '@redwoodjs/web'
 
-import StreamerCell from 'src/components/StreamerCell'
+import StreamerCell from 'src/components/Streamer/StreamerCell'
 
 const ChatPage = ({ streamerId }: { streamerId: number }) => {
   return (
