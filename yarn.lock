@@ -2687,7 +2687,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/reply-from@npm:^9.0.0":
+"@fastify/reply-from@npm:9.8.0, @fastify/reply-from@npm:^9.0.0":
   version: 9.8.0
   resolution: "@fastify/reply-from@npm:9.8.0"
   dependencies:
@@ -10690,6 +10690,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "api@workspace:api"
   dependencies:
+    "@fastify/reply-from": "npm:9.8.0"
     "@paralleldrive/cuid2": "npm:2.2.2"
     "@react-email/components": "npm:0.0.25"
     "@redwoodjs/api": "npm:8.4.0"

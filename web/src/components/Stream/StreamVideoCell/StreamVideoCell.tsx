@@ -32,5 +32,6 @@ export const Failure = ({
 export const Success = ({
   stream,
 }: CellSuccessProps<ReadStreamQuery, ReadStreamQueryVariables>) => {
-  return <StreamVideo streamUrl={stream.streamUrl} />
+  return <StreamVideo streamUrl={'/api/live/1'} />
+  // return <StreamVideo streamUrl={stream.streamUrl} />
 }
