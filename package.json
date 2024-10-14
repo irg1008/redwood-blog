@@ -73,7 +73,10 @@
   },
   "eslintConfig": {
     "extends": "@redwoodjs/eslint-config",
-    "root": true
+    "root": true,
+    "rules": {
+      "@typescript-eslint/no-unused-expressions": "off"
+    }
   },
   "engines": {
     "node": "=20.x"

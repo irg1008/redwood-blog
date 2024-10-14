@@ -27,3 +27,4 @@ coverage
 .hintrc
 certs
 dump
+debug.log

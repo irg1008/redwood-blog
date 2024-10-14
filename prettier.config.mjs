@@ -7,6 +7,7 @@ export default {
   semi: false,
   singleQuote: true,
   arrowParens: 'always',
+  endOfLine: 'auto',
   overrides: [
     {
       files: 'Routes.*',
