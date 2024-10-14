@@ -1,38 +1,104 @@
-import { RefObject, useEffect, useRef, useState } from 'react'
+import { RefObject, useEffect, useRef } from 'react'
 
-import Hls, { Level } from 'hls.js'
+import Hls, { HlsConfig, Level } from 'hls.js'
+import { clearInterval, setInterval } from 'worker-timers'
+import { create } from 'zustand'
 
 const AUTO_LEVEL = -1
 const AUTOPLAY = true
 const INITIAL_MUTED = true
+const INITIAL_VOLUME = INITIAL_MUTED ? 0 : 1
 const MIN_MUXED_HEIGHT = 480
+
+const hlsConfig: Partial<HlsConfig> = {
+  debug: false,
+  enableWorker: true,
+  lowLatencyMode: true,
+  backBufferLength: 90,
+  maxBufferLength: 300,
+  autoStartLoad: true,
+  startLevel: 0, // Highest quality
+  liveSyncDuration: -2000, // Delay. Negative value to squeeze the buffer
+  liveMaxLatencyDuration: 10_000, // Max delay until seek live
+}
+
+type HlsState = {
+  qualities: Level[]
+  currentQuality?: Level
+  autoEnabled: boolean
+  currentSpeed: number
+  loading: boolean
+  paused: boolean
+  volume: number
+  muted: boolean
+  latency: number
+  fullscreen: boolean
+  pictureInPicture: boolean
+  setQualities: (qualities: Level[]) => void
+  setCurrentQuality: (quality: Level) => void
+  setAutoEnabled: (enabled: boolean) => void
+  setCurrentSpeed: (speed: number) => void
+  setLoading: (loading: boolean) => void
+  setPaused: (paused: boolean) => void
+  setVolume: (volume: number) => void
+  setMuted: (muted: boolean) => void
+  setLatency: (latency: number) => void
+  setFullscreen: (fullscreen: boolean) => void
+  setPictureInPicture: (pictureInPicture: boolean) => void
+}
+
+const useHlsStore = create<HlsState>((set) => ({
+  qualities: [],
+  autoEnabled: true,
+  currentSpeed: 1,
+  loading: true,
+  paused: !AUTOPLAY,
+  volume: INITIAL_VOLUME,
+  muted: INITIAL_MUTED,
+  latency: 0,
+  fullscreen: false,
+  pictureInPicture: false,
+  setQualities: (qualities) => set({ qualities }),
+  setAutoEnabled: (autoEnabled) => set({ autoEnabled }),
+  setCurrentQuality: (currentQuality) => set({ currentQuality }),
+  setCurrentSpeed: (currentSpeed) => set({ currentSpeed }),
+  setLoading: (loading) => set({ loading }),
+  setPaused: (paused) => set({ paused }),
+  setVolume: (volume) => set({ volume, muted: volume === 0 }),
+  setMuted: (muted) => set({ muted }),
+  setLatency: (latency) => set({ latency }),
+  setFullscreen: (fullscreen) => set({ fullscreen }),
+  setPictureInPicture: (pictureInPicture) => set({ pictureInPicture }),
+}))
 
 export const useHls = (streamUrl: string) => {
   const videoRef = useRef<HTMLVideoElement>(null)
+  const hlsRef = useRef(new Hls(hlsConfig))
 
-  const [qualities, setQualities] = useState<Level[]>([])
-  const [currentQuality, setCurrentQuality] = useState<Level>()
-  const [autoEnabled, setAutoEnabled] = useState(true)
-  const [currentSpeed, setCurrentSpeed] = useState(1)
-  const [loading, setLoading] = useState(true)
-  const [paused, setPaused] = useState(!AUTOPLAY)
-  const [volume, setVolume] = useState(1)
-  const [muted, setMuted] = useState(INITIAL_MUTED)
-  const [latency, setLatency] = useState(0)
-
-  const hlsRef = useRef(
-    new Hls({
-      debug: false,
-      enableWorker: true,
-      lowLatencyMode: true,
-      backBufferLength: 90,
-      maxBufferLength: 300,
-      autoStartLoad: true,
-      startLevel: 0,
-      liveSyncDuration: -2000, // Delay. Negative value to squeeze the buffer
-      liveMaxLatencyDuration: 10_000, // Max delay until seek live
-    })
-  )
+  const {
+    qualities,
+    currentQuality,
+    autoEnabled,
+    currentSpeed,
+    paused,
+    volume,
+    latency,
+    muted,
+    loading,
+    fullscreen,
+    pictureInPicture,
+    setQualities,
+    setAutoEnabled,
+    setLatency,
+    setCurrentQuality,
+    setPaused,
+    setLoading,
+    setCurrentSpeed,
+    setMuted,
+    setVolume,
+    setFullscreen,
+    setPictureInPicture,
+  } = useHlsStore()
 
   useEffect(() => {
     if (!videoRef.current) return
@@ -44,6 +110,7 @@ export const useHls = (streamUrl: string) => {
     video.playsInline = true
     video.muted = INITIAL_MUTED
     video.autoplay = AUTOPLAY
+    video.volume = INITIAL_VOLUME
 
     if (!Hls.isSupported()) {
       videoRef.current.src = streamUrl
@@ -120,6 +187,14 @@ export const useHls = (streamUrl: string) => {
       setPaused(true)
     })
 
+    video.addEventListener('leavepictureinpicture', () => {
+      setPictureInPicture(false)
+    })
+
+    video.addEventListener('enterpictureinpicture', () => {
+      setPictureInPicture(true)
+    })
+
     const latencyUpdater = setInterval(() => {
       setLatency(hls.latency)
     }, 1000)
@@ -128,26 +203,41 @@ export const useHls = (streamUrl: string) => {
       hls.destroy()
       clearInterval(latencyUpdater)
     }
-  }, [streamUrl])
+  }, [
+    streamUrl,
+    setQualities,
+    setAutoEnabled,
+    setLatency,
+    setCurrentQuality,
+    setPaused,
+    setLoading,
+    setFullscreen,
+    setMuted,
+    setVolume,
+    setPictureInPicture,
+  ])
 
   const seekLive = () => {
     const livePosition = hlsRef.current.liveSyncPosition
-    if (!livePosition || !videoRef.current) return
+    const video = videoRef.current
+    if (!livePosition || !video) return
 
-    videoRef.current.currentTime = livePosition
+    video.currentTime = livePosition
   }
 
   const setSelectedLevel = (level: number) => {
     const hls = hlsRef.current
+
     hls.currentLevel = level
     setAutoEnabled(hls.autoLevelEnabled)
   }
 
   const changePlaybackSpeed = (speed: number) => {
-    if (videoRef.current) {
-      videoRef.current.playbackRate = speed
-      setCurrentSpeed(speed)
-    }
+    const video = videoRef.current
+    if (!video) return
+
+    video.playbackRate = speed
+    setCurrentSpeed(speed)
   }
 
   const play = () => {
@@ -156,6 +246,10 @@ export const useHls = (streamUrl: string) => {
 
   const pause = () => {
     videoRef.current?.pause()
+  }
+
+  const togglePlay = () => {
+    return paused ? play() : pause()
   }
 
   const togglePictureInPicture = () => {
@@ -168,38 +262,48 @@ export const useHls = (streamUrl: string) => {
 
   const toggleFullscreen = <E extends HTMLElement>(altRef?: RefObject<E>) => {
     const ref = altRef ?? videoRef
-    if (ref.current) {
-      if (document.fullscreenElement) {
-        document.exitFullscreen()
-      } else {
-        ref.current.requestFullscreen()
-      }
+    if (!ref.current) return
+
+    if (document.fullscreenElement) {
+      document.exitFullscreen()
+      setFullscreen(false)
+    } else {
+      ref.current.requestFullscreen()
+      setFullscreen(true)
     }
   }
 
   const mute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = true
-      setMuted(true)
-    }
+    const video = videoRef.current
+    if (!video) return
+
+    video.muted = true
+    setMuted(true)
   }
 
   const unmute = () => {
-    if (videoRef.current) {
-      videoRef.current.muted = false
-      setMuted(false)
+    const video = videoRef.current
+    if (!video) return
+
+    video.muted = false
+    setMuted(false)
+
+    if (volume === 0) {
+      changeVolume(0.2)
     }
   }
 
-  const changeVolume = (volume: number) => {
-    if (videoRef.current) {
-      videoRef.current.volume = volume
-      setVolume(volume)
+  const toggleMute = () => {
+    return muted ? unmute() : mute()
+  }
 
-      if (volume === 0) {
-        setMuted(true)
-      }
-    }
+  const changeVolume = (volume: number) => {
+    const video = videoRef.current
+    if (!video) return
+
+    video.muted = volume === 0
+    video.volume = volume
+    setVolume(volume)
   }
 
   return {
@@ -209,24 +313,28 @@ export const useHls = (streamUrl: string) => {
     videoRef,
     qualities,
     currentQuality,
-    setAutoEnabled,
-    seekLive,
-    setSelectedLevel,
-    changePlaybackSpeed,
     currentSpeed,
     loading,
-    play,
-    pause,
     paused,
-    togglePictureInPicture,
-    toggleFullscreen,
-    mute,
-    unmute,
     volume,
-    changeVolume,
     latency,
     playingDate: hlsRef.current.playingDate,
     muted,
     isHlsSupported: Hls.isSupported(),
+    fullscreen,
+    pictureInPicture,
+    setAutoEnabled,
+    seekLive,
+    setSelectedLevel,
+    changePlaybackSpeed,
+    play,
+    pause,
+    togglePlay,
+    toggleMute,
+    togglePictureInPicture,
+    toggleFullscreen,
+    mute,
+    unmute,
+    changeVolume,
   }
 }
