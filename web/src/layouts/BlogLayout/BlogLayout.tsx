@@ -21,7 +21,7 @@ const BlogLayout = ({ children }: BlogLayoutProps) => {
   const { isAuthenticated, currentUser, logOut, hasRole } = useAuth()
 
   return (
-    <main className="flex min-h-dvh flex-col bg-background text-foreground dark">
+    <main className="flex min-h-dvh flex-col">
       <Toaster toastOptions={{ position: 'bottom-center', duration: 5000 }} />
 
       <Navbar isBordered className="h-16">
