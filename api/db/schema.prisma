@@ -103,6 +103,8 @@ model Stream {
   streamerLive   Streamer?       @relation("LiveStream")
   streamerId     Int
   state          StreamState?
+  currentViewers Int             @default(0)
+  totalViews     Int             @default(0)
   createdAt      DateTime        @default(now())
   closedAt       DateTime?
 
