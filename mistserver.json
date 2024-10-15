@@ -109,17 +109,24 @@
         "connector": "WAV"
       },
       {
+        "bindhost": "0.0.0.0",
         "connector": "WebRTC",
         "jitterlog": false,
         "mergesessions": false,
-        "nackdisable": false,
+        "nackdisable": true,
         "packetlog": false
+      },
+      {
+        "cert": "/certs/server.crt",
+        "connector": "HTTPS",
+        "key": "/certs/server.key",
+        "pubaddr": []
       }
     ],
     "serverid": null,
     "sessionInputMode": 15,
     "sessionOutputMode": 15,
-    "sessionStreamInfoMode": 1,
+    "sessionStreamInfoMode": "1",
     "sessionUnspecifiedMode": 0,
     "sessionViewerMode": 14,
     "tknMode": 15,
@@ -131,34 +138,30 @@
           "sync": true
         }
       ],
-      "STREAM_ADD": [
+      "STREAM_BUFFER": [
         {
           "handler": "/scripts/on-stream-event.sh",
-          "streams": [],
-          "sync": true
+          "streams": [
+            "live"
+          ],
+          "sync": false
         }
       ],
-      "STREAM_END": [],
-      "STREAM_LOAD": [],
       "STREAM_READY": [
         {
           "handler": "/scripts/on-stream-event.sh",
-          "streams": [],
+          "streams": [
+            "live"
+          ],
           "sync": true
-        }
-      ],
-      "STREAM_REMOVE": [
-        {
-          "default": "true",
-          "handler": "/scripts/on-stream-event.sh",
-          "streams": [],
-          "sync": false
         }
       ],
       "STREAM_UNLOAD": [
         {
           "handler": "/scripts/on-stream-event.sh",
-          "streams": [],
+          "streams": [
+            "live"
+          ],
           "sync": true
         }
       ],
@@ -201,8 +204,9 @@
     "wait": 3
   },
   "streams": {
-    "stream": {
-      "name": "default_stream",
+    "live": {
+      "debug": 3,
+      "name": "live",
       "processes": [
         {
           "codec": "H264",
@@ -213,8 +217,9 @@
           "process": "FFMPEG",
           "resolution": "1920x1080",
           "restart_type": "fixed",
+          "source_track": ">1920x1080",
           "sources": [],
-          "track_inhibit": "video=1080p",
+          "track_inhibit": "video=1920x1080",
           "x-LSP-kind": "video",
           "x-LSP-name": "1080p"
         },
@@ -227,14 +232,14 @@
           "process": "FFMPEG",
           "resolution": "1280x720",
           "restart_type": "fixed",
+          "source_track": ">1280x720",
           "sources": [],
-          "track_inhibit": "video=720p",
+          "track_inhibit": "video=1280x720",
           "x-LSP-kind": "video",
           "x-LSP-name": "720p"
         },
         {
           "codec": "H264",
-          "crf": 25,
           "exit_unmask": false,
           "flags": "-s:v 854x480",
           "inconsequential": false,
@@ -242,14 +247,27 @@
           "process": "FFMPEG",
           "resolution": "854x480",
           "restart_type": "fixed",
+          "source_track": ">854x480",
           "sources": [],
-          "track_inhibit": "video=480p",
+          "track_inhibit": "video=854x480",
           "x-LSP-kind": "video",
-          "x-LSP-name": "480p",
-          "x-LSP-rate_or_crf": "crf"
+          "x-LSP-name": "480p"
+        },
+        {
+          "exec": "ffmpeg -i - -an -c:v mjpeg -r 0.5 -f matroska -",
+          "exit_unmask": false,
+          "inconsequential": false,
+          "process": "MKVExec",
+          "restart_type": "fixed",
+          "x-LSP-name": "Thumbnail"
         }
       ],
-      "resume": "0",
+      "source": "push://",
+      "stop_sessions": false
+    },
+    "recording": {
+      "name": "recording",
+      "processes": [],
       "source": "push://",
       "stop_sessions": false
     }
