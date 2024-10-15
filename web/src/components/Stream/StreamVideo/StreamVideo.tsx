@@ -11,6 +11,7 @@ import {
   Slider,
   Spinner,
 } from '@nextui-org/react'
+import { motion } from 'framer-motion'
 import {
   ArrowLeft,
   FastForwardIcon,
@@ -57,7 +58,7 @@ const StreamVideo = ({ streamUrl }: SteramVideoProps) => {
     switch (currentMenu) {
       case 'base': {
         return (
-          <DropdownMenu aria-label="Settings" variant="flat">
+          <DropdownMenu key="base" aria-label="Settings" variant="flat">
             <DropdownSection showDivider>
               <DropdownItem
                 startContent={<XIcon className={menuIconClasses} />}
@@ -116,6 +117,7 @@ const StreamVideo = ({ streamUrl }: SteramVideoProps) => {
       case 'qualities': {
         return (
           <DropdownMenu
+            key="qualities"
             aria-label="Qualities"
             variant="flat"
             disallowEmptySelection
@@ -159,6 +161,7 @@ const StreamVideo = ({ streamUrl }: SteramVideoProps) => {
       case 'playRate': {
         return (
           <DropdownMenu
+            key="playRate"
             aria-label="Playback rate"
             variant="flat"
             disallowEmptySelection
@@ -191,7 +194,12 @@ const StreamVideo = ({ streamUrl }: SteramVideoProps) => {
 
       case 'stats': {
         return (
-          <DropdownMenu aria-label="Stats" variant="flat">
+          <DropdownMenu
+            as={motion.ul}
+            key="stats"
+            aria-label="Stats"
+            variant="flat"
+          >
             <DropdownSection showDivider>
               <DropdownItem
                 onClick={() => setCurrentMenu('base')}
