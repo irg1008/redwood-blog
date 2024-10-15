@@ -32,6 +32,7 @@ type StreamEventData =
       connector: string
       requestUrl: string
       sessionId: string
+      jwt?: string
     }
   | {
       event: StreamEvent.Leave
@@ -86,7 +87,7 @@ const defaultDataValidator: HandlerOptions['validateData'] = (data) => {
   })
 }
 
-const defaultHandler = () => true
+const defaultHandler = (): boolean | Promise<boolean> => true
 
 export const createEventHandler =
   <D extends StreamEventData = StreamEventData>(options: HandlerOptions<D>) =>
