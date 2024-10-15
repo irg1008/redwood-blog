@@ -1,5 +1,6 @@
 declare namespace NodeJS {
   interface ProcessEnv {
+    NODE_ENV: 'development' | 'production' | 'test'
     SESSION_SECRET: string
     DATABASE_URL: string
     TEST_DATABASE_URL: string
