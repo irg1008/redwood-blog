@@ -15,6 +15,7 @@ export const QUERY: TypedDocumentNode<
   query ReadStreamQuery($streamId: Int!) {
     stream: readStream(streamId: $streamId) {
       streamUrl
+      thumbnailUrl
     }
   }
 `
@@ -32,5 +33,10 @@ export const Failure = ({
 export const Success = ({
   stream,
 }: CellSuccessProps<ReadStreamQuery, ReadStreamQueryVariables>) => {
-  return <StreamVideo streamUrl={stream.streamUrl} />
+  return (
+    <StreamVideo
+      streamUrl={stream.streamUrl}
+      thumbnailUrl={stream.thumbnailUrl}
+    />
+  )
 }

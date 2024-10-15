@@ -11,7 +11,7 @@ export type StreamComponentProps = {
 const StreamComponent = ({ stream }: { stream: StreamerlessStream }) => {
   return (
     <>
-      <div className="flex max-h-[85dvh] pe-80">
+      <div className="flex max-h-[80dvh] pe-80">
         <StreamVideoCell streamId={stream.id} />
       </div>
 
