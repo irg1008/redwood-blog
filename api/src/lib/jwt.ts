@@ -26,8 +26,8 @@ export const privateKey = async () => {
   return await importPKCS8(process.env.JWT_PRIVATE_KEY, ALG)
 }
 
-export const signJwt = async (
-  payload: JWTPayload,
+export const signJwt = async <T>(
+  payload: T & JWTPayload,
   signCb?: (sign: SignJWT) => void
 ) => {
   const key = await privateKey()
@@ -36,14 +36,14 @@ export const signJwt = async (
   return sign.setProtectedHeader({ alg: ALG, kid: KID }).setIssuedAt().sign(key)
 }
 
-export const verifyJwt = async (token: string) => {
+export const verifyJwt = async <T>(token: string) => {
   const key = await privateKey()
-  return jwtVerify(token, key)
+  return jwtVerify<T>(token, key)
 }
 
-export const publicVerifyJwt = async (token: string) => {
+export const publicVerifyJwt = async <T>(token: string) => {
   const jwks = createLocalJWKSet(mediaJWKS)
-  return jwtVerify(token, jwks)
+  return jwtVerify<T>(token, jwks)
 }
 
 const mediaJWK: JWK = {
