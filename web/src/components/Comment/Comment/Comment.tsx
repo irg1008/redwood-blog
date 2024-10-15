@@ -8,7 +8,6 @@ import { useMutation } from '@redwoodjs/web'
 
 import { useAuth } from 'src/auth'
 import { QUERY as CommentsQuery } from 'src/components/Comment/CommentsCell/CommentsCell'
-import { formatDate } from 'src/lib/formatters'
 
 const DELETE_COMMENT = gql`
   mutation DeleteCommentMutation($id: Int!) {
@@ -48,7 +47,7 @@ const Comment = ({ comment }: CommentProps) => {
       <header className="flex justify-between">
         <h2 className="font-semibold text-gray-700">{comment.name}</h2>
         <time className="text-xs text-gray-500" dateTime={comment.createdAt}>
-          {formatDate(comment.createdAt)}
+          {comment.createdAt}
         </time>
       </header>
       <p className="mt-2 text-sm">{comment.body}</p>
