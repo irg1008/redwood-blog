@@ -263,7 +263,8 @@ const StreamVideo = ({ streamUrl }: SteramVideoProps) => {
           <footer
             className={cn(
               'absolute bottom-0 left-0 flex min-h-5 w-full translate-y-full items-center justify-between bg-gradient-to-b from-transparent via-background/70 to-background/80 px-2 py-1 transition-transform group-hover/player:translate-y-0',
-              settingsOpened && 'translate-y-0'
+              settingsOpened && 'translate-y-0',
+              hls.loading && 'pointer-events-none'
             )}
           >
             <div className="flex items-center">
