@@ -195,6 +195,10 @@ export const useHls = (streamUrl: string) => {
       setPictureInPicture(true)
     })
 
+    document.addEventListener('fullscreenchange', () => {
+      setFullscreen(!!document.fullscreenElement)
+    })
+
     const latencyUpdater = setInterval(() => {
       setLatency(hls.latency)
     }, 1000)
@@ -266,10 +270,8 @@ export const useHls = (streamUrl: string) => {
 
     if (document.fullscreenElement) {
       document.exitFullscreen()
-      setFullscreen(false)
     } else {
       ref.current.requestFullscreen()
-      setFullscreen(true)
     }
   }
 
