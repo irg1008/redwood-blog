@@ -1,9 +1,10 @@
 import { createId } from '@paralleldrive/cuid2'
-import { StreamState } from '@prisma/client'
+import { Stream as DBStream, StreamState } from '@prisma/client'
 import {
   MutationResolvers,
   QueryResolvers,
   StreamRelationResolvers,
+  User,
 } from 'types/graphql'
 
 import { validate } from '@redwoodjs/api'
@@ -12,6 +13,7 @@ import { ForbiddenError, UserInputError } from '@redwoodjs/graphql-server'
 
 import { requireAuth } from 'src/lib/auth'
 import { db } from 'src/lib/db'
+import { signJwt, verifyJwt } from 'src/lib/jwt'
 import {
   createEventHandler,
   StreamEvent,
@@ -85,6 +87,9 @@ const viewEventHandler = createEventHandler({
 
     validateStreamName(streamName)
 
+    const url = new URL(requestUrl)
+    const jwt = url.searchParams.get('jwt')
+
     return {
       event: StreamEvent.View,
       streamName,
@@ -93,15 +98,35 @@ const viewEventHandler = createEventHandler({
       connector,
       requestUrl,
       sessionId,
+      jwt,
     }
   },
-  // TODO: Check other rules for user access:
-  // - user must be logged
-  // - user must be sub
-  // - user must follow for x days
-  // - user is not banned
-  // - user is not timed out
-  // - etc, depending the stream they want to see
+  async handle(data) {
+    const { jwt, streamName, connectionAddress } = data
+    if (!jwt) throw new ForbiddenError('JWT is required')
+
+    const { payload } = await verifyJwt<{ userId: number; ip: string }>(jwt)
+    validateIpAddress(payload.ip, connectionAddress)
+
+    const { recordingId } = parseStreamName(streamName)
+    validateUserCanViewStream(recordingId, payload.userId)
+
+    return true
+  },
+  async tap(data) {
+    const { streamName } = data
+    const { recordingId, type } = parseStreamName(streamName)
+
+    const fieldToUpdate: keyof DBStream =
+      type === StreamType.Live ? 'currentViewers' : 'totalViews'
+
+    await db.stream.updateMany({
+      where: { recordingId },
+      data: {
+        [fieldToUpdate]: { increment: 1 },
+      },
+    })
+  },
 })
 
 const leaveEventHandler = createEventHandler({
@@ -128,6 +153,20 @@ const leaveEventHandler = createEventHandler({
       downloadedBytes: parseInt(downloadedBytes),
       tags,
     }
+  },
+
+  async tap(data) {
+    const { streamName } = data
+    const { recordingId, type } = parseStreamName(streamName)
+
+    if (type !== StreamType.Live) return
+
+    await db.stream.updateMany({
+      where: { recordingId },
+      data: {
+        currentViewers: { decrement: 1 },
+      },
+    })
   },
 })
 
@@ -228,6 +267,18 @@ function validateStreamState(state: string): asserts state is StreamState {
   })
 }
 
+const validateIpAddress = (ip: string, ...validIps: string[]) => {
+  if (process.env.NODE_ENV !== 'production')
+    validIps.push('localhost', '127.0.0.1')
+
+  validate(ip, {
+    inclusion: {
+      in: validIps,
+      message: `Invalid IP. Must be one of ${validIps.join(', ')}`,
+    },
+  })
+}
+
 const streamStateEventHandler = createEventHandler({
   parseBody(body) {
     const [streamName, state, healthInfo] = body
@@ -297,6 +348,20 @@ export const handleStreamEvent = (streamEvent: string, plainData: string) => {
   return handler(plainData).handle()
 }
 
+const validateUserCanViewStream = async (
+  _recordingId: DBStream['recordingId'],
+  _userId?: User['id']
+) => {
+  // TODO: Check other rules for user access:
+  // - user must be logged
+  // - user must be sub
+  // - user must follow for x days
+  // - user is not banned
+  // - user is not timed out
+  // - etc, depending the stream they want to see
+  // Increment viewers count
+}
+
 const createStreamKeyForUser: MutationResolvers['adminCreateStreamKey'] =
   async ({ input }) => {
     const { streamPath, liveStreamId } = await db.streamer.upsert({
@@ -334,12 +399,10 @@ export const createStreamKey: MutationResolvers['createStreamKey'] =
     })
   }
 
-export const readStream: QueryResolvers['readStream'] = async ({
-  streamId,
-}) => {
-  // We don't need that much security since this url is public or could be very easily
-  // We shall make authorizaton on media server trigger. See `viewEventHandler` function above
-
+export const readStream: QueryResolvers['readStream'] = async (
+  { streamId },
+  { context: { event } }
+) => {
   const stream = await db.stream.findUnique({
     where: { id: streamId },
     include: {
@@ -358,23 +421,31 @@ export const readStream: QueryResolvers['readStream'] = async ({
     },
   })
 
+  validateUserCanViewStream(stream.recordingId, context.currentUser?.id)
+
   const isLive =
     stream.streamer.liveStreamId === streamId &&
     stream.closedAt === null &&
     stream.state !== StreamState.empty
 
-  const streamType = isLive ? StreamType.Live : StreamType.Recording
-
   const streamName = createStreamName({
     recordingId: stream.recordingId,
     streamPath: stream.streamer.streamPath,
-    type: streamType,
+    type: isLive ? StreamType.Live : StreamType.Recording,
   })
 
   const encodedName = encodeURIComponent(streamName)
 
+  const userJwt = await signJwt(
+    {
+      ip: event.requestContext.identity.sourceIp,
+      userId: context.currentUser?.id,
+    },
+    (s) => s.setExpirationTime('30s')
+  )
+
   return {
-    streamUrl: `${process.env.MEDIA_SERVER_HTTPS_URL}/cmaf/${encodedName}/index.m3u8`,
+    streamUrl: `${process.env.MEDIA_SERVER_HTTPS_URL}/cmaf/${encodedName}/index.m3u8?jwt=${userJwt}`,
     thumbnailUrl: `${process.env.MEDIA_SERVER_HTTPS_URL}/${encodedName}.mjpg`,
   }
 }
