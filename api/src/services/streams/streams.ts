@@ -375,6 +375,7 @@ export const readStream: QueryResolvers['readStream'] = async ({
 
   return {
     streamUrl: `${process.env.MEDIA_SERVER_HTTPS_URL}/cmaf/${encodedName}/index.m3u8`,
+    thumbnailUrl: `${process.env.MEDIA_SERVER_HTTPS_URL}/${encodedName}.mjpg`,
   }
 }
 

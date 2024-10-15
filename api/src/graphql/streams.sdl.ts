@@ -14,6 +14,7 @@ export const schema = gql`
 
   type StreamUrl {
     streamUrl: String!
+    thumbnailUrl: String!
   }
 
   type Query {
