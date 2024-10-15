@@ -308,7 +308,7 @@ const StreamVideo = ({ streamUrl }: SteramVideoProps) => {
                   step={0.01}
                   size="sm"
                   color="foreground"
-                  value={hls.volume}
+                  value={hls.muted ? 0 : hls.volume}
                   onChange={(value) => {
                     if (typeof value === 'number') hls.changeVolume(value)
                   }}
