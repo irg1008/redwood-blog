@@ -33,7 +33,6 @@ import {
   VolumeXIcon,
   XIcon,
 } from 'lucide-react'
-import prettyBytes from 'pretty-bytes'
 
 import { useHls } from 'src/hooks/useHls'
 
@@ -150,14 +149,7 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
                     `(${hls.currentQuality.height}p)`}
                 </DropdownItem>,
                 ...hls.qualities.map((quality, i) => (
-                  <DropdownItem
-                    key={i}
-                    description={
-                      <span className="text-default-400">
-                        {prettyBytes(quality.bitrate, { bits: true })}
-                      </span>
-                    }
-                  >
+                  <DropdownItem key={i}>
                     {quality.height}p {i === 0 ? '(Original)' : ''}
                   </DropdownItem>
                 )),
@@ -237,6 +229,7 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
 
   return (
     <>
+      TimesLoading: {hls.timesLoading}
       <div className="flex max-h-full w-full flex-col">
         <section
           className="group/player relative flex overflow-hidden"
