@@ -5,7 +5,7 @@ ARG MISTSERVER=mistserver_64V3.4.tar.gz
 ADD https://r.mistserver.org/dl/${MISTSERVER} /${MISTSERVER}
 RUN mkdir /mistserver && tar -xvzf /${MISTSERVER} -C /mistserver
 
-FROM bitnami/minideb:bullseye
+FROM ubuntu:22.04
 
 # Install used tools in stream scripts
 RUN apt-get update

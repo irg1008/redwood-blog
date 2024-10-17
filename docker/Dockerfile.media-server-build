@@ -5,12 +5,12 @@ RUN python3 -m pip install meson ninja
 
 RUN git clone https://github.com/DDVTECH/mistserver.git
 RUN cd mistserver && git checkout development && meson setup build -DWITH_AV=true --default-library static && cd build && ninja install && meson compile -C .
-# RUN cd mistserver/build && find . -mindepth 1 ! -name "Mist*" -exec rm -rf {} + && rm -rf *.p
+RUN cd mistserver/build && find . -mindepth 1 ! -name "Mist*" -exec rm -rf {} + && rm -rf *.p
 
 FROM ubuntu:22.04
 
 COPY --from=builder /mistserver/build /mistserver
 
-RUN apt-get -y update && apt-get -y install curl openssl coreutils
+RUN apt-get -y update && apt-get -y install curl openssl coreutils libavutil-dev libavcodec-dev libswscale-dev libavformat-dev
 
 CMD /mistserver/MistController -c /config/config.json
