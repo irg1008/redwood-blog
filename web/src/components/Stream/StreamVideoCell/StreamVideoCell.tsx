@@ -1,4 +1,7 @@
-import type { ReadStreamQuery, ReadStreamQueryVariables } from 'types/graphql'
+import type {
+  GetStreamUrlQuery,
+  GetStreamUrlQueryVariables,
+} from 'types/graphql'
 
 import {
   type CellFailureProps,
@@ -9,11 +12,11 @@ import {
 import StreamVideo from '../StreamVideo/StreamVideo'
 
 export const QUERY: TypedDocumentNode<
-  ReadStreamQuery,
-  ReadStreamQueryVariables
+  GetStreamUrlQuery,
+  GetStreamUrlQueryVariables
 > = gql`
-  query ReadStreamQuery($streamId: Int!) {
-    stream: readStream(streamId: $streamId) {
+  query GetStreamUrlQuery($streamId: Int!) {
+    stream: getStreamUrl(streamId: $streamId) {
       streamUrl
       thumbnailUrl
     }
@@ -26,13 +29,13 @@ export const Empty = () => <div>Empty</div>
 
 export const Failure = ({
   error,
-}: CellFailureProps<ReadStreamQueryVariables>) => (
+}: CellFailureProps<GetStreamUrlQueryVariables>) => (
   <div style={{ color: 'red' }}>Error: {error?.message}</div>
 )
 
 export const Success = ({
   stream,
-}: CellSuccessProps<ReadStreamQuery, ReadStreamQueryVariables>) => {
+}: CellSuccessProps<GetStreamUrlQuery, GetStreamUrlQueryVariables>) => {
   return (
     <StreamVideo
       streamUrl={stream.streamUrl}
