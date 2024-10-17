@@ -76,7 +76,7 @@ enum StreamState {
   empty
   full
   dry
-  reover
+  recover
 }
 
 model Identity {
