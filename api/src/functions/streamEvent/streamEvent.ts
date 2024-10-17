@@ -4,7 +4,7 @@ import { validate } from '@redwoodjs/api'
 import { verifyEvent } from '@redwoodjs/api/webhooks'
 
 import { logger } from 'src/lib/logger'
-import { handleStreamEvent } from 'src/services/streams/streams'
+import { handleStreamEvent } from 'src/services/streamEvent/streamEvent'
 
 const verifySource = (event: APIGatewayProxyEvent) => {
   verifyEvent('timestampSchemeVerifier', {
@@ -18,6 +18,8 @@ const verifySource = (event: APIGatewayProxyEvent) => {
 }
 
 export const handler: APIGatewayProxyHandler = async (event) => {
+  const streamEvent = event.headers[process.env.MEDIA_SERVER_TRIGGER_HEADER]
+
   try {
     verifySource(event)
 
@@ -28,7 +30,6 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       },
     })
 
-    const streamEvent = event.headers[process.env.MEDIA_SERVER_TRIGGER_HEADER]
     const response = await handleStreamEvent(streamEvent, event.body)
 
     return {
@@ -36,7 +37,9 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       body: typeof response === 'string' ? response : JSON.stringify(response),
     }
   } catch (error) {
-    logger.error('Failed to handle stream event', error)
+    logger.error(
+      `> Streams: [${streamEvent}] refused. Reason: ${error.message}`
+    )
     return {
       statusCode: 400,
       body: JSON.stringify(false),
