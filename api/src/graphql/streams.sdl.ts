@@ -18,7 +18,7 @@ export const schema = gql`
   }
 
   type Query {
-    readStream(streamId: Int!): StreamUrl! @skipAuth
+    getStreamUrl(streamId: Int!): StreamUrl! @skipAuth
   }
 
   input CreateStreamKeyInput {
