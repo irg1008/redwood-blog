@@ -25,7 +25,6 @@ export const LoggedIn: Story = {
     mockGraphQLQuery<ChatMessagesQuery, ChatMessagesQueryVariables>(
       'ChatMessagesQuery',
       (_variables) => {
-        console.log('standard().chatMessages', standard().chatMessages)
         return {
           chatMessages: standard().chatMessages,
         }

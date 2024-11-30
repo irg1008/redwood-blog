@@ -1,7 +1,6 @@
 import userEvent from '@testing-library/user-event'
 
 import { render, screen, waitFor } from '@redwoodjs/testing/web'
-import { toast } from '@redwoodjs/web/toast'
 
 import ConfirmCodeForm from './ConfirmCodeForm'
 
@@ -14,8 +13,6 @@ describe('ConfirmCodeForm', () => {
 
   it('code cannot be empty', async () => {
     const onConfirm = jest.fn()
-
-    console.log(toast)
 
     render(<ConfirmCodeForm onConfirm={onConfirm} />)
 
