@@ -102,7 +102,7 @@ describe('common oauth provider functions', () => {
   })
 
   scenario(
-    'finds existing user and identityr',
+    'finds existing user and identity',
     async (foundIdentityScenario: FoundIdentityScenario) => {
       const githubProvider = foundIdentityScenario.identity.github
 

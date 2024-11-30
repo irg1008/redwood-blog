@@ -1,7 +1,5 @@
 import { render, screen, waitFor } from '@redwoodjs/testing/web'
 
-import { formatDate } from 'src/lib/formatters'
-
 import Comment from './Comment'
 
 const COMMENT = {
@@ -19,7 +17,7 @@ describe('Comment', () => {
     expect(screen.getByText(COMMENT.name)).toBeInTheDocument()
     expect(screen.getByText(COMMENT.body)).toBeInTheDocument()
 
-    const formattedCreatedAt = formatDate(COMMENT.createdAt)
+    const formattedCreatedAt = COMMENT.createdAt
     const dateExpect = screen.getByText(formattedCreatedAt)
 
     expect(dateExpect).toBeInTheDocument()
