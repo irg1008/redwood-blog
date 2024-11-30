@@ -1,6 +1,6 @@
 import { Card, CardFooter, Divider } from '@nextui-org/react'
 
-import { useAuth } from 'src/auth'
+import { useAuth } from 'src/lib/auth'
 
 import ChatInput from '../ChatInput/ChatInput'
 import ChatMessagesCell, { ChatMessagesCellProps } from '../ChatMessagesCell'

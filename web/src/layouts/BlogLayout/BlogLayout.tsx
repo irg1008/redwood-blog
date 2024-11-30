@@ -9,9 +9,9 @@ import {
 import { routes } from '@redwoodjs/router'
 import { Toaster } from '@redwoodjs/web/toast'
 
-import { useAuth } from 'src/auth'
 import Link from 'src/components/UI/Link/Link'
 import NavLink from 'src/components/UI/NavLink/NavLink'
+import { useAuth } from 'src/lib/auth'
 
 type BlogLayoutProps = {
   children?: React.ReactNode

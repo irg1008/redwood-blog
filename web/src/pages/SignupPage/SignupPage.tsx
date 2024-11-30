@@ -14,9 +14,9 @@ import { Link, navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
-import { useAuth } from 'src/auth'
 import ConfirmUserModal from 'src/components/Confirm/ConfirmUserModal/ConfirmUserModal'
 import SocialLogin from 'src/components/SocialLogin/SocialLogin'
+import { useAuth } from 'src/lib/auth'
 
 const SignupPage = () => {
   const formMethods = useForm<SignupAttributes>({ mode: 'onBlur' })

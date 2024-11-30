@@ -7,8 +7,9 @@ import possibleTypes from 'src/graphql/possibleTypes'
 import FatalErrorPage from 'src/pages/FatalErrorPage'
 import Routes from 'src/Routes'
 
-import { AuthProvider, useAuth } from './auth'
+import { AuthProvider, useAuth } from './lib/auth'
 
+import './i18n'
 import './index.css'
 import './scaffold.css'
 
