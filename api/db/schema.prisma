@@ -26,7 +26,7 @@ model Post {
   slug      String    @unique
   body      String
   comments  Comment[]
-  user      User      @relation(fields: [userId], references: [id])
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
   createdAt DateTime  @default(now())
 }
@@ -61,7 +61,7 @@ model Comment {
   id        Int      @id @default(autoincrement())
   name      String
   body      String
-  post      Post     @relation(fields: [postId], references: [id])
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId    Int
   createdAt DateTime @default(now())
 }
@@ -83,7 +83,7 @@ model Identity {
   id          Int       @id @default(autoincrement())
   provider    Provider
   uid         String
-  user        User      @relation(fields: [userId], references: [id])
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId      Int
   accessToken String?
   scope       String?
@@ -99,7 +99,7 @@ model Stream {
   id             Int             @id @default(autoincrement())
   recordingId    String          @unique @default(cuid())
   streamMessages StreamMessage[]
-  streamer       Streamer        @relation(fields: [streamerId], references: [id])
+  streamer       Streamer        @relation(fields: [streamerId], references: [id], onDelete: Cascade)
   streamerLive   Streamer?       @relation("LiveStream")
   streamerId     Int
   state          StreamState?
@@ -114,24 +114,24 @@ model Stream {
 
 model StreamMessage {
   id        String   @id @default(cuid())
-  stream    Stream   @relation(fields: [streamId], references: [id])
+  stream    Stream   @relation(fields: [streamId], references: [id], onDelete: Cascade)
   streamId  Int
   body      String
   createdAt DateTime @default(now())
-  user      User     @relation(fields: [userId], references: [id])
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId    Int
 }
 
 model Streamer {
   id                 Int       @id @default(autoincrement())
-  user               User      @relation(fields: [userId], references: [id])
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId             Int       @unique
   streams            Stream[]
   banned             Boolean   @default(false)
   timeout            DateTime?
   streamPath         String    @unique @default(cuid())
   hashedStreamSecret String?
-  liveStream         Stream?   @relation("LiveStream", fields: [liveStreamId], references: [id])
+  liveStream         Stream?   @relation("LiveStream", fields: [liveStreamId], references: [id], onDelete: SetNull)
   liveStreamId       Int?      @unique
 
   @@index(userId)
