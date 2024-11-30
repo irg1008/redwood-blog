@@ -93,6 +93,10 @@ const ResetPasswordPage = ({ resetToken }: { resetToken: string }) => {
                           value: true,
                           message: 'New Password is required',
                         },
+                        minLength: {
+                          value: 8,
+                          message: 'Password must be at least 8 characters',
+                        },
                         pattern: {
                           value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
                           message:

@@ -1,4 +1,7 @@
-import type { MutationcreateContactArgs } from 'types/graphql'
+import type {
+  ConfirmUserInput,
+  CreateContactInput
+} from 'types/graphql'
 
 import { mailDirections, mailer } from 'src/lib/mailer'
 import { ConfirmCodeEmail } from 'src/mail/ConfirmCodeEmail/ConfirmCodeEmail'
@@ -29,19 +32,14 @@ export const sendResetPasswordEmail = async ({
 export const sendConfirmUserEmail = async ({
   code,
   email,
-}: {
-  code: number
-  email: string
-}) => {
+}: ConfirmUserInput) => {
   return await mailer.send(ConfirmCodeEmail({ code }), {
     to: email,
     subject: 'Confirm your account',
   })
 }
 
-export const sendContactEmail = async (
-  input: MutationcreateContactArgs['input']
-) => {
+export const sendContactEmail = async (input: CreateContactInput) => {
   return await mailer.send(ContactUsEmail(input), {
     to: mailDirections.contactReceiver,
     subject: 'New Contact Form Submission',

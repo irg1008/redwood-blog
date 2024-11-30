@@ -1,5 +1,6 @@
 import { render } from '@redwoodjs/testing/web'
-import { Loading, Empty, Failure, Success } from './StreamerCell'
+
+import { Empty, Failure, Loading, Success } from './StreamerCell'
 import { standard } from './StreamerCell.mock'
 
 // Generated boilerplate tests do not account for all circumstances

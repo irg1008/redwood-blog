@@ -154,7 +154,10 @@ export const handler = async (
     // Import the error along with `DbAuthHandler` from `@redwoodjs/api` above.
     passwordValidation: (password) => {
       validate(password, 'password', {
-        length: { minimum: 8 },
+        length: {
+          minimum: 8,
+          message: 'Password must be at least 8 characters',
+        },
         format: {
           pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
           message:

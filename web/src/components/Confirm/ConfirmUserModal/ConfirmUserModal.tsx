@@ -6,6 +6,7 @@ import {
   ModalFooter,
   ModalHeader,
 } from '@nextui-org/react'
+import { toast } from 'react-hot-toast'
 import type {
   ConfirmUserMutation,
   ConfirmUserMutationVariables,
@@ -14,7 +15,6 @@ import type {
 } from 'types/graphql'
 
 import { TypedDocumentNode, useMutation } from '@redwoodjs/web'
-import { toast } from '@redwoodjs/web/toast'
 
 import ConfirmCodeForm from 'src/components/Confirm/ConfirmCodeForm/ConfirmCodeForm'
 
@@ -40,7 +40,7 @@ export const SEND_CONFIRM_CODE_MUTATION: TypedDocumentNode<
 
 type ConfirmUserModalProps = {
   email: string
-  onClose?: (success?: boolean) => void
+  onClose?: (success: boolean) => void
   isOpen: boolean
 }
 
@@ -57,7 +57,9 @@ const ConfirmUserModal = ({
         onClose?.(true)
       },
       onError: (error) => {
-        toast.error(error.message)
+        toast.error(error.message, {
+          id: 'confirm-error',
+        })
       },
     }
   )
@@ -88,7 +90,7 @@ const ConfirmUserModal = ({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={onClose}>
+    <Modal isOpen={isOpen} onClose={() => onClose?.(false)}>
       <ModalContent>
         <ModalHeader className="line-clamp-1">Confirm {email}</ModalHeader>
 

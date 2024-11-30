@@ -4,12 +4,10 @@ import type {
   FindPostById,
 } from 'types/graphql'
 
-import { Link, routes, navigate } from '@redwoodjs/router'
-import { useMutation } from '@redwoodjs/web'
+import { Link, navigate, routes } from '@redwoodjs/router'
 import type { TypedDocumentNode } from '@redwoodjs/web'
+import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
-
-import { timeTag } from 'src/lib/formatters'
 
 const DELETE_POST_MUTATION: TypedDocumentNode<
   DeletePostMutation,
@@ -71,7 +69,7 @@ const Post = ({ post }: Props) => {
             </tr>
             <tr>
               <th>Created at</th>
-              <td>{timeTag(post.createdAt)}</td>
+              <td>{post.createdAt}</td>
             </tr>
           </tbody>
         </table>

@@ -5,12 +5,11 @@ import type {
 } from 'types/graphql'
 
 import { Link, routes } from '@redwoodjs/router'
-import { useMutation } from '@redwoodjs/web'
 import type { TypedDocumentNode } from '@redwoodjs/web'
+import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY } from 'src/components/Post/PostsCell'
-import { timeTag, truncate } from 'src/lib/formatters'
 
 const DELETE_POST_MUTATION: TypedDocumentNode<
   DeletePostMutation,
@@ -60,11 +59,11 @@ const PostsList = ({ posts }: FindPosts) => {
         <tbody>
           {posts.map((post) => (
             <tr key={post.id}>
-              <td>{truncate(post.id)}</td>
-              <td>{truncate(post.title)}</td>
-              <td>{truncate(post.slug)}</td>
-              <td>{truncate(post.body)}</td>
-              <td>{timeTag(post.createdAt)}</td>
+              <td>{post.id}</td>
+              <td>{post.title}</td>
+              <td>{post.slug}</td>
+              <td>{post.body}</td>
+              <td>{post.createdAt}</td>
               <td>
                 <nav className="rw-table-actions">
                   <Link
