@@ -11,30 +11,30 @@
     ]
   },
   "dependencies": {
-    "@hookform/resolvers": "3.9.0",
+    "@hookform/resolvers": "3.9.1",
     "@nextui-org/react": "2.4.8",
-    "@redwoodjs/auth-dbauth-web": "8.4.0",
-    "@redwoodjs/forms": "8.4.0",
-    "@redwoodjs/router": "8.4.0",
-    "@redwoodjs/web": "8.4.0",
-    "framer-motion": "11.11.9",
-    "hls.js": "1.5.16",
-    "lucide-react": "0.453.0",
+    "@redwoodjs/auth-dbauth-web": "8.4.1",
+    "@redwoodjs/forms": "8.4.1",
+    "@redwoodjs/router": "8.4.1",
+    "@redwoodjs/web": "8.4.1",
+    "framer-motion": "11.11.17",
+    "hls.js": "1.5.17",
+    "lucide-react": "0.460.0",
     "pretty-bytes": "6.1.1",
     "react": "18.3.1",
     "react-dom": "18.3.1",
     "schemas": "workspace:*",
-    "worker-timers": "8.0.7",
-    "zustand": "5.0.0"
+    "worker-timers": "8.0.11",
+    "zustand": "5.0.1"
   },
   "devDependencies": {
-    "@redwoodjs/vite": "8.4.0",
-    "@types/react": "18.3.11",
+    "@redwoodjs/vite": "8.4.1",
+    "@types/react": "18.3.12",
     "@types/react-dom": "18.3.1",
     "autoprefixer": "10.4.20",
-    "postcss": "8.4.47",
+    "postcss": "8.4.49",
     "postcss-loader": "8.1.1",
     "tailwind-merge": "2.5.4",
-    "tailwindcss": "3.4.14"
+    "tailwindcss": "3.4.15"
   }
 }
