@@ -61,7 +61,8 @@
     "d:restart": "docker compose restart",
     "d:build": "docker compose up -d --build",
     "packages": "yarn workspace schemas build",
-    "dev:packages": "yarn workspace schemas dev"
+    "dev:packages": "yarn workspace schemas dev",
+    "i18n:set": "rw setup i18n"
   },
   "devDependencies": {
     "@redwoodjs/auth-dbauth-setup": "8.4.1",
