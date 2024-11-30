@@ -1,7 +1,7 @@
 {
   "editor.tabSize": 2,
   "files.trimTrailingWhitespace": true,
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "eslint.experimental.useFlatConfig": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",

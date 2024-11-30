@@ -1,0 +1,293 @@
+{
+  "account": {
+    "mistserver_admin": {
+      "password": "f921f36ae73c47c8fcbd8414ecb441ff"
+    }
+  },
+  "autopushes": null,
+  "bandwidth": {
+    "exceptions": [
+      "::1",
+      "127.0.0.0/8",
+      "10.0.0.0/8",
+      "192.168.0.0/16",
+      "172.16.0.0/12"
+    ],
+    "limit": 0
+  },
+  "config": {
+    "accesslog": "LOG",
+    "controller": {
+      "interface": null,
+      "port": null,
+      "username": null
+    },
+    "debug": null,
+    "defaultStream": null,
+    "limits": null,
+    "location": {
+      "lat": 0.0000000000,
+      "lon": 0.0000000000,
+      "name": ""
+    },
+    "prometheus": "",
+    "protocols": [
+      {
+        "connector": "AAC"
+      },
+      {
+        "connector": "CMAF",
+        "debug": 3,
+        "default_track_sorting": "res_htl",
+        "mergesessions": true,
+        "nonchunked": false
+      },
+      {
+        "connector": "DTSC"
+      },
+      {
+        "connector": "EBML"
+      },
+      {
+        "connector": "FLAC"
+      },
+      {
+        "connector": "FLV"
+      },
+      {
+        "connector": "H264"
+      },
+      {
+        "connector": "HDS"
+      },
+      {
+        "connector": "HLS",
+        "default_track_sorting": "res_htl",
+        "nonchunked": false
+      },
+      {
+        "connector": "HTTP",
+        "pubaddr": []
+      },
+      {
+        "connector": "HTTPTS",
+        "default_track_sorting": "res_htl"
+      },
+      {
+        "connector": "JPG"
+      },
+      {
+        "connector": "JSON"
+      },
+      {
+        "connector": "MP3"
+      },
+      {
+        "connector": "MP4"
+      },
+      {
+        "connector": "OGG"
+      },
+      {
+        "connector": "RTMP",
+        "maxkbps": 8000
+      },
+      {
+        "connector": "RTSP"
+      },
+      {
+        "connector": "SDP"
+      },
+      {
+        "connector": "SubRip"
+      },
+      {
+        "connector": "TSRIST"
+      },
+      {
+        "connector": "TSSRT"
+      },
+      {
+        "connector": "WAV"
+      },
+      {
+        "bindhost": "0.0.0.0",
+        "connector": "WebRTC",
+        "jitterlog": false,
+        "mergesessions": true,
+        "nackdisable": false,
+        "packetlog": false
+      },
+      {
+        "cert": "/certs/server.crt",
+        "connector": "HTTPS",
+        "key": "/certs/server.key",
+        "pubaddr": []
+      }
+    ],
+    "serverid": null,
+    "sessionInputMode": 15,
+    "sessionOutputMode": 15,
+    "sessionStreamInfoMode": "1",
+    "sessionUnspecifiedMode": 0,
+    "sessionViewerMode": 14,
+    "tknMode": 15,
+    "triggers": {
+      "PUSH_REWRITE": [
+        {
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [],
+          "sync": true
+        }
+      ],
+      "STREAM_BUFFER": [
+        {
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [
+            "live"
+          ],
+          "sync": false
+        }
+      ],
+      "STREAM_END": [
+        {
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [
+            "live"
+          ],
+          "sync": false
+        }
+      ],
+      "STREAM_READY": [
+        {
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [
+            "live"
+          ],
+          "sync": true
+        }
+      ],
+      "STREAM_UNLOAD": [
+        {
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [
+            "live"
+          ],
+          "sync": true
+        }
+      ],
+      "SYSTEM_START": [
+        {
+          "default": "true",
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [],
+          "sync": false
+        }
+      ],
+      "SYSTEM_STOP": [
+        {
+          "default": "true",
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [],
+          "sync": false
+        }
+      ],
+      "USER_END": [
+        {
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [],
+          "sync": true
+        }
+      ],
+      "USER_NEW": [
+        {
+          "handler": "/scripts/on-stream-event.sh",
+          "streams": [],
+          "sync": true
+        }
+      ]
+    },
+    "trustedproxy": []
+  },
+  "extwriters": null,
+  "push_settings": {
+    "maxspeed": 0,
+    "wait": 3
+  },
+  "streams": {
+    "live": {
+      "debug": 3,
+      "name": "live",
+      "processes": [
+        {
+          "exec": "/scripts/on-stream-start.sh 2560x1440",
+          "exit_unmask": false,
+          "inconsequential": false,
+          "process": "MKVExec",
+          "restart_type": "disabled",
+          "source_mask": "4",
+          "target_mask": "3",
+          "track_select": "video=2560x1440,>2560x1440,|<3840x2160",
+          "x-LSP-name": " Encoding - 2k"
+        },
+        {
+          "exec": "/scripts/on-stream-start.sh 1920x1080",
+          "exit_unmask": false,
+          "inconsequential": false,
+          "process": "MKVExec",
+          "restart_type": "disabled",
+          "source_mask": "4",
+          "target_mask": "3",
+          "track_select": "video=1920x1080,>1920x1080,|<2560x1440",
+          "x-LSP-name": "Encoding - 1080p"
+        },
+        {
+          "exec": "/scripts/on-stream-start.sh 1280x720",
+          "exit_unmask": false,
+          "inconsequential": false,
+          "process": "MKVExec",
+          "restart_type": "disabled",
+          "source_mask": "4",
+          "target_mask": "3",
+          "track_select": "video=1280x720,>1280x720,|<1920x1080",
+          "x-LSP-name": "Encoding - 720p"
+        },
+        {
+          "exec": "/scripts/on-stream-start.sh 854x480",
+          "exit_unmask": false,
+          "inconsequential": false,
+          "process": "MKVExec",
+          "restart_type": "disabled",
+          "source_mask": "4",
+          "target_mask": "3",
+          "track_select": "video=854x480,>854x480,|<1280x720",
+          "x-LSP-name": "Encoding - 480"
+        },
+        {
+          "exec": "ffmpeg -i - -an -c:v mjpeg -r 1 -s 1280x720 -f matroska -",
+          "exit_unmask": false,
+          "inconsequential": true,
+          "process": "MKVExec",
+          "restart_type": "disabled",
+          "source_mask": "4",
+          "target_mask": "1",
+          "x-LSP-name": "Thumbnail"
+        }
+      ],
+      "segmentsize": 1000,
+      "source": "push://",
+      "stop_sessions": false
+    },
+    "recording": {
+      "name": "recording",
+      "processes": [],
+      "source": "push://",
+      "stop_sessions": false
+    }
+  },
+  "ui_settings": {
+    "HTTPUrl": "http://localhost:8080/",
+    "viewmode": "list"
+  },
+  "variables": []
+}
