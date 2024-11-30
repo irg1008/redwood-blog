@@ -26,12 +26,12 @@ services:
       dockerfile: Dockerfile.media-server
     container_name: redwood-blog-media-server
     restart: unless-stopped
-    shm_size: 4g
+    shm_size: 8g
     networks:
       - redwood-blog-network
     volumes:
       - media-server-config:/config
-      - ./scripts/on-stream-event.sh:/scripts/on-stream-event.sh
+      - ./scripts/mediaserver:/scripts
       - ./certs:/certs
     env_file:
       - .env
