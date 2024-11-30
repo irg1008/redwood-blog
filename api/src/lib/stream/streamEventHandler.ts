@@ -62,7 +62,7 @@ type StreamEventData =
   | {
       event: StreamEvent.StateChange
       streamName: StreamName
-      state: StreamState
+      state?: StreamState
       healthInfo?: object
     }
   | {

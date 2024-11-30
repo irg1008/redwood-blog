@@ -2,7 +2,10 @@ import { validate } from '@redwoodjs/api'
 
 export enum StreamConnector {
   JPG = 'JPG',
-  HLS = 'CMAF',
+  CMAF = 'CMAF',
+  HTTP = 'HTTP',
+  MP4 = 'MP4',
+  HLS = 'HLS',
 }
 
 export function validateStreamConnector(
@@ -12,7 +15,7 @@ export function validateStreamConnector(
   validate(connector, {
     inclusion: {
       in: validConnectors,
-      message: `Invalid connector. Must be one of ${validConnectors.join(', ')}`,
+      message: `Invalid connector ${connector || '[EMPTY]'}. Must be one of ${validConnectors.join(', ')}`,
     },
   })
 }

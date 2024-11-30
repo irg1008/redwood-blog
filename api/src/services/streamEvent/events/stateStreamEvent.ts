@@ -13,8 +13,8 @@ function validateStreamState(state: string): asserts state is StreamState {
   const validStates = Object.values(StreamState)
   validate(state, {
     inclusion: {
-      in: validStates,
-      message: `Invalid state. Must be one of ${validStates.join(', ')}`,
+      in: ['', ...validStates],
+      message: `Invalid state. Must be one of ${validStates.join(', ')}. Received is "${state}`,
     },
   })
 }
@@ -36,6 +36,8 @@ export const stateEventHandler = createEventHandler({
     }
   },
   async tap({ streamName, state }) {
+    if (!state) return
+
     const { recordingId } = parseStreamName(streamName)
 
     await db.stream.update({
