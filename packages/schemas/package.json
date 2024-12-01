@@ -3,24 +3,25 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "main": "dist/cjs/index.js",
-  "module": "dist/mjs/index.js",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./dist/src/index.js",
+      "require": "./dist/src/index.cjs"
     }
   },
   "files": [
     "dist"
   ],
   "scripts": {
-    "dev": "tsup --watch --silent --onSuccess \"echo Detected changes in database, rebuilding...\"",
+    "dev": "tsup --watch --silent --onSuccess \"echo Detected changes in package, rebuilding...\"",
     "build": "tsup"
   },
   "tsup": {
     "entry": [
-      "./*.ts"
+      "./src",
+      "./types"
     ],
     "dts": true,
     "format": [
@@ -32,10 +33,11 @@
     "lagacyOutput": true
   },
   "dependencies": {
+    "i18next": "24.0.2",
     "valibot": "0.42.1"
   },
   "devDependencies": {
     "tsup": "8.3.0",
-    "typescript": "5.6.3"
+    "typescript": "5.7.2"
   }
 }
