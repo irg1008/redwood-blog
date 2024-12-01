@@ -1,0 +1,150 @@
+{
+  "404": {
+    "description": "Página no encontrada",
+    "title": "404"
+  },
+  "About": {
+    "about": "Sobre nosotros blablabla",
+    "description": "Sobre nosotros",
+    "title": "Sobre"
+  },
+  "Article": {
+    "description": "Artículo",
+    "title": "Artículo"
+  },
+  "Contact": {
+    "description": "Contáctanos",
+    "title": "Contacto"
+  },
+  "FatalError": {
+    "description": "Error Fatal",
+    "title": "Error Fatal",
+    "wrong": "Algo salió mal"
+  },
+  "HomePage": {
+    "description": "Bienvenido a la página principal de nuestro sitio web.",
+    "title": "Página Principal"
+  },
+  "Posts": {
+    "description": "Publicaciones",
+    "title": "Publicaciones"
+  },
+  "Streamer": {
+    "description": "Mira lo que está pasando",
+    "title": "Streamer"
+  },
+  "article": {
+    "empty": "Artículo no encontrado",
+    "error": "Error al cargar el artículo"
+  },
+  "articles": {
+    "empty": "¡Ya estás al día!",
+    "error": "Error al cargar los artículos"
+  },
+  "chat": {
+    "empty": "Esto está muy solitario...",
+    "error": "Error al cargar el chat",
+    "input": {
+      "placeholder": "Escribe un mensaje..."
+    }
+  },
+  "comment": {
+    "actions": {
+      "c2a": "Dejar un comentario",
+      "create": "Crear",
+      "create_success": "¡Gracias por tu comentario!",
+      "delete": "Eliminar",
+      "delete_confirm": "¿Estás seguro de que quieres eliminar este comentario?",
+      "submit": "Enviar"
+    },
+    "form": {
+      "comment": {
+        "label": "Comentario"
+      },
+      "name": {
+        "label": "Nombre"
+      }
+    }
+  },
+  "comments": {
+    "empty": "Aún no hay comentarios",
+    "error": "Error al cargar los comentarios"
+  },
+  "common": {
+    "by": "por {{name}}",
+    "error": "Error: {{error}}",
+    "language-dropdown": {
+      "aria": "Seleccionar un idioma"
+    },
+    "loading": "Cargando...",
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión",
+    "name": "{{appName}}",
+    "paste": "Pegar desde el portapapeles",
+    "unknown": "Desconocido"
+  },
+  "confirm-code": {
+    "actions": {
+      "submit": "Confirmar"
+    },
+    "form": {
+      "code": {
+        "label": "Código de confirmación",
+        "placeholder": "Ingresa el código que recibiste"
+      }
+    }
+  },
+  "confirm-user": {
+    "actions": {
+      "confirm": "Confirmar",
+      "confirm_success": "¡Usuario confirmado exitosamente!",
+      "send-new": "Reenviar código",
+      "send-new_success": "¡Código enviado exitosamente!"
+    }
+  },
+  "social": {
+    "action": {
+      "login": {
+        "with": "Iniciar sesión con {{provider}}"
+      }
+    }
+  },
+  "stream-player": {
+    "auto": "Automático",
+    "empty": "Transmisión no encontrada",
+    "error": "Error al cargar la transmisión",
+    "latency": "Latencia",
+    "toolbar": {
+      "close": "Cerrar",
+      "fullscreen": {
+        "aria": "Pantalla completa",
+        "enter": "Activar pantalla completa",
+        "exit": "Salir de pantalla completa"
+      },
+      "picture-in-picture": {
+        "aria": "Imagen en imagen",
+        "enter": "Activar imagen en imagen",
+        "exit": "Desactivar imagen en imagen"
+      },
+      "settings": {
+        "aria": "Configuración",
+        "back": "Volver a configuración",
+        "playback-speed": "Velocidad de reproducción",
+        "resolution": "Resolución",
+        "seek-live": "Ir en vivo",
+        "stats": "Estadísticas"
+      },
+      "volume": {
+        "aria": "Volumen",
+        "mute": "Silenciar",
+        "unmute": "Activar sonido"
+      }
+    }
+  },
+  "streamer": {
+    "empty": "Sí, aquí no hay nada...",
+    "error": "Error al cargar el streamer. Inténtalo más tarde.",
+    "live-for": "En vivo por {{duration}}",
+    "not-live": "El streamer no está en vivo"
+  }
+}

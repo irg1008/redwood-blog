@@ -1,6 +1,7 @@
 import * as React from 'react'
+
 import type { GlobalTypes } from '@storybook/csf'
-import type { StoryFn, StoryContext } from '@storybook/react'
+import type { StoryContext, StoryFn } from '@storybook/react'
 import { I18nextProvider } from 'react-i18next'
 import i18n from 'web/src/i18n'
 
@@ -20,9 +21,9 @@ export const globalTypes: GlobalTypes = {
           title: 'English',
         },
         {
-          value: 'fr',
-          right: '🇫🇷',
-          title: 'Français',
+          value: 'es',
+          right: '🇪🇸',
+          title: 'Español',
         },
       ],
     },

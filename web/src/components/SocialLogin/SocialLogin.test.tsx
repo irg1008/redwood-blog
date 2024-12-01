@@ -12,7 +12,7 @@ describe('SocialLogin', () => {
   it('contains a link to the Google OAuth provider', () => {
     render(<SocialLogin />)
 
-    const googleLink = screen.getByTitle('Log In with Google')
+    const googleLink = screen.getByTitle('Login with Google')
 
     expect(googleLink).toBeInTheDocument()
     expect(googleLink).toBeInstanceOf(HTMLAnchorElement)
@@ -22,7 +22,7 @@ describe('SocialLogin', () => {
   it('contains a link to the GitHub OAuth provider', () => {
     render(<SocialLogin />)
 
-    const githubLink = screen.getByTitle('Log In with Github')
+    const githubLink = screen.getByTitle('Login with Github')
 
     expect(githubLink).toBeInTheDocument()
     expect(githubLink).toBeInstanceOf(HTMLAnchorElement)
@@ -32,7 +32,7 @@ describe('SocialLogin', () => {
   it('contains a link to the Twitch OAuth provider', () => {
     render(<SocialLogin />)
 
-    const twitchLink = screen.getByTitle('Log In with Twitch')
+    const twitchLink = screen.getByTitle('Login with Twitch')
 
     expect(twitchLink).toBeInTheDocument()
     expect(twitchLink).toBeInstanceOf(HTMLAnchorElement)

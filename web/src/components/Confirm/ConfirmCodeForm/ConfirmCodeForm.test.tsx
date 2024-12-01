@@ -30,7 +30,7 @@ describe('ConfirmCodeForm', () => {
     render(<ConfirmCodeForm onConfirm={onConfirm} />)
 
     const submit = screen.getByText('Confirm')
-    const input = screen.getByLabelText('Code')
+    const input = screen.getByLabelText('Confirmation code')
 
     await waitFor(() => userEvent.type(input, '12345'))
     await waitFor(() => userEvent.click(submit))
@@ -45,7 +45,7 @@ describe('ConfirmCodeForm', () => {
   it('input must be number type', async () => {
     render(<ConfirmCodeForm />)
 
-    const input = screen.getByLabelText('Code')
+    const input = screen.getByLabelText('Confirmation code')
 
     expect(input).toHaveAttribute('type', 'number')
 
@@ -59,7 +59,7 @@ describe('ConfirmCodeForm', () => {
     render(<ConfirmCodeForm onConfirm={onConfirm} />)
 
     const submit = screen.getByText('Confirm')
-    const input = screen.getByLabelText('Code')
+    const input = screen.getByLabelText('Confirmation code')
 
     const code = '123456'
 
@@ -74,7 +74,7 @@ describe('ConfirmCodeForm', () => {
 
     render(<ConfirmCodeForm />)
 
-    const input = screen.getByLabelText('Code')
+    const input = screen.getByLabelText('Confirmation code')
     const paste = screen.getByLabelText('Paste from clipboard')
     expect(paste).toBeInTheDocument()
 

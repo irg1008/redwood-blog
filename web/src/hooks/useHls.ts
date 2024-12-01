@@ -250,6 +250,7 @@ export const useHls = (streamUrl: string) => {
       document.exitPictureInPicture()
     } else {
       videoRef.current?.requestPictureInPicture()
+      document.exitFullscreen()
     }
   }
 
@@ -261,6 +262,7 @@ export const useHls = (streamUrl: string) => {
       document.exitFullscreen()
     } else {
       ref.current.requestFullscreen()
+      document.exitPictureInPicture()
     }
   }
 

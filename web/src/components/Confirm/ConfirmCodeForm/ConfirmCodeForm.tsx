@@ -1,6 +1,7 @@
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import { Button, Input, Tooltip } from '@nextui-org/react'
 import { ClipboardPasteIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { confirmCodeSchema } from 'schemas'
 
 import { FieldError, Form, Submit, useForm } from '@redwoodjs/forms'
@@ -20,6 +21,8 @@ type ConfirmCodeProps = {
 }
 
 const ConfirmCodeForm = ({ onConfirm, error, loading }: ConfirmCodeProps) => {
+  const { t } = useTranslation()
+
   const formMethods = useForm<ConfirmCodeInput>({
     mode: 'onTouched',
     defaultValues: {
@@ -53,17 +56,17 @@ const ConfirmCodeForm = ({ onConfirm, error, loading }: ConfirmCodeProps) => {
           <Input
             {...field}
             type="number"
-            label="Code"
+            label={t('confirm-code.form.code.label')}
             variant="bordered"
-            placeholder="Enter the code you received in your email"
+            placeholder={t('confirm-code.form.code.placeholder')}
             isInvalid={invalid}
             endContent={
-              <Tooltip content="Paste from clipboard">
+              <Tooltip content={t('common.paste')}>
                 <Button
                   onClick={pasteFromClipboard}
                   isIconOnly
                   variant="light"
-                  aria-label="Paste from clipboard"
+                  aria-label={t('common.paste')}
                 >
                   <ClipboardPasteIcon />
                 </Button>
@@ -80,7 +83,7 @@ const ConfirmCodeForm = ({ onConfirm, error, loading }: ConfirmCodeProps) => {
         as={Submit}
         isLoading={loading}
       >
-        Confirm
+        {t('confirm-code.actions.submit')}
       </Button>
     </Form>
   )

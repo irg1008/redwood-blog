@@ -1,9 +1,15 @@
 import { render, screen } from '@redwoodjs/testing/web'
 
-import { Loading, Empty, Failure, Success } from './ArticleCell'
+import { mockI18n } from 'src/i18n/i18n.test'
+
+import { Empty, Failure, Loading, Success } from './ArticleCell'
 import { standard } from './ArticleCell.mock'
 
 describe('ArticleCell', () => {
+  beforeEach(() => {
+    mockI18n()
+  })
+
   it('Loading renders successfully', () => {
     expect(() => {
       render(<Loading />)
@@ -12,7 +18,7 @@ describe('ArticleCell', () => {
 
   it('Empty renders successfully', async () => {
     render(<Empty />)
-    expect(screen.getByText('Post not found')).toBeInTheDocument()
+    expect(screen.getByText('Article not found')).toBeInTheDocument()
   })
 
   it('Failure renders successfully', async () => {

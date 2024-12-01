@@ -10,6 +10,7 @@ import {
   DropdownTrigger,
   Slider,
   Spinner,
+  Tooltip,
 } from '@nextui-org/react'
 import { motion } from 'framer-motion'
 import {
@@ -33,6 +34,7 @@ import {
   VolumeXIcon,
   XIcon,
 } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 
 import { useHls } from 'src/hooks/useHls'
 
@@ -42,6 +44,8 @@ type SteramVideoProps = {
 }
 
 const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
+  const { t } = useTranslation()
+
   const hls = useHls(streamUrl)
   const containerRef = useRef<HTMLHeadingElement>(null)
 
@@ -59,12 +63,16 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
     switch (currentMenu) {
       case 'base': {
         return (
-          <DropdownMenu key="base" aria-label="Settings" variant="flat">
+          <DropdownMenu
+            key="base"
+            aria-label={t('stream-player.toolbar.settings.aria')}
+            variant="flat"
+          >
             <DropdownSection showDivider>
               <DropdownItem
                 startContent={<XIcon className={menuIconClasses} />}
               >
-                Close
+                {t('stream-player.toolbar.close')}
               </DropdownItem>
             </DropdownSection>
             <DropdownItem
@@ -77,7 +85,7 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
                 </span>
               }
             >
-              Resolution
+              {t('stream-player.toolbar.settings.resolution')}
             </DropdownItem>
             <DropdownItem
               onClick={() => setCurrentMenu('playRate')}
@@ -95,21 +103,21 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
                 <span className="text-default-400">{hls.currentSpeed}x</span>
               }
             >
-              Playback speed
+              {t('stream-player.toolbar.settings.playback-speed')}
             </DropdownItem>
             <DropdownItem
               onClick={() => setCurrentMenu('stats')}
               closeOnSelect={false}
               startContent={<HourglassIcon className={menuIconClasses} />}
             >
-              Stats
+              {t('stream-player.toolbar.settings.stats')}
             </DropdownItem>
             <DropdownItem
               onClick={hls.seekLive}
               startContent={<FastForwardIcon className={menuIconClasses} />}
               className={cn(!hls.isHlsSupported && 'hidden')}
             >
-              Seek live
+              {t('stream-player.toolbar.settings.seek-live')}
             </DropdownItem>
           </DropdownMenu>
         )
@@ -119,7 +127,7 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
         return (
           <DropdownMenu
             key="qualities"
-            aria-label="Qualities"
+            aria-label={t('stream-player.toolbar.settings.resolution')}
             variant="flat"
             disallowEmptySelection
             selectionMode="single"
@@ -137,21 +145,19 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
                 closeOnSelect={false}
                 startContent={<ArrowLeft className={menuIconClasses} />}
               >
-                Back to settings
+                {t('stream-player.toolbar.settings.back')}
               </DropdownItem>
             </DropdownSection>
             <DropdownSection>
               {[
                 <DropdownItem key={hls.autoLevel}>
-                  Auto{' '}
+                  {t('stream-player.auto')}{' '}
                   {hls.autoEnabled &&
                     hls.currentQuality &&
                     `(${hls.currentQuality.height}p)`}
                 </DropdownItem>,
                 ...hls.qualities.map((quality, i) => (
-                  <DropdownItem key={i}>
-                    {quality.height}p {i === 0 ? '(Original)' : ''}
-                  </DropdownItem>
+                  <DropdownItem key={i}>{quality.height}p</DropdownItem>
                 )),
               ]}
             </DropdownSection>
@@ -163,7 +169,7 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
         return (
           <DropdownMenu
             key="playRate"
-            aria-label="Playback rate"
+            aria-label={t('stream-player.toolbar.settings.playback-speed')}
             variant="flat"
             disallowEmptySelection
             selectionMode="single"
@@ -181,7 +187,7 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
                 closeOnSelect={false}
                 startContent={<ArrowLeft className={menuIconClasses} />}
               >
-                Back to settings
+                {t('stream-player.toolbar.settings.back')}
               </DropdownItem>
             </DropdownSection>
             <DropdownSection>
@@ -198,7 +204,7 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
           <DropdownMenu
             as={motion.ul}
             key="stats"
-            aria-label="Stats"
+            aria-label={t('stream-player.toolbar.settings.stats')}
             variant="flat"
           >
             <DropdownSection showDivider>
@@ -207,7 +213,7 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
                 closeOnSelect={false}
                 startContent={<ArrowLeft className={menuIconClasses} />}
               >
-                Back to settings
+                {t('stream-player.toolbar.settings.back')}
               </DropdownItem>
             </DropdownSection>
             <DropdownItem
@@ -219,13 +225,13 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
                 </span>
               }
             >
-              Latency
+              {t('stream-player.latency')}
             </DropdownItem>
           </DropdownMenu>
         )
       }
     }
-  }, [currentMenu, hls, menuIconClasses])
+  }, [currentMenu, hls, menuIconClasses, t])
 
   return (
     <>
@@ -289,7 +295,11 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
                 <Button
                   isIconOnly
                   size="sm"
-                  aria-label="Mute/Unmute"
+                  aria-label={
+                    hls.muted
+                      ? t('stream-player.toolbar.volume.mute')
+                      : t('stream-player.toolbar.volume.unmute')
+                  }
                   onClick={hls.toggleMute}
                   variant="light"
                 >
@@ -305,7 +315,7 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
                 <Slider
                   hideValue
                   className="opacity-0 transition-opacity group-hover/volume:opacity-100"
-                  aria-label="Volume"
+                  aria-label={t('stream-player.toolbar.volume.aria')}
                   minValue={0}
                   maxValue={1}
                   step={0.01}
@@ -335,32 +345,51 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
                 {menuComponent}
               </Dropdown>
 
-              <Button
-                isIconOnly
-                size="sm"
-                aria-label="Toggle picture in picture"
-                onClick={hls.togglePictureInPicture}
-                variant="light"
+              <Tooltip
+                content={
+                  hls.pictureInPicture
+                    ? t('stream-player.toolbar.picture-in-picture.exit')
+                    : t('stream-player.toolbar.picture-in-picture.enter')
+                }
               >
-                {hls.pictureInPicture ? (
-                  <PictureInPicture2Icon className={iconClasses} />
-                ) : (
-                  <PictureInPictureIcon className={iconClasses} />
-                )}
-              </Button>
-              <Button
-                isIconOnly
-                size="sm"
-                aria-label="Toggle fullscreen"
-                onClick={toggleFullscreen}
-                variant="light"
+                <Button
+                  isIconOnly
+                  size="sm"
+                  aria-label={t(
+                    'stream-player.toolbar.picture-in-picture.aria'
+                  )}
+                  onClick={hls.togglePictureInPicture}
+                  variant="light"
+                >
+                  {hls.pictureInPicture ? (
+                    <PictureInPicture2Icon className={iconClasses} />
+                  ) : (
+                    <PictureInPictureIcon className={iconClasses} />
+                  )}
+                </Button>
+              </Tooltip>
+
+              <Tooltip
+                content={
+                  hls.fullscreen
+                    ? t('stream-player.toolbar.fullscreen.exit')
+                    : t('stream-player.toolbar.fullscreen.enter')
+                }
               >
-                {hls.fullscreen ? (
-                  <MinimizeIcon className={iconClasses} />
-                ) : (
-                  <MaximizeIcon className={iconClasses} />
-                )}
-              </Button>
+                <Button
+                  isIconOnly
+                  size="sm"
+                  aria-label={t('stream-player.toolbar.fullscreen.aria')}
+                  onClick={toggleFullscreen}
+                  variant="light"
+                >
+                  {hls.fullscreen ? (
+                    <MinimizeIcon className={iconClasses} />
+                  ) : (
+                    <MaximizeIcon className={iconClasses} />
+                  )}
+                </Button>
+              </Tooltip>
             </aside>
           </footer>
         </section>

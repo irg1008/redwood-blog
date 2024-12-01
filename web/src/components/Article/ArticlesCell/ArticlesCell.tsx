@@ -1,40 +1,47 @@
+import { useTranslation } from 'react-i18next'
 import type { ArticlesQuery, ArticlesQueryVariables } from 'types/graphql'
 
 import type {
-  CellSuccessProps,
   CellFailureProps,
+  CellSuccessProps,
   TypedDocumentNode,
 } from '@redwoodjs/web'
 
 import Article from 'src/components/Article/Article'
+import Spinner from 'src/components/UI/Spinner/Spinner'
 
-export const QUERY: TypedDocumentNode<
-  ArticlesQuery,
-  ArticlesQueryVariables
-> = gql`
-  query ArticlesQuery {
-    articles: posts {
-      id
-      title
-      slug
-      body
-      createdAt
-      user {
-        name
+export const QUERY: TypedDocumentNode<ArticlesQuery, ArticlesQueryVariables> =
+  gql`
+    query ArticlesQuery {
+      articles: posts {
+        id
+        title
+        slug
+        body
+        createdAt
+        user {
+          name
+        }
       }
     }
-  }
-`
+  `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = Spinner
 
 export const Empty = () => {
-  return <div>No posts to show</div>
+  const { t } = useTranslation()
+  return <div>{t('articles.empty')}</div>
 }
 
-export const Failure = ({ error }: CellFailureProps) => (
-  <div style={{ color: 'red' }}>Error: {error?.message}</div>
-)
+export const Failure = ({ error }: CellFailureProps) => {
+  const { t } = useTranslation()
+  return (
+    <div style={{ color: 'red' }}>
+      {t('articles.error')}{' '}
+      {error && t('common.error', { error: error.message })}
+    </div>
+  )
+}
 
 export const Success = ({ articles }: CellSuccessProps<ArticlesQuery>) => {
   return (

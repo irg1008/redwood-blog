@@ -4,7 +4,7 @@
 # see https://redwoodjs.com/docs/app-configuration-redwood-toml#api-paths
 
 [web]
-title = "Redwood App"
+title = "Blazing"
 port = "${WEB_PORT:8910}"
 host = "0.0.0.0"
 apiUrl = "/api"

@@ -27,5 +27,18 @@
   },
   "[typescript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  }
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[html]": {
+    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
+  },
+  "i18n-ally.localesPaths": [
+    "web/src/i18n/locales"
+  ],
+  "i18n-ally.enabledFrameworks": ["react-i18next"],
+  "i18n-ally.extract.autoDetect": true,
+  "i18n-ally.keystyle": "nested",
+  "i18n-ally.sortKeys": false
 }

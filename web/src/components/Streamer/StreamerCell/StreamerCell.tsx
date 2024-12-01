@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import type {
   FindStreamerQuery,
   FindStreamerQueryVariables,
@@ -8,6 +9,8 @@ import {
   type CellSuccessProps,
   type TypedDocumentNode,
 } from '@redwoodjs/web'
+
+import Spinner from 'src/components/UI/Spinner/Spinner'
 
 import Streamer from '../Streamer/Streamer'
 
@@ -35,15 +38,24 @@ export const QUERY: TypedDocumentNode<
   }
 `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = Spinner
 
-export const Empty = () => <div>Empty</div>
+export const Empty = () => {
+  const { t } = useTranslation()
+  return <div>{t('streamer.empty')}</div>
+}
 
 export const Failure = ({
   error,
-}: CellFailureProps<FindStreamerQueryVariables>) => (
-  <div style={{ color: 'red' }}>Error: {error?.message}</div>
-)
+}: CellFailureProps<FindStreamerQueryVariables>) => {
+  const { t } = useTranslation()
+  return (
+    <div style={{ color: 'red' }}>
+      {t('streamer.error')}{' '}
+      {error && t('common.error', { error: error?.message })}
+    </div>
+  )
+}
 
 export const Success = ({
   streamer,

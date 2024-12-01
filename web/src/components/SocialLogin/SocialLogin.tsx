@@ -1,6 +1,7 @@
 import { ComponentProps } from 'react'
 
 import { Button, Link } from '@nextui-org/react'
+import { useTranslation } from 'react-i18next'
 
 const GithubIcon = (props: ComponentProps<'svg'>) => (
   <svg
@@ -37,6 +38,8 @@ const TwitchIcon = (props: ComponentProps<'svg'>) => (
 )
 
 const SocialLogin = () => {
+  const { t } = useTranslation()
+
   return (
     <div className="flex justify-center gap-2">
       <Button
@@ -45,7 +48,7 @@ const SocialLogin = () => {
         variant="solid"
         size="lg"
         className="bg-[#333] text-gray-50"
-        title="Log In with Github"
+        title={t('social.action.login.with', { provider: 'Github' })}
       >
         <GithubIcon className="size-5" />
       </Button>
@@ -56,7 +59,7 @@ const SocialLogin = () => {
         variant="solid"
         size="lg"
         className="bg-[#4285F4] text-gray-50"
-        title="Log In with Google"
+        title={t('social.action.login.with', { provider: 'Google' })}
       >
         <GoogleIcon className="size-5" />
       </Button>
@@ -67,7 +70,7 @@ const SocialLogin = () => {
         variant="solid"
         size="lg"
         className="bg-[#6441A4] text-gray-50"
-        title="Log In with Twitch"
+        title={t('social.action.login.with', { provider: 'Twitch' })}
       >
         <TwitchIcon className="size-5" />
       </Button>

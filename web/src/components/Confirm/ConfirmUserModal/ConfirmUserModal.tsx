@@ -7,6 +7,7 @@ import {
   ModalHeader,
 } from '@nextui-org/react'
 import { toast } from 'react-hot-toast'
+import { useTranslation } from 'react-i18next'
 import type {
   ConfirmUserMutation,
   ConfirmUserMutationVariables,
@@ -49,11 +50,13 @@ const ConfirmUserModal = ({
   email,
   isOpen,
 }: ConfirmUserModalProps) => {
+  const { t } = useTranslation()
+
   const [confirmUser, { loading, error, reset }] = useMutation(
     CONFIRM_USER_MUTATION,
     {
       onCompleted: async () => {
-        toast.success('Confirmed successfully!')
+        toast.success(t('confirm-user.actions.confirm', { context: 'success' }))
         onClose?.(true)
       },
       onError: (error) => {
@@ -68,9 +71,12 @@ const ConfirmUserModal = ({
     SEND_CONFIRM_CODE_MUTATION,
     {
       onCompleted: () => {
-        toast.success('We just sent a new code to your email inbox', {
-          id: 'signup-confirm',
-        })
+        toast.success(
+          t('confirm-user.actions.send-new', { context: 'success' }),
+          {
+            id: 'signup-confirm',
+          }
+        )
         reset()
       },
       onError: (error) => {
@@ -92,7 +98,9 @@ const ConfirmUserModal = ({
   return (
     <Modal isOpen={isOpen} onClose={() => onClose?.(false)}>
       <ModalContent>
-        <ModalHeader className="line-clamp-1">Confirm {email}</ModalHeader>
+        <ModalHeader className="line-clamp-1">
+          {t('confirm-user.actions.confirm')} {email}
+        </ModalHeader>
 
         <ModalBody>
           <ConfirmCodeForm
@@ -110,7 +118,7 @@ const ConfirmUserModal = ({
             color="primary"
             onClick={sendNewConfirmCode}
           >
-            Send a new code
+            {t('confirm-user.actions.send-new')}
           </Button>
         </ModalFooter>
       </ModalContent>

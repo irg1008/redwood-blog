@@ -9,7 +9,7 @@ import Routes from 'src/Routes'
 
 import { AuthProvider, useAuth } from './lib/auth'
 
-import './i18n'
+import './i18n/i18n'
 import './index.css'
 import './scaffold.css'
 

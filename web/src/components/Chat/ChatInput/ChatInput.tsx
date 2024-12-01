@@ -3,6 +3,7 @@ import { useRef } from 'react'
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import { Button, Input } from '@nextui-org/react'
 import { SendIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import { sendChatMessageSchema } from 'schemas'
 import type {
   ChatMessageInput,
@@ -31,6 +32,8 @@ export const SEND_CHAT_MESSAGE: TypedDocumentNode<
 `
 
 const ChatInput = ({ streamId }: ChatMessagesCellProps) => {
+  const { t } = useTranslation()
+
   const [sendChatMessage, { error }] = useMutation<
     SendChatMessageMutation,
     SendChatMessageMutationVariables
@@ -73,7 +76,7 @@ const ChatInput = ({ streamId }: ChatMessagesCellProps) => {
             size="md"
             color="primary"
             variant="bordered"
-            placeholder="Type a message"
+            placeholder={t('chat.input.placeholder')}
             endContent={
               <Button
                 as={Submit}

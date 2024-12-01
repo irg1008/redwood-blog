@@ -1,37 +1,45 @@
+import { Spinner } from '@nextui-org/react'
+import { useTranslation } from 'react-i18next'
 import type { CommentsQuery, CommentsQueryVariables } from 'types/graphql'
 
 import type {
-  CellSuccessProps,
   CellFailureProps,
+  CellSuccessProps,
   TypedDocumentNode,
 } from '@redwoodjs/web'
 
 import Comment from 'src/components/Comment/Comment'
 
-export const QUERY: TypedDocumentNode<
-  CommentsQuery,
-  CommentsQueryVariables
-> = gql`
-  query CommentsQuery($postId: Int!) {
-    comments(postId: $postId) {
-      id
-      name
-      body
-      postId
-      createdAt
+export const QUERY: TypedDocumentNode<CommentsQuery, CommentsQueryVariables> =
+  gql`
+    query CommentsQuery($postId: Int!) {
+      comments(postId: $postId) {
+        id
+        name
+        body
+        postId
+        createdAt
+      }
     }
-  }
-`
+  `
 
-export const Loading = () => <div>Loading...</div>
+export const Loading = Spinner
 
 export const Empty = () => {
-  return <div className="text-center text-gray-500">No comments yet</div>
+  const { t } = useTranslation()
+  return <div className="text-center text-gray-500">{t('comments.empty')}</div>
 }
 
-export const Failure = ({ error }: CellFailureProps) => (
-  <div style={{ color: 'red' }}>Error: {error?.message}</div>
-)
+export const Failure = ({ error }: CellFailureProps) => {
+  const { t } = useTranslation()
+
+  return (
+    <div style={{ color: 'red' }}>
+      {t('comments.error')}{' '}
+      {error && t('common.error', { error: error.message })}
+    </div>
+  )
+}
 
 export const Success = ({ comments }: CellSuccessProps<CommentsQuery>) => {
   return (

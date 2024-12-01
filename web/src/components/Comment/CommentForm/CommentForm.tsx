@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import {
   CreateCommentInput,
   CreateCommentMutation,
@@ -38,6 +39,8 @@ type CommentFormProps = {
 }
 
 const CommentForm = ({ postId }: CommentFormProps) => {
+  const { t } = useTranslation()
+
   const formMethods = useForm<CommentFormValues>({ mode: 'onBlur' })
 
   const [createComment, { loading, error }] = useMutation<
@@ -45,7 +48,7 @@ const CommentForm = ({ postId }: CommentFormProps) => {
     CreateCommentMutationVariables
   >(CREATE_COMMENT, {
     onCompleted: () => {
-      toast.success('Thank you for your comment!')
+      toast.success(t('comment.actions.create', { context: 'success' }))
       formMethods.reset()
     },
     refetchQueries: [
@@ -62,7 +65,9 @@ const CommentForm = ({ postId }: CommentFormProps) => {
 
   return (
     <div>
-      <h3 className="text-lg font-light text-gray-600">Leave a Comment</h3>
+      <h3 className="text-lg font-light text-gray-600">
+        {t('comment.actions.c2a')}
+      </h3>
       <Form<CommentFormValues>
         className="mt-4 w-full"
         formMethods={formMethods}
@@ -80,7 +85,7 @@ const CommentForm = ({ postId }: CommentFormProps) => {
           className="mt-8 block text-sm uppercase text-gray-700"
           errorClassName="block mt-8 text-red-700 uppercase text-sm"
         >
-          Name
+          {t('comment.form.name.label')}
         </Label>
         <TextField
           name="name"
@@ -95,7 +100,7 @@ const CommentForm = ({ postId }: CommentFormProps) => {
           className="mt-8 block text-sm uppercase text-gray-700"
           errorClassName="block mt-8 text-red-700 uppercase text-sm"
         >
-          Comment
+          {t('comment.form.comment.label')}
         </Label>
         <TextAreaField
           name="body"
@@ -109,7 +114,7 @@ const CommentForm = ({ postId }: CommentFormProps) => {
           disabled={loading}
           className="mt-4 block rounded bg-blue-500 px-3 py-2 text-xs font-semibold uppercase tracking-wide text-white disabled:opacity-50"
         >
-          Submit
+          {t('comment.actions.submit')}
         </Submit>
       </Form>
     </div>

@@ -37,7 +37,7 @@ describe('ConfirmUserModal', () => {
   it('has confirm and code input', async () => {
     render(<ConfirmUserModal email={email} isOpen={true} />)
 
-    const input = screen.getByLabelText('Code')
+    const input = screen.getByLabelText('Confirmation code')
     expect(input).toBeInTheDocument()
 
     const confirm = screen.getByText('Confirm')
@@ -58,7 +58,7 @@ describe('ConfirmUserModal', () => {
 
     render(<ConfirmUserModal email={email} isOpen={true} />)
 
-    const resend = screen.getByText('Send a new code')
+    const resend = screen.getByText('Resend code')
     expect(resend).toBeInTheDocument()
 
     await waitFor(() => userEvent.click(resend))
@@ -89,7 +89,7 @@ describe('ConfirmUserModal', () => {
       <ConfirmUserModal email={email} isOpen={true} onClose={closeCallback} />
     )
 
-    const input = screen.getByLabelText('Code')
+    const input = screen.getByLabelText('Confirmation code')
     const confirm = screen.getByText('Confirm')
 
     await waitFor(() => userEvent.type(input, correctCode.toString()))
@@ -122,7 +122,7 @@ describe('ConfirmUserModal', () => {
       <ConfirmUserModal email={email} isOpen={true} onClose={closeCallback} />
     )
 
-    const input = screen.getByLabelText('Code')
+    const input = screen.getByLabelText('Confirmation code')
     const confirm = screen.getByText('Confirm')
 
     await waitFor(() => userEvent.type(input, incorrectCode.toString()))
@@ -136,19 +136,19 @@ describe('ConfirmUserModal', () => {
     })
   })
 
-  // it('closing the modal calls the onClose callback', async () => {
-  //   const closeCallback = jest.fn()
-  //   render(
-  //     <ConfirmUserModal email={email} isOpen={true} onClose={closeCallback} />
-  //   )
+  it('closing the modal calls the onClose callback', async () => {
+    const closeCallback = jest.fn()
+    render(
+      <ConfirmUserModal email={email} isOpen={true} onClose={closeCallback} />
+    )
 
-  //   const close = screen.getByLabelText('Close')
-  //   expect(close).toBeInTheDocument()
+    const close = screen.getByLabelText('Close')
+    expect(close).toBeInTheDocument()
 
-  //   await waitFor(() => userEvent.click(close))
+    await waitFor(() => userEvent.click(close))
 
-  //   expect(closeCallback).toHaveBeenCalled()
-  //   expect(closeCallback).toHaveBeenCalledTimes(1)
-  //   expect(closeCallback).toHaveBeenCalledWith()
-  // })
+    expect(closeCallback).toHaveBeenCalled()
+    expect(closeCallback).toHaveBeenCalledTimes(1)
+    expect(closeCallback).toHaveBeenCalledWith(false)
+  })
 })

@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import {
   DeleteCommentMutation,
   DeleteCommentMutationVariables,
@@ -22,6 +23,7 @@ type CommentProps = {
 }
 
 const Comment = ({ comment }: CommentProps) => {
+  const { t } = useTranslation()
   const { hasRole } = useAuth()
 
   const [deleteComment] = useMutation<
@@ -37,7 +39,7 @@ const Comment = ({ comment }: CommentProps) => {
   })
 
   const confirmDeleteComment = () => {
-    if (confirm('Are you sure you want to delete this comment?')) {
+    if (confirm(t('comment.actions.delete', { context: 'confirm' }))) {
       deleteComment({ variables: { id: comment.id } })
     }
   }
@@ -57,7 +59,7 @@ const Comment = ({ comment }: CommentProps) => {
           onClick={confirmDeleteComment}
           className="absolute bottom-2 right-2 rounded bg-red-500 px-2 py-1 text-xs text-white"
         >
-          Delete
+          {t('comment.actions.delete')}
         </button>
       )}
     </div>

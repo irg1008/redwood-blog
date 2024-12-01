@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { RatIcon } from 'lucide-react'
+import { useTranslation } from 'react-i18next'
 import type {
   ChatMessageFragment,
   ChatMessageInput,
@@ -17,6 +18,8 @@ import {
   type TypedDocumentNode,
 } from '@redwoodjs/web'
 import { registerFragment } from '@redwoodjs/web/apollo'
+
+import Spinner from 'src/components/UI/Spinner/Spinner'
 
 import ChatMessages from '../ChatMessages/ChatMessages'
 
@@ -56,11 +59,17 @@ export const CHAT_MESSAGES_SUB: TypedDocumentNode<
   }
 `
 
-export const Loading = () => <div className="h-full">Loading messages</div>
+export const Loading = Spinner
 
-export const Failure = ({ error }: CellFailureProps) => (
-  <div className="text-danger">Error: {error?.message}</div>
-)
+export const Failure = ({ error }: CellFailureProps) => {
+  const { t } = useTranslation()
+  return (
+    <div className="text-danger">
+      {t('chat.error')}
+      {error && t('common.error', { error: error.message })}
+    </div>
+  )
+}
 
 const pushToQueue = (
   queue: ChatMessageFragment[],
@@ -78,6 +87,8 @@ export const Success = ({
   chatMessages,
   streamId,
 }: CellSuccessProps<ChatMessagesQuery> & ChatMessagesCellProps) => {
+  const { t } = useTranslation()
+
   const [messages, setMessages] = useState(chatMessages)
   const [isScrollingAway, setIsScrolling] = useState(false)
   const messageLimit = isScrollingAway ? 500 : 200
@@ -110,7 +121,7 @@ export const Success = ({
     return (
       <div className="grid h-full place-content-center place-items-center gap-2">
         <RatIcon className="size-16 text-primary-600" />
-        {`It's so empty here`}
+        {t('chat.empty')}
       </div>
     )
   }

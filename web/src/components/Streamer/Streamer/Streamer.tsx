@@ -1,3 +1,4 @@
+import { useTranslation } from 'react-i18next'
 import { FindStreamerQuery } from 'types/graphql'
 
 import { CellSuccessProps } from '@redwoodjs/web'
@@ -8,6 +9,8 @@ import { useLiveTime } from 'src/hooks/useLiveTime'
 type StreamerProps = CellSuccessProps<FindStreamerQuery>
 
 const StreamerComponent = ({ streamer }: StreamerProps) => {
+  const { t } = useTranslation()
+
   const {
     liveStream,
     user: { email },
@@ -15,14 +18,14 @@ const StreamerComponent = ({ streamer }: StreamerProps) => {
 
   return (
     <div className="flex flex-col gap-4">
-      Streamer: {email}
+      {email}{' '}
       {liveStream ? (
         <>
           <Stream stream={liveStream} />
           <LiveTime startDate={new Date(liveStream.createdAt)} />
         </>
       ) : (
-        <>Streamer is not live</>
+        <>{t('streamer.not-live')}</>
       )}
     </div>
   )
@@ -33,8 +36,9 @@ type LiveTimeProps = {
 }
 
 const LiveTime = ({ startDate }: LiveTimeProps) => {
+  const { t } = useTranslation()
   const { formattedTime } = useLiveTime(startDate)
-  return <div>Live for {formattedTime}</div>
+  return <div>{t('streamer.live-for', { duration: formattedTime })}</div>
 }
 
 export default StreamerComponent

@@ -1,14 +1,20 @@
+import { useTranslation } from 'react-i18next'
+
 import { Metadata } from '@redwoodjs/web'
 
 import StreamerCell from 'src/components/Streamer/StreamerCell'
 
-const ChatPage = ({ streamerId }: { streamerId: number }) => {
+const StreamerPage = ({ streamerId }: { streamerId: number }) => {
+  const { t } = useTranslation()
   return (
     <>
-      <Metadata title="Streamer" description="Streamer page" />
+      <Metadata
+        title={t('Streamer.title')}
+        description={t('Streamer.description')}
+      />
       <StreamerCell id={streamerId} />
     </>
   )
 }
 
-export default ChatPage
+export default StreamerPage

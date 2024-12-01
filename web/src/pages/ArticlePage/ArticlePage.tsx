@@ -1,3 +1,5 @@
+import { useTranslation } from 'react-i18next'
+
 import { Metadata } from '@redwoodjs/web'
 
 import ArticleCell from 'src/components/Article/ArticleCell'
@@ -7,9 +9,13 @@ type ArticlePageProps = {
 }
 
 const ArticlePage = ({ slug }: ArticlePageProps) => {
+  const { t } = useTranslation()
   return (
     <>
-      <Metadata title="Article" description="Article page" />
+      <Metadata
+        title={t('Article.title')}
+        description={t('Article.description')}
+      />
       <ArticleCell slug={slug} />
     </>
   )

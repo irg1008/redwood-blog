@@ -1,0 +1,150 @@
+{
+  "404": {
+    "description": "Page not found",
+    "title": "404"
+  },
+  "About": {
+    "about": "About us blablabla",
+    "description": "About us",
+    "title": "About"
+  },
+  "Article": {
+    "description": "Article",
+    "title": "Article"
+  },
+  "Contact": {
+    "description": "Contact us",
+    "title": "Contact"
+  },
+  "FatalError": {
+    "description": "Fatal Error",
+    "title": "Fatal Error",
+    "wrong": "Something went wrong"
+  },
+  "HomePage": {
+    "description": "Welcome to the home page of our website.",
+    "title": "Home Page"
+  },
+  "Posts": {
+    "description": "Posts",
+    "title": "Posts"
+  },
+  "Streamer": {
+    "description": "See whats happening",
+    "title": "Streamer"
+  },
+  "article": {
+    "empty": "Article not found",
+    "error": "Error loading article"
+  },
+  "articles": {
+    "empty": "You are all caught up!",
+    "error": "Error loading articles"
+  },
+  "chat": {
+    "empty": "It's lonely in here...",
+    "error": "Error loading chat",
+    "input": {
+      "placeholder": "Type a message..."
+    }
+  },
+  "comment": {
+    "actions": {
+      "c2a": "Leave a comment",
+      "create": "Create",
+      "create_success": "Thank you for your comment!",
+      "delete": "Delete",
+      "delete_confirm": "Are you sure you want to delete this comment?",
+      "submit": "Submit"
+    },
+    "form": {
+      "comment": {
+        "label": "Comment"
+      },
+      "name": {
+        "label": "Name"
+      }
+    }
+  },
+  "comments": {
+    "empty": "No comments yet",
+    "error": "Error loading comments"
+  },
+  "common": {
+    "by": "by {{name}}",
+    "error": "Error: {{error}}",
+    "language-dropdown": {
+      "aria": "Select a language"
+    },
+    "loading": "Loading...",
+    "login": "Login",
+    "logout": "Logout",
+    "name": "{{appName}}",
+    "paste": "Paste from clipboard",
+    "unknown": "Unknown"
+  },
+  "confirm-code": {
+    "actions": {
+      "submit": "Confirm"
+    },
+    "form": {
+      "code": {
+        "label": "Confirmation code",
+        "placeholder": "Enter the code you received"
+      }
+    }
+  },
+  "confirm-user": {
+    "actions": {
+      "confirm": "Confirm",
+      "confirm_success": "User confirmed successfully!",
+      "send-new": "Resend code",
+      "send-new_success": "Code sent successfully!"
+    }
+  },
+  "social": {
+    "action": {
+      "login": {
+        "with": "Login with {{provider}}"
+      }
+    }
+  },
+  "stream-player": {
+    "auto": "Auto",
+    "empty": "Stream not found",
+    "error": "Error loading stream",
+    "latency": "Latency",
+    "toolbar": {
+      "close": "Close",
+      "fullscreen": {
+        "aria": "Fullscreen",
+        "enter": "Enter fullscreen",
+        "exit": "Exit fullscreen"
+      },
+      "picture-in-picture": {
+        "aria": "Picture in picture",
+        "enter": "Enter picture in picture",
+        "exit": "Exit picture in picture"
+      },
+      "settings": {
+        "aria": "Settings",
+        "back": "Back to settings",
+        "playback-speed": "Playback speed",
+        "resolution": "Resolution",
+        "seek-live": "Seek live",
+        "stats": "Stats"
+      },
+      "volume": {
+        "aria": "Volume",
+        "mute": "Mute",
+        "unmute": "Unmute"
+      }
+    }
+  },
+  "streamer": {
+    "empty": "Yeah, nothing here...",
+    "error": "Error loading streamer. Try again later.",
+    "live-for": "Live for {{duration}}",
+    "not-live": "Streamer is not live"
+  }
+}

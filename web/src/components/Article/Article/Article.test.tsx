@@ -3,6 +3,7 @@ import { FindArticleQuery } from 'types/graphql'
 import { render, screen, waitFor } from '@redwoodjs/testing/web'
 
 import { standard as commentsStandard } from 'src/components/Comment/CommentsCell/CommentsCell.mock'
+import { mockI18n } from 'src/i18n/i18n.test'
 
 import Article, { LINE_CLAMP_CLASS } from './Article'
 
@@ -18,6 +19,10 @@ const ARTICLE: FindArticleQuery['article'] = {
 }
 
 describe('Article', () => {
+  beforeEach(() => {
+    mockI18n()
+  })
+
   it('renders a blog post', () => {
     render(<Article article={ARTICLE} />)
 
