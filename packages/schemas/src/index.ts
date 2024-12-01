@@ -1,31 +1,36 @@
 import { ConfirmUserInput, CreateContactInput } from 'types/graphql'
 import type { GenericSchema } from 'valibot'
 import * as v from 'valibot'
+
 export * as v from 'valibot'
+export { schemaI18n }
+
+import { schemaI18n } from './i18n/i18n'
+import { m as t } from './i18n/m'
 
 type Schema<T> = Record<keyof T, GenericSchema>
 
 const emailSchema = v.pipe(
   v.string(),
-  v.nonEmpty('Please enter your email'),
-  v.email('the email is badly formatted'),
-  v.maxLength(50, 'The email is too long')
+  v.nonEmpty(t('email.nonEmpty')),
+  v.email(t('email.email')),
+  v.maxLength(50, t('email.maxLength'))
 )
 
 export const createContactSchema = v.object<Schema<CreateContactInput>>({
   email: emailSchema,
   message: v.pipe(
     v.string(),
-    v.nonEmpty('Please enter a message'),
-    v.maxLength(5000, 'The message is too long')
+    v.nonEmpty(t('createContact.nonEmpty')),
+    v.maxLength(5000, t('createContact.maxLength'))
   ),
   name: v.optional(v.string()),
 })
 
 export const codeSchema = v.pipe(
   v.string(),
-  v.nonEmpty('Please enter the code'),
-  v.regex(/^[0-9]{6}$/, 'Invalid code format. Must be a 6 digit code')
+  v.nonEmpty(t('code.nonEmpty')),
+  v.regex(/^[0-9]{6}$/, t('code.regex'))
 )
 
 export const confirmCodeSchema = v.object<Schema<{ code: string }>>({
@@ -40,7 +45,7 @@ export const confirmUserSchema = v.object<Schema<ConfirmUserInput>>({
 export const sendChatMessageSchema = v.object<Schema<{ body: string }>>({
   body: v.pipe(
     v.string(),
-    v.nonEmpty('Please enter a message'),
-    v.maxLength(5000, 'The message is too long')
+    v.nonEmpty(t('sendChatMessage.nonEmpty')),
+    v.maxLength(5000, t('sendChatMessage.maxLength'))
   ),
 })

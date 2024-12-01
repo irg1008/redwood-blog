@@ -15,10 +15,11 @@ import {
   SubmitHandler,
   TextAreaField,
   TextField,
-  useForm,
 } from '@redwoodjs/forms'
 import { Metadata, useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
+
+import { useForm } from 'src/hooks/useForm'
 
 const CREATE_CONTACT = gql`
   mutation CreateContactMutation($input: CreateContactInput!) {

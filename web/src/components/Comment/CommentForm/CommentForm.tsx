@@ -14,12 +14,12 @@ import {
   SubmitHandler,
   TextAreaField,
   TextField,
-  useForm,
 } from '@redwoodjs/forms'
 import { useMutation } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import { QUERY as CommentsQuery } from 'src/components/Comment/CommentsCell/CommentsCell'
+import { useForm } from 'src/hooks/useForm'
 
 const CREATE_COMMENT = gql`
   mutation CreateCommentMutation($input: CreateCommentInput!) {

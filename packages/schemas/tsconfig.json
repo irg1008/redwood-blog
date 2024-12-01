@@ -8,14 +8,27 @@
     "sourceMap": true,
     "esModuleInterop": true,
     "module": "ESNext",
+    "target": "ESNext",
     "moduleResolution": "Bundler",
     "outDir": "./dist",
+    "rootDir": "./src",
     "paths": {
-      "types/*": ["../../types/*", "../../web/types/*", "../../api/types/*"]
+      "types/*": [
+        "../../types/*",
+        "./types/*",
+        "../../web/types/*",
+        "../../api/types/*"
+      ],
+      "src/*": [
+        "./src/*",
+      ]
     },
-    "typeRoots": ["../../node_modules/@types"],
+    "typeRoots": [
+      "../../node_modules/@types"
+    ],
   },
   "include": [
-    "*.ts",
+    "src",
+    "./types"
   ]
 }

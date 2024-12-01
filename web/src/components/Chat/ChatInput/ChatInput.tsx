@@ -11,10 +11,11 @@ import type {
   SendChatMessageMutationVariables,
 } from 'types/graphql'
 
-import { Form, Submit, useForm } from '@redwoodjs/forms'
+import { Form, Submit } from '@redwoodjs/forms'
 import { TypedDocumentNode, useMutation } from '@redwoodjs/web'
 
 import Controller from 'src/components/UI/Controller/Controller'
+import { useForm } from 'src/hooks/useForm'
 
 import { ChatMessagesCellProps } from '../ChatMessagesCell'
 

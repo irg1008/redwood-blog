@@ -4,14 +4,15 @@ import type { EditPostById, UpdatePostInput } from 'types/graphql'
 
 import type { RWGqlError } from '@redwoodjs/forms'
 import {
+  FieldError,
   Form,
   FormError,
-  FieldError,
   Label,
-  TextField,
   Submit,
-  useForm,
+  TextField,
 } from '@redwoodjs/forms'
+
+import { useForm } from 'src/hooks/useForm'
 
 type FormPost = NonNullable<EditPostById['post']>
 

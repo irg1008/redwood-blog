@@ -4,11 +4,12 @@ import { ClipboardPasteIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { confirmCodeSchema } from 'schemas'
 
-import { FieldError, Form, Submit, useForm } from '@redwoodjs/forms'
+import { FieldError, Form, Submit } from '@redwoodjs/forms'
 
 import Controller, {
   ApolloError,
 } from 'src/components/UI/Controller/Controller'
+import { useForm } from 'src/hooks/useForm'
 
 type ConfirmCodeInput = {
   code: string

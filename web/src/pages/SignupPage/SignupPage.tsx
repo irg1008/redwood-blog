@@ -8,7 +8,6 @@ import {
   PasswordField,
   Submit,
   TextField,
-  useForm,
 } from '@redwoodjs/forms'
 import { Link, navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
@@ -16,6 +15,7 @@ import { toast } from '@redwoodjs/web/toast'
 
 import ConfirmUserModal from 'src/components/Confirm/ConfirmUserModal/ConfirmUserModal'
 import SocialLogin from 'src/components/SocialLogin/SocialLogin'
+import { useForm } from 'src/hooks/useForm'
 import { useAuth } from 'src/lib/auth'
 
 const SignupPage = () => {

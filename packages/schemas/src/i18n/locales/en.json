@@ -1,0 +1,19 @@
+{
+  "email": {
+    "nonEmpty": "Please enter an email address",
+    "email": "Please enter a valid email address",
+    "maxLength": "Email address is too long"
+  },
+  "createContact": {
+    "nonEmpty": "Please enter a message",
+    "maxLength": "Message is too long. Max length is {expected}"
+  },
+  "code": {
+    "nonEmpty": "Please enter a code",
+    "regex": "Code is too long. Max length is {expected}"
+  },
+  "sendChatMessage": {
+    "nonEmpty": "Please enter a message",
+    "maxLength": "Message is too long. Max length is {expected}"
+  }
+}
