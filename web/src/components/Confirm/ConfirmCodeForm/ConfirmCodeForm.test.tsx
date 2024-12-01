@@ -21,23 +21,27 @@ describe('ConfirmCodeForm', () => {
     await waitFor(() => userEvent.click(submit))
 
     expect(onConfirm).not.toHaveBeenCalled()
-    expect(screen.getByText('Please enter the code')).toBeInTheDocument()
+    expect(screen.getByText('Please enter a code')).toBeInTheDocument()
   })
 
-  it('code must be a 6 digit number', async () => {
+  test.each([
+    ['123456789', 'Code must be 6 characters long'],
+    ['123', 'Code must be 6 characters long'],
+    ['DEHECK', 'Code must contain only digits'],
+  ])(`code must be a 6 digit number. Checking %p`, async (code, message) => {
     const onConfirm = jest.fn()
 
     render(<ConfirmCodeForm onConfirm={onConfirm} />)
 
     const submit = screen.getByText('Confirm')
-    const input = screen.getByLabelText('Confirmation code')
+    const input: HTMLInputElement = screen.getByLabelText('Confirmation code')
 
-    await waitFor(() => userEvent.type(input, '12345'))
+    input.type = 'text'
+
+    await waitFor(() => userEvent.type(input, code))
     await waitFor(() => userEvent.click(submit))
 
-    const error = screen.getByText(
-      'Invalid code format. Must be a 6 digit code'
-    )
+    const error = screen.getByText(message)
     expect(error).toBeInTheDocument()
     expect(onConfirm).not.toHaveBeenCalled()
   })

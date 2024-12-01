@@ -30,6 +30,7 @@ export const createContactSchema = v.object<Schema<CreateContactInput>>({
 export const codeSchema = v.pipe(
   v.string(),
   v.nonEmpty(t('code.nonEmpty')),
+  v.length(6, t('code.length')),
   v.regex(/^[0-9]{6}$/, t('code.regex'))
 )
 

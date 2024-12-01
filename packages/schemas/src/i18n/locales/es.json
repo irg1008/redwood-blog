@@ -6,14 +6,15 @@
   },
   "createContact": {
     "nonEmpty": "Por favor ingresa un mensaje",
-    "maxLength": "El mensaje es demasiado largo. Máx. {expected}"
+    "maxLength": "El mensaje es demasiado largo. Máx. {{requirement}}"
   },
   "code": {
     "nonEmpty": "Por favor ingresa un código",
-    "regex": "El código es demasiado largo. Máx. {expected}"
+    "length": "El código debe ser {{requirement}} caracteres de largo",
+    "regex": "El código debe contener solo dígitos"
   },
   "sendChatMessage": {
     "nonEmpty": "Por favor ingresa un mensaje",
-    "maxLength": "El mensaje es demasiado largo. Máx. {expected}"
+    "maxLength": "El mensaje es demasiado largo. Máx. {{requirement}}"
   }
 }
