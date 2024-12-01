@@ -13,8 +13,9 @@ import { useTranslation } from 'react-i18next'
 import { DevFatalErrorPage } from '@redwoodjs/web/dist/components/DevFatalErrorPage'
 
 export default DevFatalErrorPage ||
-  (() => {
+  (({ error }: { error: Error }) => {
     const { t } = useTranslation()
+
     return (
       <main>
         <style
@@ -55,6 +56,7 @@ export default DevFatalErrorPage ||
         <section>
           <h1>
             <span>{t('FatalError.wrong')}</span>
+            <div>{error.message}</div>
           </h1>
         </section>
       </main>

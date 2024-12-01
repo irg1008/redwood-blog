@@ -19,7 +19,6 @@ export const useForm = <
   const form = useRedwoodForm<T, C, V>(props)
 
   const triggerInvalidFields = useCallback(() => {
-    console.log('Retriggering')
     Object.keys(form.formState.errors).forEach((key) => {
       form.trigger(key as Path<T>)
     })

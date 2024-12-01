@@ -6,6 +6,7 @@ import ArticlesCell from 'src/components/Article/ArticlesCell'
 
 const HomePage = () => {
   const { t } = useTranslation()
+
   return (
     <>
       <Metadata
