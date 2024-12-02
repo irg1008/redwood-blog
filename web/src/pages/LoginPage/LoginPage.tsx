@@ -136,7 +136,12 @@ const LoginPage = () => {
               </Link>
             </span>
 
-            <Link size="sm" to={routes.forgotPassword()} underline="hover">
+            <Link
+              size="sm"
+              to={routes.forgotPassword()}
+              underline="hover"
+              className="text-end"
+            >
               {t('Login.actions.forgot-password')}
             </Link>
           </footer>

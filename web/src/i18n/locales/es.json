@@ -6,7 +6,7 @@
   "About": {
     "about": "Sobre nosotros blablabla",
     "description": "Sobre nosotros",
-    "title": "Sobre"
+    "title": "Sobre nosotros"
   },
   "Article": {
     "description": "Artículo",
@@ -42,7 +42,7 @@
   },
   "HomePage": {
     "description": "Bienvenido a la página principal de nuestro sitio web.",
-    "title": "Página Principal"
+    "title": "Inicio"
   },
   "Login": {
     "actions": {
@@ -82,7 +82,7 @@
     "actions": {
       "navigate-login": "Ir a iniciar sesión",
       "submit": "Restablecer contraseña",
-      "submit_success": "Contraseña restablecida exitosamente"
+      "submit_success": "Contraseña restablecida con éxito"
     },
     "description": "Restablece tu contraseña",
     "errors": {
