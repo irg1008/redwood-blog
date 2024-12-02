@@ -1,7 +1,10 @@
 import { NextUIProvider } from '@nextui-org/react'
 
 import { FatalErrorBoundary, RedwoodProvider } from '@redwoodjs/web'
-import { RedwoodApolloProvider } from '@redwoodjs/web/apollo'
+import {
+  GraphQLClientConfigProp,
+  RedwoodApolloProvider,
+} from '@redwoodjs/web/apollo'
 
 import possibleTypes from 'src/graphql/possibleTypes'
 import FatalErrorPage from 'src/pages/FatalErrorPage'
@@ -13,7 +16,7 @@ import './i18n/i18n'
 import './index.css'
 import './scaffold.css'
 
-const graphQLClientConfig = {
+const graphQLClientConfig: GraphQLClientConfigProp = {
   cacheConfig: {
     possibleTypes: possibleTypes.possibleTypes,
   },

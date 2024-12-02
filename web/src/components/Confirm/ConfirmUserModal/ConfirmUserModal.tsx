@@ -14,6 +14,7 @@ import type {
   SendConfirmCodeMutation,
   SendConfirmCodeMutationVariables,
 } from 'types/graphql'
+import { TranslatePath } from 'types/i18next'
 
 import { TypedDocumentNode, useMutation } from '@redwoodjs/web'
 
@@ -59,11 +60,6 @@ const ConfirmUserModal = ({
         toast.success(t('confirm-user.actions.confirm', { context: 'success' }))
         onClose?.(true)
       },
-      onError: (error) => {
-        toast.error(error.message, {
-          id: 'confirm-error',
-        })
-      },
     }
   )
 
@@ -80,7 +76,10 @@ const ConfirmUserModal = ({
         reset()
       },
       onError: (error) => {
-        toast.error(error.message)
+        const err = error.message as TranslatePath
+        return toast.error(t([err, 'common.error'], { error: err }), {
+          id: err,
+        })
       },
     }
   )
@@ -112,7 +111,7 @@ const ConfirmUserModal = ({
 
         <ModalFooter>
           <Button
-            className="me-auto"
+            className="ms-auto"
             isLoading={loadingRequest}
             variant="light"
             color="primary"

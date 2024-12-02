@@ -7,6 +7,7 @@ export { schemaI18n }
 
 import { schemaI18n } from './i18n/i18n'
 import { m as t } from './i18n/m'
+export { t }
 
 type Schema<T> = Record<keyof T, GenericSchema>
 
@@ -50,3 +51,24 @@ export const sendChatMessageSchema = v.object<Schema<{ body: string }>>({
     v.maxLength(5000, t('sendChatMessage.maxLength'))
   ),
 })
+
+export const passwordSchema = v.pipe(
+  v.string(),
+  v.nonEmpty(t('password.nonEmpty')),
+  v.minLength(8, t('password.minLength')),
+  v.maxLength(50, t('password.maxLength')),
+  v.regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/, t('password.regex'))
+)
+
+export const loginSchema = v.object<
+  Schema<{ username: string; password: string }>
+>({
+  username: emailSchema,
+  password: passwordSchema,
+})
+
+export const forgotPasswordSchema = v.pick(loginSchema, ['username'])
+
+export const resetPasswordSchema = v.pick(loginSchema, ['password'])
+
+export const signupSchema = loginSchema

@@ -1,32 +1,45 @@
 import { useEffect, useRef, useState } from 'react'
 
+import { valibotResolver } from '@hookform/resolvers/valibot'
+import { Button, Divider, Input } from '@nextui-org/react'
+import { useTranslation } from 'react-i18next'
+import { loginSchema } from 'schemas'
+import { TranslatePath } from 'types/i18next'
+
 import { LoginAttributes } from '@redwoodjs/auth-dbauth-web'
-import {
-  FieldError,
-  Form,
-  Label,
-  PasswordField,
-  Submit,
-  TextField,
-} from '@redwoodjs/forms'
-import { Link, navigate, routes, useParams } from '@redwoodjs/router'
+import { FieldError, Form, Submit } from '@redwoodjs/forms'
+import { navigate, routes, useParams } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
 import ConfirmUserModal from 'src/components/Confirm/ConfirmUserModal/ConfirmUserModal'
 import SocialLogin from 'src/components/SocialLogin/SocialLogin'
+import Controller from 'src/components/UI/Controller/Controller'
+import Link from 'src/components/UI/Link/Link'
 import { useForm } from 'src/hooks/useForm'
 import { useAuth } from 'src/lib/auth'
 
 const LoginPage = () => {
-  const formMethods = useForm<LoginAttributes>({ mode: 'onBlur' })
-  const { isAuthenticated, logIn } = useAuth()
+  const { t } = useTranslation()
+
+  const formMethods = useForm<LoginAttributes>({
+    mode: 'onBlur',
+    defaultValues: {
+      password: '',
+      username: '',
+    },
+    resolver: valibotResolver(loginSchema),
+  })
+
+  const { isAuthenticated, logIn, loading } = useAuth()
   const { error } = useParams()
   const [confirmOpen, setConfirmOpen] = useState(false)
 
   useEffect(() => {
-    if (error) toast.error(error)
-  }, [error])
+    if (error) {
+      toast.error(t('common.error', { error }))
+    }
+  }, [error, t])
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -41,121 +54,104 @@ const LoginPage = () => {
 
   const onSubmit = async (data: LoginAttributes) => {
     const response = await logIn(data)
+    const err: TranslatePath = response.error
+    if (!err) return
 
-    if (response.message) {
-      return toast(response.message)
-    }
-
-    if (response.error === 'confirmUser') {
-      setConfirmOpen(true)
-      return toast.success('Check your inbox for a confirmation code', {
-        id: 'login-confirm',
-      })
-    }
-
-    if (response.error) {
-      return toast.error(response.error)
+    switch (err) {
+      case 'Login.actions.confirm-user': {
+        setConfirmOpen(true)
+        return toast.success(t(err), { id: 'login-confirm' })
+      }
+      default: {
+        return toast.error(t([err, 'common.error'], { ...data, error: err }), {
+          id: err,
+        })
+      }
     }
   }
 
   const onUserConfirmed = (success: boolean) => {
     setConfirmOpen(false)
-    if (success) onSubmit(formMethods.getValues())
+    if (success) {
+      onSubmit(formMethods.getValues())
+    }
   }
 
   return (
     <>
-      <Metadata title="Login" />
+      <Metadata title={t('Login.title')} description={t('Login.description')} />
 
-      <main className="rw-main">
-        <div className="rw-scaffold rw-login-container">
-          <div className="rw-segment">
-            <header className="rw-segment-header">
-              <h2 className="rw-heading rw-heading-secondary">Login</h2>
-            </header>
+      <section className="grid w-full grow place-content-center gap-8 p-16">
+        <header className="text-center">
+          <h2 className="text-4xl text-primary">{t('common.name')}</h2>
+        </header>
 
-            <div className="rw-segment-main">
-              <div className="rw-form-wrapper">
-                <Form
-                  onSubmit={onSubmit}
-                  className="rw-form-wrapper"
-                  formMethods={formMethods}
-                >
-                  <Label
-                    name="username"
-                    className="rw-label"
-                    errorClassName="rw-label rw-label-error"
-                  >
-                    Username
-                  </Label>
-                  <TextField
-                    name="username"
-                    className="rw-input"
-                    errorClassName="rw-input rw-input-error"
-                    ref={usernameRef}
-                    validation={{
-                      required: {
-                        value: true,
-                        message: 'Username is required',
-                      },
-                    }}
-                  />
+        <Form<LoginAttributes>
+          onSubmit={onSubmit}
+          error={error}
+          formMethods={formMethods}
+          className="flex w-72 flex-col gap-4"
+        >
+          <Controller
+            name="username"
+            render={({ field, fieldState: { invalid } }) => (
+              <Input
+                {...field}
+                type="text"
+                ref={usernameRef}
+                label={t('Login.form.username.label')}
+                variant="bordered"
+                placeholder={t('Login.form.username.placeholder')}
+                isInvalid={invalid}
+                errorMessage={<FieldError name="username" />}
+              />
+            )}
+          />
 
-                  <FieldError name="username" className="rw-field-error" />
+          <Controller
+            name="password"
+            render={({ field, fieldState: { invalid } }) => (
+              <Input
+                {...field}
+                type="password"
+                label={t('Login.form.password.label')}
+                autoComplete="current-password"
+                variant="bordered"
+                placeholder={t('Login.form.password.placeholder')}
+                isInvalid={invalid}
+                errorMessage={<FieldError name="password" />}
+              />
+            )}
+          />
 
-                  <Label
-                    name="password"
-                    className="rw-label"
-                    errorClassName="rw-label rw-label-error"
-                  >
-                    Password
-                  </Label>
-                  <PasswordField
-                    name="password"
-                    className="rw-input"
-                    errorClassName="rw-input rw-input-error"
-                    autoComplete="current-password"
-                    validation={{
-                      required: {
-                        value: true,
-                        message: 'Password is required',
-                      },
-                    }}
-                  />
-                  <FieldError name="password" className="rw-field-error" />
+          <Button color="primary" as={Submit} isLoading={loading}>
+            {t('Login.actions.submit')}
+          </Button>
 
-                  <div className="rw-forgot-link">
-                    <Link
-                      to={routes.forgotPassword()}
-                      className="rw-forgot-link"
-                    >
-                      Forgot Password?
-                    </Link>
-                  </div>
+          <footer className="mt-2 flex justify-between">
+            <span className="text-sm">
+              {t('Login.no-account')}{' '}
+              <Link size="sm" to={routes.signup()} underline="hover">
+                {t('Login.actions.signup')}
+              </Link>
+            </span>
 
-                  <div className="rw-button-group">
-                    <Submit className="rw-button rw-button-blue">Login</Submit>
-                  </div>
-                </Form>
-              </div>
-            </div>
-          </div>
-          <div className="rw-login-link">
-            <span>{`Don't have an account?`}</span>{' '}
-            <Link to={routes.signup()} className="rw-link">
-              Sign up!
+            <Link size="sm" to={routes.forgotPassword()} underline="hover">
+              {t('Login.actions.forgot-password')}
             </Link>
-          </div>
-        </div>
+          </footer>
+        </Form>
 
-        <ConfirmUserModal
-          isOpen={confirmOpen}
-          email={formMethods.getValues().username}
-          onClose={onUserConfirmed}
-        />
+        <Divider />
 
         <SocialLogin />
-      </main>
+      </section>
+
+      <ConfirmUserModal
+        isOpen={confirmOpen}
+        email={formMethods.getValues().username}
+        onClose={onUserConfirmed}
+      />
     </>
   )
 }

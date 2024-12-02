@@ -1,22 +1,42 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 
-import {
-  FieldError,
-  Form,
-  Label,
-  PasswordField,
-  Submit,
-} from '@redwoodjs/forms'
+import { valibotResolver } from '@hookform/resolvers/valibot'
+import { Button, Input } from '@nextui-org/react'
+import { useTranslation } from 'react-i18next'
+import { resetPasswordSchema } from 'schemas'
+import { TranslatePath } from 'types/i18next'
+
+import { ResetPasswordAttributes } from '@redwoodjs/auth-dbauth-web'
+import { FieldError, Form, Submit } from '@redwoodjs/forms'
 import { navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
+import Controller from 'src/components/UI/Controller/Controller'
+import Link from 'src/components/UI/Link/Link'
+import { useForm } from 'src/hooks/useForm'
 import { useAuth } from 'src/lib/auth'
 
+type ResetPasswordForm = Pick<ResetPasswordAttributes, 'password'>
+
 const ResetPasswordPage = ({ resetToken }: { resetToken: string }) => {
-  const { isAuthenticated, reauthenticate, validateResetToken, resetPassword } =
-    useAuth()
-  const [enabled, setEnabled] = useState(true)
+  const { t } = useTranslation()
+
+  const formMethods = useForm<ResetPasswordForm>({
+    mode: 'onBlur',
+    defaultValues: {
+      password: '',
+    },
+    resolver: valibotResolver(resetPasswordSchema),
+  })
+
+  const {
+    isAuthenticated,
+    reauthenticate,
+    validateResetToken,
+    resetPassword,
+    loading,
+  } = useAuth()
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -27,101 +47,93 @@ const ResetPasswordPage = ({ resetToken }: { resetToken: string }) => {
   useEffect(() => {
     const validateToken = async () => {
       const response = await validateResetToken(resetToken)
-      if (response.error) {
-        setEnabled(false)
-        toast.error(response.error)
-      } else {
-        setEnabled(true)
-      }
+
+      const err: TranslatePath = response.error
+      if (!err) return
+
+      navigate(routes.home(), { replace: true })
+      toast.error(t([err, 'common.error'], { error: err }), {
+        id: err,
+      })
     }
+
     validateToken()
-  }, [resetToken, validateResetToken])
+  }, [resetToken, validateResetToken, t])
 
   const passwordRef = useRef<HTMLInputElement>(null)
   useEffect(() => {
     passwordRef.current?.focus()
   }, [])
 
-  const onSubmit = async (data: Record<string, string>) => {
+  const onSubmit = async (data: ResetPasswordForm) => {
     const response = await resetPassword({
       resetToken,
       password: data.password,
     })
 
+    const err: TranslatePath = response.error
     if (response.error) {
-      toast.error(response.error)
-    } else {
-      toast.success('Password changed!')
-      await reauthenticate()
-      navigate(routes.login())
+      return toast.error(t([err, 'common.error'], { error: err }), {
+        id: err,
+      })
     }
+
+    toast.success(t('ResetPassword.actions.submit', { context: 'success' }))
+
+    await reauthenticate()
+    navigate(routes.login())
   }
 
   return (
     <>
-      <Metadata title="Reset Password" />
+      <Metadata
+        title={t('ResetPassword.title')}
+        description={t('ResetPassword.description')}
+      />
 
-      <main className="rw-main">
-        <div className="rw-scaffold rw-login-container">
-          <div className="rw-segment">
-            <header className="rw-segment-header">
-              <h2 className="rw-heading rw-heading-secondary">
-                Reset Password
-              </h2>
-            </header>
+      <section className="grid w-full grow place-content-center gap-8 p-16">
+        <header className="text-center">
+          <h2 className="text-4xl text-primary">{t('common.name')}</h2>
+        </header>
 
-            <div className="rw-segment-main">
-              <div className="rw-form-wrapper">
-                <Form onSubmit={onSubmit} className="rw-form-wrapper">
-                  <div className="text-left">
-                    <Label
-                      name="password"
-                      className="rw-label"
-                      errorClassName="rw-label rw-label-error"
-                    >
-                      New Password
-                    </Label>
-                    <PasswordField
-                      name="password"
-                      autoComplete="new-password"
-                      className="rw-input"
-                      errorClassName="rw-input rw-input-error"
-                      disabled={!enabled}
-                      ref={passwordRef}
-                      validation={{
-                        required: {
-                          value: true,
-                          message: 'New Password is required',
-                        },
-                        minLength: {
-                          value: 8,
-                          message: 'Password must be at least 8 characters',
-                        },
-                        pattern: {
-                          value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-                          message:
-                            'Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number',
-                        },
-                      }}
-                    />
+        <Form<ResetPasswordForm>
+          onSubmit={onSubmit}
+          formMethods={formMethods}
+          className="flex w-72 flex-col gap-4"
+        >
+          <Controller
+            name="password"
+            render={({ field, fieldState: { invalid } }) => (
+              <Input
+                {...field}
+                type="password"
+                ref={passwordRef}
+                autoComplete="new-password"
+                label={t('ResetPassword.form.password.label')}
+                variant="bordered"
+                placeholder={t('ResetPassword.form.password.placeholder')}
+                isInvalid={invalid}
+                errorMessage={<FieldError name="password" />}
+              />
+            )}
+          />
 
-                    <FieldError name="password" className="rw-field-error" />
-                  </div>
+          <Button color="primary" as={Submit} isLoading={loading}>
+            {t('ResetPassword.actions.submit')}
+          </Button>
 
-                  <div className="rw-button-group">
-                    <Submit
-                      className="rw-button rw-button-blue"
-                      disabled={!enabled}
-                    >
-                      Submit
-                    </Submit>
-                  </div>
-                </Form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
+          <footer className="mt-2 grid">
+            <Link
+              size="sm"
+              to={routes.login()}
+              underline="hover"
+              className="justify-self-end"
+            >
+              {t('ResetPassword.actions.navigate-login')}
+            </Link>
+          </footer>
+        </Form>
+      </section>
     </>
   )
 }

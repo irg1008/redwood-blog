@@ -29,7 +29,7 @@ export const useForm = <
     return () => {
       i18n.off('languageChanged', triggerInvalidFields)
     }
-  })
+  }, [triggerInvalidFields])
 
   return form
 }

@@ -10023,13 +10023,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/i18n@npm:^0":
-  version: 0.13.12
-  resolution: "@types/i18n@npm:0.13.12"
-  checksum: 10c0/f1060c165dbb724fe14efd30bbf8875fab2c2ad9b92c4a52cff5fa2df7f8efc7426e98db59c8bfc63dd49933c8622ae4e31056a0e86c9fa84c92d87a87924411
-  languageName: node
-  linkType: hard
-
 "@types/istanbul-lib-coverage@npm:*, @types/istanbul-lib-coverage@npm:^2.0.0, @types/istanbul-lib-coverage@npm:^2.0.1":
   version: 2.0.6
   resolution: "@types/istanbul-lib-coverage@npm:2.0.6"
@@ -24007,7 +24000,6 @@ __metadata:
     "@redwoodjs/router": "npm:8.4.1"
     "@redwoodjs/vite": "npm:8.4.1"
     "@redwoodjs/web": "npm:8.4.1"
-    "@types/i18n": "npm:^0"
     "@types/react": "npm:18.3.12"
     "@types/react-dom": "npm:18.3.1"
     autoprefixer: "npm:10.4.20"

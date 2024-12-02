@@ -31,6 +31,108 @@
     "description": "See whats happening",
     "title": "Streamer"
   },
+  "Login": {
+    "title": "Login",
+    "description": "Login to your account",
+    "form": {
+      "username": {
+        "label": "Username",
+        "placeholder": "Enter your username"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password"
+      }
+    },
+    "actions": {
+      "submit": "Login",
+      "confirm-user": "Please confirm your account to login",
+      "forgot-password": "Forgot password?",
+      "signup": "Sign up!"
+    },
+    "errors": {
+      "fields-required": "All fields are required",
+      "username": {
+        "not-found": "Username {{username}} not found"
+      },
+      "password": {
+        "incorrect": "Incorrect password for {{username}}"
+      }
+    },
+    "no-account": "No account?"
+  },
+  "ForgotPassword": {
+    "title": "Forgot password",
+    "description": "Forgot your password? No problem!",
+    "form": {
+      "username": {
+        "label": "Username",
+        "placeholder": "Enter your username"
+      }
+    },
+    "actions": {
+      "submit": "Send code",
+      "submit_success": "A link to reset your password has been sent to {{username}}",
+      "go-back": "Go back"
+    },
+    "errors": {
+      "username": {
+        "required": "Username is required",
+        "not-found": "Username {{username}} not found"
+      }
+    }
+  },
+  "ResetPassword": {
+    "title": "Reset password",
+    "description": "Reset your password",
+    "form": {
+      "password": {
+        "label": "New password",
+        "placeholder": "Enter your new password"
+      }
+    },
+    "actions": {
+      "submit": "Reset password",
+      "submit_success": "Password reset successfully",
+      "navigate-login": "Go to login"
+    },
+    "errors": {
+      "password": {
+        "already-used": "Please choose a different password"
+      },
+      "reset-token": {
+        "expired": "Reset token has expired",
+        "invalid": "Invalid reset token",
+        "required": "Empty reset token"
+      }
+    }
+  },
+  "Signup": {
+    "title": "Sign Up",
+    "description": "Sign up for an account",
+    "form": {
+      "username": {
+        "label": "Username",
+        "placeholder": "Enter your username"
+      },
+      "password": {
+        "label": "Password",
+        "placeholder": "Enter your password"
+      }
+    },
+    "actions": {
+      "submit": "Sign up",
+      "confirm-user": "Please confirm your account to login",
+      "login": "Login!"
+    },
+    "errors": {
+      "fields-required": "All fields are required",
+      "username": {
+        "taken": "Username {{username}} is already taken"
+      }
+    },
+    "already-account": "Already have an account?"
+  },
   "article": {
     "empty": "Article not found",
     "error": "Error loading article"
@@ -79,6 +181,7 @@
     "logout": "Logout",
     "name": "{{appName}}",
     "paste": "Paste from clipboard",
+    "paste-error": "Error pasting from clipboard",
     "unknown": "Unknown"
   },
   "confirm-code": {
@@ -96,8 +199,17 @@
     "actions": {
       "confirm": "Confirm",
       "confirm_success": "User confirmed successfully!",
-      "send-new": "Resend code",
+      "send-new": "Send new code",
       "send-new_success": "Code sent successfully!"
+    },
+    "errors": {
+      "code": {
+        "invalid": "Invalid code, make sure you entered it correctly",
+        "expired": "The code has expired, please request a new one"
+      },
+      "username": {
+        "not-found": "Username {{username}} not found"
+      }
     }
   },
   "social": {

@@ -3,8 +3,10 @@ import { Button, Input, Tooltip } from '@nextui-org/react'
 import { ClipboardPasteIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { confirmCodeSchema } from 'schemas'
+import { TranslatePath } from 'types/i18next'
 
-import { FieldError, Form, Submit } from '@redwoodjs/forms'
+import { Form, Submit } from '@redwoodjs/forms'
+import { toast } from '@redwoodjs/web/toast'
 
 import Controller, {
   ApolloError,
@@ -41,7 +43,8 @@ const ConfirmCodeForm = ({ onConfirm, error, loading }: ConfirmCodeProps) => {
       const text = await navigator.clipboard.readText()
       formMethods.setValue('code', text)
     } catch (err) {
-      console.error('Failed to read clipboard contents: ', err)
+      console.error(err)
+      toast.error(t('common.paste-error'))
     }
   }
 
@@ -50,10 +53,11 @@ const ConfirmCodeForm = ({ onConfirm, error, loading }: ConfirmCodeProps) => {
       onSubmit={onSubmit}
       error={error}
       formMethods={formMethods}
+      className="flex flex-col gap-4"
     >
       <Controller
         name="code"
-        render={({ field, fieldState: { invalid } }) => (
+        render={({ field, fieldState: { invalid, error } }) => (
           <Input
             {...field}
             type="number"
@@ -73,17 +77,12 @@ const ConfirmCodeForm = ({ onConfirm, error, loading }: ConfirmCodeProps) => {
                 </Button>
               </Tooltip>
             }
-            errorMessage={<FieldError name="code" />}
+            errorMessage={error && t(error.message as TranslatePath)}
           />
         )}
       />
 
-      <Button
-        color="primary"
-        className="mt-6 w-full"
-        as={Submit}
-        isLoading={loading}
-      >
+      <Button color="primary" as={Submit} isLoading={loading}>
         {t('confirm-code.actions.submit')}
       </Button>
     </Form>

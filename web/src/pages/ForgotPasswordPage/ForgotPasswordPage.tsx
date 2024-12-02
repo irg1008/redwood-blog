@@ -1,14 +1,35 @@
 import { useEffect, useRef } from 'react'
 
-import { FieldError, Form, Label, Submit, TextField } from '@redwoodjs/forms'
-import { navigate, routes } from '@redwoodjs/router'
+import { valibotResolver } from '@hookform/resolvers/valibot'
+import { Button, Input, Link } from '@nextui-org/react'
+import { useTranslation } from 'react-i18next'
+import { forgotPasswordSchema } from 'schemas'
+import { TranslatePath } from 'types/i18next'
+
+import { LoginAttributes } from '@redwoodjs/auth-dbauth-web'
+import { FieldError, Form, Submit } from '@redwoodjs/forms'
+import { back, navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
+import Controller from 'src/components/UI/Controller/Controller'
+import { useForm } from 'src/hooks/useForm'
 import { useAuth } from 'src/lib/auth'
 
+type ForgotPasswordForm = Pick<LoginAttributes, 'username'>
+
 const ForgotPasswordPage = () => {
-  const { isAuthenticated, forgotPassword } = useAuth()
+  const { t } = useTranslation()
+
+  const formMethods = useForm<ForgotPasswordForm>({
+    mode: 'onBlur',
+    defaultValues: {
+      username: '',
+    },
+    resolver: valibotResolver(forgotPasswordSchema),
+  })
+
+  const { isAuthenticated, forgotPassword, loading } = useAuth()
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -21,69 +42,72 @@ const ForgotPasswordPage = () => {
     usernameRef?.current?.focus()
   }, [])
 
-  const onSubmit = async (data: { username: string }) => {
+  const onSubmit = async (data: ForgotPasswordForm) => {
     const response = await forgotPassword(data.username)
 
     if (response.error) {
-      toast.error(response.error)
-    } else {
-      toast.success(
-        'A link to reset your password was sent to ' + response.email
-      )
-
-      navigate(routes.login())
+      const err: TranslatePath = response.error
+      return toast.error(t([err, 'common.error'], { ...data, error: err }), {
+        id: err,
+      })
     }
+
+    toast.success(
+      t('ForgotPassword.actions.submit', { context: 'success', ...data })
+    )
+
+    formMethods.reset()
   }
 
   return (
     <>
-      <Metadata title="Forgot Password" />
+      <Metadata
+        title={t('ForgotPassword.title')}
+        description={t('ForgotPassword.description')}
+      />
 
-      <main className="rw-main">
-        <div className="rw-scaffold rw-login-container">
-          <div className="rw-segment">
-            <header className="rw-segment-header">
-              <h2 className="rw-heading rw-heading-secondary">
-                Forgot Password
-              </h2>
-            </header>
+      <section className="grid w-full grow place-content-center gap-8 p-16">
+        <header className="text-center">
+          <h2 className="text-4xl text-primary">{t('common.name')}</h2>
+        </header>
 
-            <div className="rw-segment-main">
-              <div className="rw-form-wrapper">
-                <Form onSubmit={onSubmit} className="rw-form-wrapper">
-                  <div className="text-left">
-                    <Label
-                      name="username"
-                      className="rw-label"
-                      errorClassName="rw-label rw-label-error"
-                    >
-                      Username
-                    </Label>
-                    <TextField
-                      name="username"
-                      className="rw-input"
-                      errorClassName="rw-input rw-input-error"
-                      ref={usernameRef}
-                      validation={{
-                        required: {
-                          value: true,
-                          message: 'Username is required',
-                        },
-                      }}
-                    />
+        <Form<ForgotPasswordForm>
+          onSubmit={onSubmit}
+          formMethods={formMethods}
+          className="flex w-72 flex-col gap-4"
+        >
+          <Controller
+            name="username"
+            render={({ field, fieldState: { invalid } }) => (
+              <Input
+                {...field}
+                type="text"
+                ref={usernameRef}
+                label={t('ForgotPassword.form.username.label')}
+                variant="bordered"
+                placeholder={t('ForgotPassword.form.username.placeholder')}
+                isInvalid={invalid}
+                errorMessage={<FieldError name="username" />}
+              />
+            )}
+          />
 
-                    <FieldError name="username" className="rw-field-error" />
-                  </div>
+          <Button color="primary" as={Submit} isLoading={loading}>
+            {t('ForgotPassword.actions.submit')}
+          </Button>
 
-                  <div className="rw-button-group">
-                    <Submit className="rw-button rw-button-blue">Submit</Submit>
-                  </div>
-                </Form>
-              </div>
-            </div>
-          </div>
-        </div>
-      </main>
+          <footer className="mt-2 grid">
+            <Link
+              size="sm"
+              onClick={() => back()}
+              underline="hover"
+              className="cursor-pointer justify-self-end"
+            >
+              {t('ForgotPassword.actions.go-back')}
+            </Link>
+          </footer>
+        </Form>
+      </section>
     </>
   )
 }

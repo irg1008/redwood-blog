@@ -1,13 +1,15 @@
 import { User } from '@prisma/client'
 import type { APIGatewayProxyEvent, Context } from 'aws-lambda'
+import { passwordSchema, v } from 'schemas'
 
-import { validate } from '@redwoodjs/api'
 import type { DbAuthHandlerOptions, UserType } from '@redwoodjs/auth-dbauth-api'
 import { DbAuthHandler } from '@redwoodjs/auth-dbauth-api'
 
 import { cookieName } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 import { sendConfirmCode, sendResetPassword } from 'src/services/users'
+
+import type { TranslatePath } from '$web/src/i18n/i18n'
 
 export const handler = async (
   event: APIGatewayProxyEvent,
@@ -43,9 +45,11 @@ export const handler = async (
       // for security reasons you may want to be vague here rather than expose
       // the fact that the email address wasn't found (prevents fishing for
       // valid email addresses)
-      usernameNotFound: 'Username not found',
+      usernameNotFound:
+        'ForgotPassword.errors.username.not-found' satisfies TranslatePath,
       // if the user somehow gets around client validation
-      usernameRequired: 'Username is required',
+      usernameRequired:
+        'ForgotPassword.errors.username.required' satisfies TranslatePath,
     },
   }
 
@@ -64,16 +68,20 @@ export const handler = async (
     handler: async (user: User) => {
       if (user.confirmed) return user
       await sendConfirmCode({ email: user.email })
-      throw new Error('confirmUser')
+      const msg: TranslatePath = 'Login.actions.confirm-user'
+      throw new Error(msg)
     },
 
     errors: {
-      usernameOrPasswordMissing: 'Both username and password are required',
-      usernameNotFound: 'Username ${username} not found',
+      usernameOrPasswordMissing:
+        'Login.errors.fields-required' satisfies TranslatePath,
+      usernameNotFound:
+        'Login.errors.username.not-found' satisfies TranslatePath,
       // For security reasons you may want to make this the same as the
       // usernameNotFound error so that a malicious user can't use the error
       // to narrow down if it's the username or password that's incorrect
-      incorrectPassword: 'Incorrect password for ${username}',
+      incorrectPassword:
+        'Login.errors.password.incorrect' satisfies TranslatePath,
     },
 
     // How long a user will remain logged in, in seconds
@@ -103,13 +111,17 @@ export const handler = async (
 
     errors: {
       // the resetToken is valid, but expired
-      resetTokenExpired: 'resetToken is expired',
+      resetTokenExpired:
+        'ResetPassword.errors.reset-token.expired' satisfies TranslatePath,
       // no user was found with the given resetToken
-      resetTokenInvalid: 'resetToken is invalid',
+      resetTokenInvalid:
+        'ResetPassword.errors.reset-token.invalid' satisfies TranslatePath,
       // the resetToken was not present in the URL
-      resetTokenRequired: 'resetToken is required',
+      resetTokenRequired:
+        'ResetPassword.errors.reset-token.required' satisfies TranslatePath,
       // new password is the same as the old password (apparently they did not forget it)
-      reusedPassword: 'Must choose a new password',
+      reusedPassword:
+        'ResetPassword.errors.password.already-used' satisfies TranslatePath,
     },
   }
 
@@ -153,25 +165,14 @@ export const handler = async (
     // password is valid, otherwise throw a `PasswordValidationError`.
     // Import the error along with `DbAuthHandler` from `@redwoodjs/api` above.
     passwordValidation: (password) => {
-      validate(password, 'password', {
-        length: {
-          minimum: 8,
-          message: 'Password must be at least 8 characters',
-        },
-        format: {
-          pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/,
-          message:
-            'Password must contain at least 1 uppercase letter, 1 lowercase letter, and 1 number',
-        },
-      })
-
+      v.parse(passwordSchema, password)
       return true
     },
 
     errors: {
       // `field` will be either "username" or "password"
-      fieldMissing: '${field} is required',
-      usernameTaken: 'Username "${username}" already in use',
+      fieldMissing: 'Signup.errors.fields-required' satisfies TranslatePath,
+      usernameTaken: 'Signup.errors.username.taken' satisfies TranslatePath,
     },
   }
 

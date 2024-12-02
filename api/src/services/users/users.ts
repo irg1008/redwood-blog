@@ -1,3 +1,4 @@
+import { confirmUserSchema, v } from 'schemas'
 import type {
   MutationResolvers,
   QueryResolvers,
@@ -12,6 +13,8 @@ import { SendResetPasswordEmailJob } from 'src/jobs/SendResetPasswordEmailJob/Se
 import { db } from 'src/lib/db'
 import { later } from 'src/lib/jobs'
 
+import { TranslatePath } from '$web/src/i18n/i18n'
+
 export const users: QueryResolvers['users'] = () => {
   return db.user.findMany()
 }
@@ -23,21 +26,29 @@ export const user: QueryResolvers['user'] = ({ id }) => {
 }
 
 export const confirmUser: MutationResolvers['confirmUser'] = async ({
-  input: { email, code },
+  input,
 }) => {
-  validate(email, 'email', { email: true })
-  validate(code, 'code', { numericality: { integer: true } })
+  const { email, code } = input
+  v.parse(confirmUserSchema, input)
 
   const hashedCode = hashToken(code.toString())
   const user = await db.user.findFirst({
     where: { email, confirmToken: hashedCode },
   })
 
-  validate(user, 'code', { presence: { message: 'The code is not valid' } })
+  validate(user, 'code', {
+    presence: {
+      message: 'confirm-user.errors.code.invalid' satisfies TranslatePath,
+    },
+  })
+
   if (user?.confirmed) return user
 
   validate(new Date() <= user.confirmTokenExpiresAt, 'code', {
-    acceptance: { in: [true], message: 'The code has expired' },
+    acceptance: {
+      in: [true],
+      message: 'confirm-user.errors.code.expired' satisfies TranslatePath,
+    },
   })
 
   return await db.user.update({
@@ -54,7 +65,11 @@ export const sendConfirmCode: MutationResolvers['sendConfirmCode'] = async ({
   email,
 }) => {
   const user = await db.user.findUnique({ where: { email } })
-  if (!user) throw new Error('No user found with this email address')
+  if (!user) {
+    throw new Error(
+      'confirm-user.errors.username.not-found' satisfies TranslatePath
+    )
+  }
 
   const isStillValid = user.confirmTokenExpiresAt > new Date()
   if (isStillValid) return true

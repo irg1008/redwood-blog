@@ -16,5 +16,11 @@
   "sendChatMessage": {
     "nonEmpty": "Por favor ingresa un mensaje",
     "maxLength": "El mensaje es demasiado largo. Máx. {{requirement}}"
+  },
+  "password": {
+    "nonEmpty": "Por favor ingresa una contraseña",
+    "minLength": "La contraseña debe tener al menos {{requirement}} caracteres",
+    "maxLength": "La contraseña es demasiado larga. Máx. {{requirement}}",
+    "regex": "La contraseña debe contener al menos una letra mayúscula, una minúscula y un número"
   }
 }

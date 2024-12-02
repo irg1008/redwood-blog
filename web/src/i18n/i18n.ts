@@ -3,22 +3,25 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
 import { schemaI18n } from 'schemas'
 
+import { FieldPathByValue } from '@redwoodjs/forms'
+
 import en from './locales/en.json'
 import es from './locales/es.json'
-
-export const langs = ['en', 'es'] as const
-export type Lang = (typeof langs)[number]
 
 export enum Namespace {
   default = 'translation',
 }
 
-export type Resource = Record<Namespace, typeof en>
-
 const resources: Record<Lang, Resource> = {
   en: { [Namespace.default]: en },
   es: { [Namespace.default]: es },
 }
+
+export const langs = ['en', 'es'] as const
+export type Lang = (typeof langs)[number]
+
+export type Resource = Record<Namespace, typeof en>
+export type TranslatePath = FieldPathByValue<typeof en, string | string[]>
 
 i18n
   // learn more: https://github.com/i18next/i18next-browser-languageDetector
