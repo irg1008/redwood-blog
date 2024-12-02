@@ -19,13 +19,115 @@
   "FatalError": {
     "wrong": "Algo salió mal"
   },
+  "ForgotPassword": {
+    "actions": {
+      "go-back": "Volver",
+      "submit": "Enviar código",
+      "submit_success": "Se ha enviado un enlace para restablecer tu contraseña a {{username}}"
+    },
+    "description": "¿Olvidaste tu contraseña? ¡No hay problema!",
+    "errors": {
+      "username": {
+        "not-found": "Usuario {{username}} no encontrado",
+        "required": "El nombre de usuario es requerido"
+      }
+    },
+    "form": {
+      "username": {
+        "label": "Nombre de usuario",
+        "placeholder": "Ingresa tu nombre de usuario"
+      }
+    },
+    "title": "Contraseña olvidada"
+  },
   "HomePage": {
     "description": "Bienvenido a la página principal de nuestro sitio web.",
     "title": "Página Principal"
   },
+  "Login": {
+    "actions": {
+      "confirm-user": "Por favor confirma tu cuenta para iniciar sesión",
+      "forgot-password": "¿Olvidaste tu contraseña?",
+      "signup": "¡Regístrate!",
+      "submit": "Iniciar sesión"
+    },
+    "description": "Inicia sesión en tu cuenta",
+    "errors": {
+      "fields-required": "Todos los campos son requeridos",
+      "password": {
+        "incorrect": "Contraseña incorrecta para {{username}}"
+      },
+      "username": {
+        "not-found": "Usuario {{username}} no encontrado"
+      }
+    },
+    "form": {
+      "password": {
+        "label": "Contraseña",
+        "placeholder": "Ingresa tu contraseña"
+      },
+      "username": {
+        "label": "Nombre de usuario",
+        "placeholder": "Ingresa tu nombre de usuario"
+      }
+    },
+    "no-account": "¿No tienes cuenta?",
+    "title": "Iniciar sesión"
+  },
   "Posts": {
     "description": "Publicaciones",
     "title": "Publicaciones"
+  },
+  "ResetPassword": {
+    "actions": {
+      "navigate-login": "Ir a iniciar sesión",
+      "submit": "Restablecer contraseña",
+      "submit_success": "Contraseña restablecida exitosamente"
+    },
+    "description": "Restablece tu contraseña",
+    "errors": {
+      "password": {
+        "already-used": "Por favor elige una contraseña diferente"
+      },
+      "reset-token": {
+        "expired": "El token de restablecimiento ha expirado",
+        "invalid": "Token de restablecimiento inválido",
+        "required": "Token de restablecimiento vacío"
+      }
+    },
+    "form": {
+      "password": {
+        "label": "Nueva contraseña",
+        "placeholder": "Ingresa tu nueva contraseña"
+      }
+    },
+    "title": "Restablecer contraseña"
+  },
+  "Signup": {
+    "actions": {
+      "confirm-user": "Por favor confirma tu cuenta para iniciar sesión",
+      "login": "¡Inicia sesión!",
+      "submit": "Registrarse"
+    },
+    "already-account": "¿Ya tienes una cuenta?",
+    "description": "Regístrate para una cuenta",
+    "errors": {
+      "fields-required": "Todos los campos son requeridos",
+      "username": {
+        "taken": "El nombre de usuario {{username}} ya está en uso"
+      }
+    },
+    "form": {
+      "password": {
+        "label": "Contraseña",
+        "placeholder": "Ingresa tu contraseña"
+      },
+      "username": {
+        "label": "Nombre de usuario",
+        "placeholder": "Ingresa tu nombre de usuario"
+      }
+    },
+    "title": "Registrarse"
   },
   "Streamer": {
     "description": "Mira lo que está pasando",
@@ -79,6 +181,7 @@
     "logout": "Cerrar sesión",
     "name": "{{appName}}",
     "paste": "Pegar desde el portapapeles",
+    "paste-error": "Error al pegar desde el portapapeles",
     "unknown": "Desconocido"
   },
   "confirm-code": {
@@ -96,8 +199,17 @@
     "actions": {
       "confirm": "Confirmar",
       "confirm_success": "¡Usuario confirmado exitosamente!",
-      "send-new": "Reenviar código",
+      "send-new": "Enviar nuevo código",
       "send-new_success": "¡Código enviado exitosamente!"
+    },
+    "errors": {
+      "code": {
+        "expired": "El código ha expirado, por favor solicita uno nuevo",
+        "invalid": "Código inválido, asegúrate de haberlo ingresado correctamente"
+      },
+      "username": {
+        "not-found": "Usuario {{username}} no encontrado"
+      }
     }
   },
   "social": {
