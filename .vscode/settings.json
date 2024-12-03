@@ -1,7 +1,7 @@
 {
   "editor.tabSize": 2,
   "files.trimTrailingWhitespace": true,
-  "editor.formatOnSave": false,
+  "editor.formatOnSave": true,
   "eslint.experimental.useFlatConfig": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
@@ -36,10 +36,12 @@
   },
   "i18n-ally.localesPaths": [
     "web/src/i18n/locales",
+    "api/src/i18n/locales",
     "packages/schemas/src/i18n/locales"
   ],
-  "i18n-ally.enabledFrameworks": ["react-i18next"],
+  "i18n-ally.enabledFrameworks": ["react-i18next", "i18next"],
   "i18n-ally.extract.autoDetect": true,
   "i18n-ally.keystyle": "nested",
-  "i18n-ally.sortKeys": false
+  "i18n-ally.sortKeys": false,
+  "i18n-ally.enabledParsers": ["json", "ts"]
 }

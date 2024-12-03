@@ -15,6 +15,8 @@
     "@redwoodjs/mailer-renderer-react-email": "8.4.1",
     "@redwoodjs/realtime": "8.4.1",
     "cookie": "1.0.2",
+    "i18next": "24.0.2",
+    "i18next-http-middleware": "3.7.0",
     "ioredis": "5.4.1",
     "jose": "5.9.6",
     "schemas": "workspace:*",

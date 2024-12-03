@@ -47,8 +47,7 @@
       "name": "Start Debug",
       "configurations": [
         "Run Dev Server",
-        "Attach API debugger",
-        "Launch Web debugger"
+        "Attach API debugger"
       ],
       "stopAll": true
     }
