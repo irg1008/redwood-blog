@@ -2,6 +2,7 @@ import type { MutationResolvers, QueryResolvers } from 'types/graphql'
 
 import { validate } from '@redwoodjs/api'
 
+import { LanguageContext } from 'src/i18n/i18n'
 import { SendContactEmailJob } from 'src/jobs/SendContactEmailJob/SendContactEmailJob'
 import { db } from 'src/lib/db'
 import { later } from 'src/lib/jobs'
@@ -16,17 +17,17 @@ export const contact: QueryResolvers['contact'] = ({ id }) => {
   })
 }
 
-export const createContact: MutationResolvers['createContact'] = async ({
-  input,
-}) => {
-  validate(input.email, 'email', { email: true })
+export const createContact: MutationResolvers<LanguageContext>['createContact'] =
+  async ({ input }, { context }) => {
+    validate(input.email, 'email', { email: true })
 
-  await later(SendContactEmailJob, [input])
+    const lang = context.req.language
+    await later(SendContactEmailJob, [input, lang])
 
-  return db.contact.create({
-    data: input,
-  })
-}
+    return db.contact.create({
+      data: input,
+    })
+  }
 
 export const updateContact: MutationResolvers['updateContact'] = ({
   id,

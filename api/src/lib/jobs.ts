@@ -30,7 +30,7 @@ export const jobs = new JobManager({
       logger,
       queue: 'emails',
       count: 1,
-      maxAttempts: 2,
+      maxAttempts: 10,
       maxRuntime: 5_000,
       deleteFailedJobs: false,
       deleteSuccessfulJobs: true,

@@ -40,6 +40,8 @@ export const mailer = new Mailer({
 
   defaults: {
     replyTo: mailDirections.noReply,
-    from: `"No Reply" <${mailDirections.noReply}>`,
+    from: {
+      address: mailDirections.noReply,
+    },
   },
 })

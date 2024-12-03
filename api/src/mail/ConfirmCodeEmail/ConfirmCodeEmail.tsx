@@ -9,21 +9,19 @@ import {
   Tailwind,
   Text,
 } from '@react-email/components'
+import i18next, { t } from 'i18next'
+import { ConfirmUserInput } from 'types/graphql'
 
-type ConfirmCodeEmailProps = {
-  code: number
-}
-
-export const ConfirmCodeEmail = ({ code }: ConfirmCodeEmailProps) => {
+export const ConfirmCodeEmail = ({ code }: ConfirmUserInput) => {
   return (
-    <Html lang="en">
+    <Html lang={i18next.language}>
       <Head />
-      <Preview>Confirm action</Preview>
+      <Preview>{t('emails.confirm-user.preview')}</Preview>
       <Tailwind>
         <Body className="mx-auto my-auto bg-white font-sans">
           <Container className="mx-auto my-[40px] rounded border border-solid border-gray-200 p-[20px]">
             <Heading className="mx-0 my-[30px] p-0 text-center text-[24px] font-normal text-black">
-              Please use this code to confirm your action
+              {t('emails.confirm-user.header')}
             </Heading>
             <Hr className="mx-0 my-[26px] w-full border border-solid border-[#eaeaea]" />
 
@@ -32,7 +30,7 @@ export const ConfirmCodeEmail = ({ code }: ConfirmCodeEmailProps) => {
             </Text>
 
             <Text className="text-[14px] leading-[24px] text-black">
-              {`If you didn't request this code, you can ignore this email.`}
+              {t('emails.confirm-user.unrequested')}
             </Text>
           </Container>
         </Body>

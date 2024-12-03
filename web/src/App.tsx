@@ -10,11 +10,13 @@ import possibleTypes from 'src/graphql/possibleTypes'
 import FatalErrorPage from 'src/pages/FatalErrorPage'
 import Routes from 'src/Routes'
 
+import { i18nInit } from './i18n/i18n'
 import { AuthProvider, useAuth } from './lib/auth'
 
-import './i18n/i18n'
 import './index.css'
 import './scaffold.css'
+
+i18nInit()
 
 const graphQLClientConfig: GraphQLClientConfigProp = {
   cacheConfig: {

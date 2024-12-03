@@ -8,6 +8,7 @@ import type {
 import { validate } from '@redwoodjs/api'
 import { hashToken } from '@redwoodjs/auth-dbauth-api'
 
+import { LanguageContext } from 'src/i18n/i18n'
 import { SendConfirmUserEmailJob } from 'src/jobs/SendConfirmUserEmailJob/SendConfirmUserEmailJob'
 import { SendResetPasswordEmailJob } from 'src/jobs/SendResetPasswordEmailJob/SendResetPasswordEmailJob'
 import { db } from 'src/lib/db'
@@ -61,38 +62,43 @@ export const confirmUser: MutationResolvers['confirmUser'] = async ({
   })
 }
 
-export const sendConfirmCode: MutationResolvers['sendConfirmCode'] = async ({
-  email,
-}) => {
-  const user = await db.user.findUnique({ where: { email } })
-  if (!user) {
-    throw new Error(
-      'confirm-user.errors.username.not-found' satisfies TranslatePath
-    )
+export const sendConfirmCode: MutationResolvers<LanguageContext>['sendConfirmCode'] =
+  async ({ email }, { context }) => {
+    const user = await db.user.findUnique({ where: { email } })
+    if (!user) {
+      throw new Error(
+        'confirm-user.errors.username.not-found' satisfies TranslatePath
+      )
+    }
+
+    const isStillValid = user.confirmTokenExpiresAt > new Date()
+    if (isStillValid) return true
+
+    const code = Math.floor(100000 + Math.random() * 900000)
+
+    const lang = context.req.language
+    await later(SendConfirmUserEmailJob, [{ email, code }, lang])
+
+    await db.user.update({
+      where: { email },
+      data: {
+        confirmToken: hashToken(code.toString()),
+        confirmTokenExpiresAt: new Date(Date.now() + 2 * 60 * 1000),
+      },
+    })
+
+    return true
   }
 
-  const isStillValid = user.confirmTokenExpiresAt > new Date()
-  if (isStillValid) return true
-
-  const code = Math.floor(100000 + Math.random() * 900000)
-  await later(SendConfirmUserEmailJob, [{ email, code }])
-
-  await db.user.update({
-    where: { email },
-    data: {
-      confirmToken: hashToken(code.toString()),
-      confirmTokenExpiresAt: new Date(Date.now() + 2 * 60 * 1000),
-    },
-  })
-
-  return true
-}
-
-export const sendResetPassword = async (data: {
-  email: string
-  resetToken: string
-}) => {
-  await later(SendResetPasswordEmailJob, [data])
+export const sendResetPassword = async (
+  data: {
+    email: string
+    resetToken: string
+  },
+  { context }: { context: LanguageContext }
+) => {
+  const lang = context.req.language
+  await later(SendResetPasswordEmailJob, [data, lang])
 }
 
 export const User: UserRelationResolvers = {

@@ -1,9 +1,11 @@
-import i18n from 'i18next'
+import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import { initReactI18next } from 'react-i18next'
 import { schemaI18n } from 'schemas'
 
 import { FieldPathByValue } from '@redwoodjs/forms'
+
+import { listenI18nBroadcast } from 'src/lib/broadcast'
 
 import en from './locales/en.json'
 import es from './locales/es.json'
@@ -23,31 +25,45 @@ export type Lang = (typeof langs)[number]
 export type Resource = Record<Namespace, typeof en>
 export type TranslatePath = FieldPathByValue<typeof en, string | string[]>
 
-i18n
-  // learn more: https://github.com/i18next/i18next-browser-languageDetector
-  .use(LanguageDetector)
-  .use(initReactI18next)
-  .init({
-    ns: [Namespace.default],
-    defaultNS: Namespace.default,
-    interpolation: {
-      escapeValue: false, // React already does escaping
-      defaultVariables: {
-        appName: 'Blazing',
-      },
-    },
-    fallbackLng: 'en',
-    load: 'currentOnly',
-    cleanCode: true,
-    resources,
-    supportedLngs: langs,
-    detection: {
-      convertDetectedLanguage: (lng) => lng.split('-')[0],
-    },
-  })
+export const FALLBACK_LANG: Lang = 'en'
 
-i18n.on('languageChanged', (lng) => {
+export const i18nInit = (lng?: Lang) => {
+  if (i18next.isInitialized) {
+    i18next.changeLanguage(lng)
+    return
+  }
+
+  listenI18nBroadcast()
+
+  return (
+    i18next
+      // learn more: https://github.com/i18next/i18next-browser-languageDetector
+      .use(LanguageDetector)
+      .use(initReactI18next)
+      .init({
+        interpolation: {
+          escapeValue: false, // React already does escaping
+          defaultVariables: {
+            appName: 'Blazing',
+          },
+        },
+        lng,
+        fallbackLng: FALLBACK_LANG,
+        load: 'currentOnly',
+        cleanCode: true,
+        resources,
+        supportedLngs: langs,
+        detection: {
+          convertDetectedLanguage: (lng) => lng.split('-')[0],
+          caches: ['cookie'],
+          lookupCookie: 'lang',
+        },
+      })
+  )
+}
+
+i18next.on('languageChanged', (lng) => {
   schemaI18n.changeLanguage(lng)
 })
 
-export default i18n
+export default i18next

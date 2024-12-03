@@ -1,19 +1,19 @@
-import { User } from '@prisma/client'
-import type { APIGatewayProxyEvent, Context } from 'aws-lambda'
+import type { APIGatewayProxyEvent, Handler } from 'aws-lambda'
 import { passwordSchema, v } from 'schemas'
 
 import type { DbAuthHandlerOptions, UserType } from '@redwoodjs/auth-dbauth-api'
 import { DbAuthHandler } from '@redwoodjs/auth-dbauth-api'
 
+import { getLanguageContext } from 'src/i18n/i18n'
 import { cookieName } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 import { sendConfirmCode, sendResetPassword } from 'src/services/users'
 
 import type { TranslatePath } from '$web/src/i18n/i18n'
 
-export const handler = async (
-  event: APIGatewayProxyEvent,
-  context: Context
+export const handler: Handler<APIGatewayProxyEvent> = async (
+  event,
+  requestContext
 ) => {
   const forgotPasswordOptions: DbAuthHandlerOptions['forgotPassword'] = {
     // handler() is invoked after verifying that a user was found with the given
@@ -34,7 +34,8 @@ export const handler = async (
     // `user` here has been sanitized to only include the fields listed in
     // `allowedUserFields` so it should be safe to return as-is.
     handler: async (user, resetToken) => {
-      await sendResetPassword({ email: user.email, resetToken })
+      const context = getLanguageContext(event, requestContext)
+      await sendResetPassword({ email: user.email, resetToken }, { context })
       return user
     },
 
@@ -65,7 +66,7 @@ export const handler = async (
     // didn't validate their email yet), throw an error and it will be returned
     // by the `logIn()` function from `useAuth()` in the form of:
     // `{ message: 'Error message' }`
-    handler: async (user: User) => {
+    handler: async (user) => {
       if (user.confirmed) return user
       await sendConfirmCode({ email: user.email })
       const msg: TranslatePath = 'Login.actions.confirm-user'
@@ -176,7 +177,7 @@ export const handler = async (
     },
   }
 
-  const authHandler = new DbAuthHandler(event, context, {
+  const authHandler = new DbAuthHandler(event, requestContext, {
     // Provide prisma db client
     db: db,
 
