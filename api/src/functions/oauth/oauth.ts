@@ -1,6 +1,7 @@
 import { Provider } from '@prisma/client'
-import type { APIGatewayEvent, Context } from 'aws-lambda'
+import type { APIGatewayEvent, Handler } from 'aws-lambda'
 
+import { Response } from './providers/common'
 import {
   callback as githubCallback,
   redirect as githubRedirect,
@@ -17,18 +18,9 @@ import {
 type Action = 'callback' | 'redirect'
 type AllowedPath = `/oauth/${Provider}/${Action}`
 
-type HandlerRes = {
-  statusCode: number
-  headers?: {
-    'Set-Cookie'?: string
-    Location: string
-  }
-}
-type FunctionForAction<A extends Action> = A extends 'callback'
-  ? (event: APIGatewayEvent) => Promise<HandlerRes>
-  : () => Promise<HandlerRes>
+type FunctionForAction = (event: APIGatewayEvent) => Promise<Response>
 
-const actions: Record<AllowedPath, FunctionForAction<Action>> = {
+const actions: Record<AllowedPath, FunctionForAction> = {
   '/oauth/github/callback': githubCallback,
   '/oauth/github/redirect': githubRedirect,
   '/oauth/google/callback': googleCallback,
@@ -36,10 +28,11 @@ const actions: Record<AllowedPath, FunctionForAction<Action>> = {
   '/oauth/twitch/callback': twitchCallback,
   '/oauth/twitch/redirect': twitchRedirect,
 }
-export const handler = async (
-  event: APIGatewayEvent,
-  _context: Context
-): Promise<HandlerRes> => {
-  const action = actions[event.path as AllowedPath]
-  return action?.(event) ?? { statusCode: 404 }
+
+const isValidAction = (path: string): path is AllowedPath =>
+  Object.keys(actions).includes(path)
+
+export const handler: Handler<APIGatewayEvent, Response> = async (event) => {
+  const { path } = event
+  return isValidAction(path) ? actions[path](event) : { statusCode: 404 }
 }

@@ -1,9 +1,9 @@
 import { randomUUID } from 'crypto'
 
 import { Provider, User } from '@prisma/client'
-import type { APIGatewayEvent } from 'aws-lambda'
-import { serialize } from 'cookie'
-import parse from 'set-cookie-parser'
+import type { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda'
+import { parse, serialize } from 'cookie'
+import { t } from 'i18next'
 
 import {
   encryptSession,
@@ -11,6 +11,7 @@ import {
   hashToken,
 } from '@redwoodjs/auth-dbauth-api'
 
+import { getEventLanguage, i18nInit } from 'src/i18n/i18n'
 import { cookieName } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 
@@ -48,6 +49,8 @@ export type OAuthTokenResponse =
       error: string
     }
 
+export type Response = Omit<APIGatewayProxyResult, 'body'>
+
 export const CSRF_TOKEN = 'CSRFToken'
 
 export const removeCSRFCookie = () => {
@@ -67,14 +70,12 @@ export const findOrCreateUser = async (
 ) => {
   const identity = await db.identity.findFirst({
     where: { provider, uid: providerUser.id.toString() },
+    include: { user: true },
   })
 
   if (identity) {
-    const user = await db.user.findUnique({
-      where: { id: identity.userId },
-    })
-
-    return { user, identity }
+    const { user, ...rest } = identity
+    return { identity: rest, user }
   }
 
   return db.$transaction(async (tx) => {
@@ -106,14 +107,15 @@ export const getUser = async ({
   accessToken,
   scope,
 }: GetUserVariables) => {
-  const { user, identity } = await findOrCreateUser(provider, providerUser)
+  const { identity } = await findOrCreateUser(provider, providerUser)
 
-  await db.identity.update({
+  const id = await db.identity.update({
     where: { id: identity.id },
     data: { accessToken, scope, lastLoginAt: new Date() },
+    include: { user: true },
   })
 
-  return user
+  return id.user
 }
 
 export const secureCookie = (user: Pick<User, 'id'>) => {
@@ -124,19 +126,22 @@ export const secureCookie = (user: Pick<User, 'id'>) => {
   return createCookie(cookieNameWithPort, encrypted, maxAge)
 }
 
-export const secureCookieAndRedirect = (user: User) => {
+export const secureCookieAndRedirect = (user: User): Response => {
   const userCookie = secureCookie(user)
   const csrfCookie = removeCSRFCookie()
-  return redirectToLocation('/', userCookie, csrfCookie)
+  return redirectToLocation(process.env.WEB_URI, userCookie, csrfCookie)
 }
 
-export const redirectWithError = (error: string) => {
+export const redirectWithError = (error: string): Response => {
   const csrfCookie = removeCSRFCookie()
+
   return {
     statusCode: 307,
     headers: {
-      Location: `/login?error=${error}`,
-      'Set-Cookie': csrfCookie,
+      Location: `${process.env.WEB_URI}/login?error=${error}`,
+    },
+    multiValueHeaders: {
+      'Set-Cookie': [csrfCookie],
     },
   }
 }
@@ -184,14 +189,17 @@ export const createCookie = (
   })
 }
 
-export const redirectToLocation = (location: string, ...cookies: string[]) => {
-  const res = {
+export const redirectToLocation = (
+  location: string,
+  ...cookies: string[]
+): Response => {
+  const res: Response = {
     statusCode: 302,
     headers: { Location: location },
   }
 
   if (cookies.length) {
-    res.headers['Set-Cookie'] = cookies
+    res.multiValueHeaders = { 'Set-Cookie': cookies }
   }
 
   return res
@@ -200,29 +208,39 @@ export const redirectToLocation = (location: string, ...cookies: string[]) => {
 export const providerCallback = async (
   event: APIGatewayEvent,
   providerInfo: ProviderInfo
-) => {
-  const cookies = parse(event.headers.cookie, {
-    map: true,
-    decodeValues: false,
-  })
+): Promise<Response> => {
+  const { provider, getUserFromToken } = providerInfo
+  const { headers, queryStringParameters } = event
+  const lang = getEventLanguage(event)
 
+  await i18nInit(lang)
+  const test = t('emails.confirm-user.header', { lng: lang })
+
+  console.log({ test })
+
+  if (!queryStringParameters) {
+    return redirectWithError(
+      `Sorry, we received an invalid callback from ${provider} provider`
+    )
+  }
+
+  const cookies = parse(headers.cookie || '')
   const csrfCookie = cookies[CSRF_TOKEN]
+
   if (!csrfCookie) {
     return redirectWithError(
       'Invalid CSRF token. You may have taken too long to log in. Please try again.'
     )
   }
 
-  const { provider, getUserFromToken } = providerInfo
-
-  const { code, state } = event.queryStringParameters
+  const { code, state } = queryStringParameters
   if (!code || !state) {
     return redirectWithError(
       `Sorry, we received an invalid callback from ${provider} provider`
     )
   }
 
-  if (hashToken(state) !== csrfCookie.value) {
+  if (hashToken(state) !== csrfCookie) {
     return redirectWithError(
       'CSRF token does not match with callback state. You may be a victim of CSRF attack'
     )
@@ -239,6 +257,11 @@ export const providerCallback = async (
     })
 
     if (error) return redirectWithError(error)
+    if (!accessToken) {
+      return redirectWithError(
+        'No access token received from provider. Please try again or contact support'
+      )
+    }
 
     const providerUser = await getUserFromToken(accessToken)
 
@@ -257,6 +280,10 @@ export const providerCallback = async (
 
     return secureCookieAndRedirect(user)
   } catch (error) {
-    return redirectWithError(error.message)
+    if (error instanceof Error) {
+      return redirectWithError(error.message)
+    }
+
+    return redirectWithError('An unexpected error occurred')
   }
 }

@@ -1,3 +1,5 @@
+import assert from 'node:assert'
+
 import type { Provider } from '@prisma/client'
 
 import {
@@ -226,7 +228,7 @@ describe('common oauth provider functions', () => {
         scope: newScope,
       })
 
-      const updatedIdentity = await db.identity.findFirst({
+      const updatedIdentity = await db.identity.findFirstOrThrow({
         where: { id: identity.id },
         include: { user: true },
       })
@@ -239,6 +241,10 @@ describe('common oauth provider functions', () => {
 
       expect(updatedIdentity.lastLoginAt).toBeDefined()
       expect(updatedIdentity.lastLoginAt).toBeInstanceOf(Date)
+
+      assert(updatedIdentity.lastLoginAt)
+      assert(identity.lastLoginAt)
+
       expect(updatedIdentity.lastLoginAt.getTime()).toBeGreaterThan(
         identity.lastLoginAt.getTime()
       )
@@ -274,10 +280,10 @@ describe('common oauth provider functions', () => {
       const res = secureCookieAndRedirect(user)
 
       expect(res).toHaveProperty('statusCode', 302)
-      expect(res).toHaveProperty('headers.Location', '/')
-      expect(res).toHaveProperty('headers.Set-Cookie')
+      expect(res).toHaveProperty('headers.Location', process.env.WEB_URI)
+      expect(res).toHaveProperty('multiValueHeaders.Set-Cookie')
 
-      const cookies = res.headers['Set-Cookie']
+      const cookies = res.multiValueHeaders?.['Set-Cookie']
       expect(cookies).toBeDefined()
       expect(cookies).toEqual(
         expect.arrayContaining([
@@ -289,11 +295,14 @@ describe('common oauth provider functions', () => {
   )
 
   it('should remove csrf cookie and redirect to login with error', () => {
-    expect(redirectWithError('error')).toEqual({
+    const response = redirectWithError('error')
+    expect(response).toEqual({
       statusCode: 307,
       headers: {
-        Location: `/login?error=error`,
-        'Set-Cookie': emptyCSRFTokenCookie,
+        Location: `${process.env.WEB_URI}/login?error=error`,
+      },
+      multiValueHeaders: {
+        'Set-Cookie': [emptyCSRFTokenCookie],
       },
     })
   })
@@ -356,8 +365,8 @@ describe('common oauth provider functions', () => {
       statusCode: 302,
       headers: {
         Location: 'http://example.com',
-        'Set-Cookie': ['cookie1', 'cookie2'],
       },
+      multiValueHeaders: { 'Set-Cookie': ['cookie1', 'cookie2'] },
     })
 
     expect(
@@ -366,6 +375,8 @@ describe('common oauth provider functions', () => {
       statusCode: 302,
       headers: {
         Location: 'http://example.com',
+      },
+      multiValueHeaders: {
         'Set-Cookie': ['cookie1', 'cookie2', 'cookie3'],
       },
     })
@@ -440,6 +451,7 @@ describe('common oauth provider functions', () => {
     it('invalid state should throw error', async () => {
       const { event } = redirectOAuthResponse()
 
+      if (!event.queryStringParameters) event.queryStringParameters = {}
       event.queryStringParameters.state = 'invalid'
 
       const callbackRes = await providerCallback(event, providerInfo)
@@ -538,13 +550,13 @@ describe('common oauth provider functions', () => {
           client_id: providerInfo.clientId,
           client_secret: providerInfo.clientSecret,
           redirect_uri: providerInfo.redirectUri,
-          code: event.queryStringParameters.code,
+          code: event.queryStringParameters?.code,
           grant_type: 'authorization_code',
         }),
       })
     })
 
-    it.each([
+    it.each<Partial<ProviderUser>>([
       { id: undefined, email: 'valid@email.com' },
       { id: 1, email: undefined },
     ])(
@@ -578,7 +590,7 @@ describe('common oauth provider functions', () => {
 
       expect(fetchMock).toHaveBeenCalledTimes(1)
 
-      const insertedIdentity = await db.identity.findFirst({
+      const insertedIdentity = await db.identity.findFirstOrThrow({
         where: { uid: userResolvedValue.id.toString() },
         include: { user: true },
       })
@@ -594,9 +606,9 @@ describe('common oauth provider functions', () => {
       expect(insertedIdentity.user.name).toEqual(userResolvedValue.name)
 
       expect(res).toHaveProperty('statusCode', 302)
-      expect(res).toHaveProperty('headers.Location', '/')
-      expect(res).toHaveProperty('headers.Set-Cookie')
-      expect(res.headers['Set-Cookie']).toEqual(
+      expect(res).toHaveProperty('headers.Location', process.env.WEB_URI)
+      expect(res).toHaveProperty('multiValueHeaders.Set-Cookie')
+      expect(res.multiValueHeaders?.['Set-Cookie']).toEqual(
         expect.arrayContaining([
           expect.stringContaining(`${getCookieName(cookieName)}=`),
           emptyCSRFTokenCookie,

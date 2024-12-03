@@ -19,8 +19,10 @@ const Routes = () => {
 
       <Set wrap={BlogLayout}>
         <Route path="/" page={HomePage} name="home" />
-        <Route path="/about" page={AboutPage} name="about" prerender />
-        <Route path="/contact" page={ContactPage} name="contact" prerender />
+        <Set prerender>
+          <Route path="/about" page={AboutPage} name="about" />
+          <Route path="/contact" page={ContactPage} name="contact" />
+        </Set>
         <Route path="/article/{slug:String}" page={ArticlePage} name="article" />
         <Route path="/streamer/{streamerId:Int}" page={StreamerPage} name="streamer" />
 

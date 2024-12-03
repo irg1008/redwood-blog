@@ -15,7 +15,7 @@ const emailSchema = v.pipe(
   v.string(),
   v.nonEmpty(t('email.nonEmpty')),
   v.email(t('email.email')),
-  v.maxLength(50, t('email.maxLength'))
+  v.maxLength(200, t('email.maxLength'))
 )
 
 export const createContactSchema = v.object<Schema<CreateContactInput>>({
