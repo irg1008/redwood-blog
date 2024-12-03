@@ -56,12 +56,12 @@
     "add:web": "yarn workspace web add -E",
     "add:api": "yarn workspace api add -E",
     "d:up": "docker compose up -d",
-    "docker:set": "rw setup docker",
+    "d:set": "rw setup docker",
     "d:down": "docker compose down",
     "d:restart": "docker compose restart",
     "d:build": "docker compose up -d --build",
-    "packages": "yarn workspace schemas build",
-    "dev:packages": "yarn workspace schemas dev",
+    "packages:build": "yarn workspace schemas build",
+    "packages:dev": "yarn workspace schemas dev",
     "i18n:set": "rw setup i18n"
   },
   "devDependencies": {

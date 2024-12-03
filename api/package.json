@@ -19,13 +19,11 @@
     "i18next-http-middleware": "3.7.0",
     "ioredis": "5.4.1",
     "jose": "5.9.6",
-    "schemas": "workspace:*",
-    "set-cookie-parser": "2.7.1"
+    "schemas": "workspace:*"
   },
   "devDependencies": {
     "@redwoodjs/mailer-handler-in-memory": "8.4.1",
-    "@redwoodjs/mailer-handler-studio": "8.4.1",
-    "@types/set-cookie-parser": "2.4.10"
+    "@redwoodjs/mailer-handler-studio": "8.4.1"
   },
   "eslintConfig": {
     "rules": {
