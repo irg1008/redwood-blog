@@ -11,7 +11,6 @@ export const schema = gql`
     moderator
     admin
     user
-    worker
   }
 
   type Query {

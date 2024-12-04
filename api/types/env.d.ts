@@ -26,8 +26,6 @@ declare namespace NodeJS {
     TWITCH_OAUTH_CLIENT_SECRET: string
     TWITCH_OAUTH_SCOPES: string
     TWITCH_OAUTH_REDIRECT_URI: string
-    WORKER_SIGNATURE: string
-    WORKER_SECRET: string
     JWT_PRIVATE_KEY: string
     JWT_PUBLIC_KEY: string
     MEDIA_SERVER_SIGNATURE_HEADER: string

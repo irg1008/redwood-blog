@@ -1,8 +1,6 @@
-import type { APIGatewayProxyEvent } from 'aws-lambda'
 import { Role } from 'types/graphql'
 
 import type { Decoded } from '@redwoodjs/api'
-import { verifyEvent } from '@redwoodjs/api/webhooks'
 import { AuthenticationError, ForbiddenError } from '@redwoodjs/graphql-server'
 
 import { db } from './db'
@@ -113,23 +111,5 @@ export const requireAuth = ({ roles }: { roles?: AllowedRoles } = {}) => {
 
   if (roles && !hasRole(roles)) {
     throw new ForbiddenError("You don't have access to do that.")
-  }
-}
-
-export const requireWorker = ({ event }: { event: APIGatewayProxyEvent }) => {
-  try {
-    const payload = JSON.parse(event.body)
-
-    verifyEvent('timestampSchemeVerifier', {
-      event,
-      payload: JSON.stringify(payload?.variables),
-      secret: process.env.WORKER_SECRET,
-      options: {
-        signatureHeader: process.env.WORKER_SIGNATURE,
-        tolerance: 30_000, // 30 seconds
-      },
-    })
-  } catch (error) {
-    throw new AuthenticationError('Only job workers can access this resource.')
   }
 }
