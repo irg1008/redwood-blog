@@ -24,7 +24,10 @@ const SignupPage = () => {
 
   const formMethods = useForm<SignupAttributes>({
     mode: 'onBlur',
-    defaultValues: { password: '', username: '' },
+    defaultValues: {
+      password: '',
+      username: '',
+    },
     resolver: valibotResolver(signupSchema),
   })
 
