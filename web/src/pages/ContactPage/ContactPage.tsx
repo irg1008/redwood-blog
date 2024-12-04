@@ -40,7 +40,9 @@ const ContactPage = () => {
     CreateContactMutationVariables
   >(CREATE_CONTACT, {
     onCompleted: () => {
-      toast.success('Thank you for your submission!')
+      toast.success('Thank you for your submission!', {
+        id: 'contact-success',
+      })
       formMethods.reset()
     },
   })
