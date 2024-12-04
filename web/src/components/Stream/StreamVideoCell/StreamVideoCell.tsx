@@ -26,7 +26,7 @@ export const QUERY: TypedDocumentNode<
   }
 `
 
-export const Loading = Spinner
+export const Loading = () => <Spinner />
 
 export const Empty = () => {
   const { t } = useTranslation()

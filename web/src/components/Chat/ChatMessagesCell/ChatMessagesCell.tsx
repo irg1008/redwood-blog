@@ -59,7 +59,7 @@ export const CHAT_MESSAGES_SUB: TypedDocumentNode<
   }
 `
 
-export const Loading = Spinner
+export const Loading = () => <Spinner />
 
 export const Failure = ({ error }: CellFailureProps) => {
   const { t } = useTranslation()

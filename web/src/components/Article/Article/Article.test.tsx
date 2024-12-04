@@ -23,7 +23,7 @@ describe('Article', () => {
     await i18nInit('cimode')
   })
 
-  it('renders a blog post', () => {
+  it('renders a blog post', async () => {
     render(<Article article={ARTICLE} />)
 
     expect(screen.getByText(ARTICLE.title)).toBeInTheDocument()

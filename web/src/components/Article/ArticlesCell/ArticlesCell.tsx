@@ -26,7 +26,7 @@ export const QUERY: TypedDocumentNode<ArticlesQuery, ArticlesQueryVariables> =
     }
   `
 
-export const Loading = Spinner
+export const Loading = () => <Spinner />
 
 export const Empty = () => {
   const { t } = useTranslation()

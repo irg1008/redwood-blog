@@ -23,7 +23,7 @@ export const QUERY: TypedDocumentNode<CommentsQuery, CommentsQueryVariables> =
     }
   `
 
-export const Loading = Spinner
+export const Loading = () => <Spinner />
 
 export const Empty = () => {
   const { t } = useTranslation()
