@@ -5,7 +5,7 @@ import { schemaI18n } from 'schemas'
 
 import { FieldPathByValue } from '@redwoodjs/forms'
 
-import { listenI18nBroadcast } from 'src/lib/broadcast'
+import { listenI18nBroadcast } from '../lib/broadcast'
 
 import en from './locales/en.json'
 import es from './locales/es.json'
