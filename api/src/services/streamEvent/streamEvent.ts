@@ -37,7 +37,9 @@ const getHandlerForEvent = (event: StreamEvent) => {
   }
 }
 
-function validateEvent(event: string): asserts event is StreamEvent {
+function validateEvent(
+  event: string | undefined
+): asserts event is StreamEvent {
   const validStreamEvents = Object.values(StreamEvent)
 
   validate(event, {
@@ -52,7 +54,7 @@ function validateEvent(event: string): asserts event is StreamEvent {
 }
 
 export const handleStreamEvent = async (
-  streamEvent: string,
+  streamEvent: string | undefined,
   plainData: string
 ) => {
   validateEvent(streamEvent)

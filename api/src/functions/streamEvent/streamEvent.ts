@@ -17,18 +17,21 @@ const verifySource = (event: APIGatewayProxyEvent) => {
   })
 }
 
+function validateBody(body: string | null): asserts body is string {
+  validate(body, {
+    presence: {
+      message: 'No body provided',
+      allowEmptyString: false,
+    },
+  })
+}
+
 export const handler: APIGatewayProxyHandler = async (event) => {
   const streamEvent = event.headers[process.env.MEDIA_SERVER_TRIGGER_HEADER]
 
   try {
+    validateBody(event.body)
     verifySource(event)
-
-    validate(event.body, {
-      presence: {
-        message: 'No body provided',
-        allowEmptyString: false,
-      },
-    })
 
     const response = await handleStreamEvent(streamEvent, event.body)
 
@@ -37,9 +40,12 @@ export const handler: APIGatewayProxyHandler = async (event) => {
       body: typeof response === 'string' ? response : JSON.stringify(response),
     }
   } catch (error) {
-    logger.error(
-      `> Streams: [${streamEvent}] refused. Reason: ${error.message}`
-    )
+    if (error instanceof Error) {
+      logger.error(
+        `> Streams: [${streamEvent ?? 'Unknown'}] refused. Reason: ${error.message}`
+      )
+    }
+
     return {
       statusCode: 400,
       body: JSON.stringify(false),
