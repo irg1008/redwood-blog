@@ -1,7 +1,7 @@
 import type {
-  QueryResolvers,
   CommentRelationResolvers,
   MutationResolvers,
+  QueryResolvers,
 } from 'types/graphql'
 
 import { requireAuth } from 'src/lib/auth'
@@ -35,6 +35,6 @@ export const deleteComment: MutationResolvers['deleteComment'] = ({ id }) => {
 
 export const Comment: CommentRelationResolvers = {
   post: (_obj, { root }) => {
-    return db.comment.findUnique({ where: { id: root?.id } }).post()
+    return db.comment.findUniqueOrThrow({ where: { id: root?.id } }).post()
   },
 }

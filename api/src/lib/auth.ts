@@ -112,4 +112,6 @@ export const requireAuth = ({ roles }: { roles?: AllowedRoles } = {}) => {
   if (roles && !hasRole(roles)) {
     throw new ForbiddenError("You don't have access to do that.")
   }
+
+  return context.currentUser as NonNullable<typeof context.currentUser>
 }

@@ -1,3 +1,5 @@
+import assert from 'node:assert'
+
 import { CreateCommentInput } from 'types/graphql'
 
 import { AuthenticationError, ForbiddenError } from '@redwoodjs/graphql-server'
@@ -18,6 +20,7 @@ describe('comments', () => {
         where: { id: postId },
         include: { comments: true },
       })
+      assert(post)
 
       expect(result.length).toEqual(post.comments.length)
     }
@@ -102,8 +105,6 @@ describe('comments', () => {
   scenario(
     'does not allow a logged out user to delete a comment',
     async (scenario: StandardScenario) => {
-      mockCurrentUser(null)
-
       expect(() =>
         deleteComment({
           id: scenario.comment.jane.id,

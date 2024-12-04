@@ -1,17 +1,18 @@
+import { ok } from 'node:assert'
+
 import { CreatePostInput } from 'types/graphql'
 
 import { AbsenceValidationError } from '@redwoodjs/api'
-import { ForbiddenError } from '@redwoodjs/graphql-server'
-import { AuthenticationError } from '@redwoodjs/graphql-server'
+import { AuthenticationError, ForbiddenError } from '@redwoodjs/graphql-server'
 
 import { user } from 'src/services/users'
 
 import {
-  adminPosts,
   adminPost,
+  adminPosts,
   createPost,
-  updatePost,
   deletePost,
+  updatePost,
 } from './adminPosts'
 import type { StandardScenario } from './adminPosts.scenarios'
 
@@ -32,6 +33,8 @@ const mockAdmin = () => {
 describe('adminPosts', () => {
   scenario('returns all admin posts', async (scenario: StandardScenario) => {
     const postUser = await user({ id: scenario.post.oneJohn.userId })
+    ok(postUser)
+
     mockCurrentUser(postUser)
 
     const result = await adminPosts()
@@ -43,8 +46,6 @@ describe('adminPosts', () => {
   })
 
   scenario('logged out users cannot view admin posts', async () => {
-    mockCurrentUser(null)
-
     const adminPostsFunc = () => adminPosts()
     expect(adminPostsFunc).toThrow(AuthenticationError)
   })
@@ -69,6 +70,8 @@ describe('adminPosts', () => {
       const post = scenario.post.threeJane
 
       const postUser = await user({ id: post.userId })
+      ok(postUser)
+
       mockCurrentUser(postUser)
 
       const result = await adminPost({ id: post.id })
@@ -79,8 +82,6 @@ describe('adminPosts', () => {
   scenario(
     'logged out users cannot view an admin post',
     async (scenario: StandardScenario) => {
-      mockCurrentUser(null)
-
       const adminPostFunc = () => adminPost({ id: scenario.post.oneJohn.id })
       expect(adminPostFunc).toThrow(AuthenticationError)
     }
@@ -108,6 +109,8 @@ describe('adminPosts', () => {
     async (scenario: StandardScenario) => {
       const post = scenario.post.oneJohn
       const postUser = await user({ id: post.userId })
+      ok(postUser)
+
       mockCurrentUser(postUser)
 
       const result = await createPost({ input: POST })
@@ -121,8 +124,6 @@ describe('adminPosts', () => {
   )
 
   scenario('logged out users cannot create a post', async () => {
-    mockCurrentUser(null)
-
     const createFunc = () => createPost({ input: POST })
     await expect(createFunc).rejects.toThrow(AuthenticationError)
   })
@@ -140,6 +141,8 @@ describe('adminPosts', () => {
       const post = scenario.post.oneJohn
 
       const postUser = await user({ id: post.userId })
+      ok(postUser)
+
       mockCurrentUser(postUser)
 
       const createFunc = () =>
@@ -156,6 +159,8 @@ describe('adminPosts', () => {
       const post = scenario.post.twoJohn
 
       const postUser = await user({ id: post.userId })
+      ok(postUser)
+
       mockCurrentUser(postUser)
 
       const newTitle = 'Example2'
@@ -170,8 +175,6 @@ describe('adminPosts', () => {
   )
 
   scenario('logged out users cannot update a post', async () => {
-    mockCurrentUser(null)
-
     const updateFunc = () => updatePost({ id: 0, input: {} })
     await expect(updateFunc).rejects.toThrow(AuthenticationError)
   })
@@ -187,6 +190,8 @@ describe('adminPosts', () => {
       await expect(updateFunc).rejects.toThrow(ForbiddenError)
 
       const postUser = await user({ id: post.userId })
+      ok(postUser)
+
       mockCurrentUser(postUser)
 
       const original = await adminPost({ id: post.id })
@@ -209,6 +214,8 @@ describe('adminPosts', () => {
       )
 
       const postUser = await user({ id: post.userId })
+      ok(postUser)
+
       mockCurrentUser(postUser)
 
       const original = await adminPost({ id: post.id })
@@ -221,6 +228,8 @@ describe('adminPosts', () => {
     async (scenario: StandardScenario) => {
       const post = scenario.post.oneJohn
       const postUser = await user({ id: post.userId })
+      ok(postUser)
+
       mockCurrentUser(postUser)
 
       const original = await deletePost({ id: post.id })
@@ -233,14 +242,14 @@ describe('adminPosts', () => {
   scenario(
     'logged out users cannot delete a post',
     async (scenario: StandardScenario) => {
-      mockCurrentUser(null)
-
       const post = scenario.post.oneJohn
 
       const deleteFunc = () => deletePost({ id: post.id })
       await expect(deleteFunc).rejects.toThrow(AuthenticationError)
 
       const postUser = await user({ id: post.userId })
+      ok(postUser)
+
       mockCurrentUser(postUser)
 
       const original = await adminPost({ id: post.id })
@@ -259,6 +268,8 @@ describe('adminPosts', () => {
       await expect(deleteFunc).rejects.toThrow(ForbiddenError)
 
       const postUser = await user({ id: post.userId })
+      ok(postUser)
+
       mockCurrentUser(postUser)
 
       const original = await adminPost({ id: post.id })
@@ -281,6 +292,8 @@ describe('adminPosts', () => {
       )
 
       const postUser = await user({ id: post.userId })
+      ok(postUser)
+
       mockCurrentUser(postUser)
 
       const original = await adminPost({ id: post.id })

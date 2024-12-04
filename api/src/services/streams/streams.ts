@@ -1,3 +1,5 @@
+import { ok } from 'node:assert'
+
 import { createId } from '@paralleldrive/cuid2'
 import { StreamState } from '@prisma/client'
 import {
@@ -47,15 +49,15 @@ export const adminCreateStreamKey: MutationResolvers['adminCreateStreamKey'] =
 
 export const createStreamKey: MutationResolvers['createStreamKey'] =
   async () => {
-    requireAuth()
+    const user = requireAuth()
     return createStreamKeyForUser({
-      input: { userId: context.currentUser.id },
+      input: { userId: user.id },
     })
   }
 
 export const getStreamUrl: QueryResolvers['getStreamUrl'] = async (
   { streamId },
-  { context: { event } }
+  global
 ) => {
   const stream = await db.stream.findUnique({
     where: { id: streamId },
@@ -74,6 +76,7 @@ export const getStreamUrl: QueryResolvers['getStreamUrl'] = async (
       message: 'Stream not found',
     },
   })
+  ok(stream)
 
   validateUserCanViewStream(stream.recordingId, context.currentUser?.id)
 
@@ -88,9 +91,17 @@ export const getStreamUrl: QueryResolvers['getStreamUrl'] = async (
     type: isLive ? StreamType.Live : StreamType.Recording,
   })
 
+  const ip = global?.context.event.requestContext.identity?.sourceIp
+  validate(ip, {
+    presence: {
+      message: 'IP not found',
+    },
+  })
+  ok(ip)
+
   const userJwt = await signJwt(
     {
-      ip: event.requestContext.identity.sourceIp,
+      ip,
       userId: context.currentUser?.id,
     },
     (s) => s.setExpirationTime('30s')
@@ -105,7 +116,7 @@ export const getStreamUrl: QueryResolvers['getStreamUrl'] = async (
 
 export const Stream: StreamRelationResolvers = {
   streamer: (_obj, { root }) => {
-    return db.stream.findUnique({ where: { id: root?.id } }).streamer()
+    return db.stream.findUniqueOrThrow({ where: { id: root?.id } }).streamer()
   },
   streamerLive: (_obj, { root }) => {
     return db.stream.findUnique({ where: { id: root?.id } }).streamerLive()

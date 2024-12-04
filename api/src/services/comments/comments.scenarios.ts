@@ -1,4 +1,4 @@
-import type { Prisma, Comment } from '@prisma/client'
+import type { Comment, Prisma } from '@prisma/client'
 import { Post } from 'types/graphql'
 
 import type { ScenarioData } from '@redwoodjs/testing/api'
@@ -9,6 +9,7 @@ const USER_JANE = createUser('Jane Doe', 'jane@doe.com')
 const USER_JOHN = createUser('John Doe', 'john@doe.com')
 const USER_GROGU = createUser('Grogu', 'grogu@jedi.com')
 
+// @ts-expect-error - required for complex scenario
 export const standard = defineScenario<Prisma.CommentCreateArgs>({
   comment: {
     john: {

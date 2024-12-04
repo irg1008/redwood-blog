@@ -14,7 +14,7 @@ import { cookieName } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 import { logger } from 'src/lib/logger'
 
-import { TranslatePath } from '$web/src/i18n/i18n'
+import type { TranslatePath } from '$web/src/i18n/i18n'
 
 export type ProviderUser = Pick<User, 'email' | 'name'> & {
   id: string | number

@@ -14,7 +14,7 @@ import { SendResetPasswordEmailJob } from 'src/jobs/SendResetPasswordEmailJob/Se
 import { db } from 'src/lib/db'
 import { later } from 'src/lib/jobs'
 
-import { TranslatePath } from '$web/src/i18n/i18n'
+import type { TranslatePath } from '$web/src/i18n/i18n'
 
 export const users: QueryResolvers['users'] = () => {
   return db.user.findMany()

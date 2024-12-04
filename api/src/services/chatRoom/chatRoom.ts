@@ -11,7 +11,7 @@ import { ChatRoomContext } from 'src/subscriptions/chatRoom/chatRoom'
 import { getLastMessagesFromCache, saveMessagesToCache } from './chatRoom.cache'
 
 export const verifyCanSendMessage = () => {
-  requireAuth()
+  return requireAuth()
 
   // Maybe user needs to "like" the room before sending message
   // Maybe user needs to "follow" room for X days before sending message
@@ -26,9 +26,8 @@ export const sendChatMessage = async (
   { input }: MutationsendChatMessageArgs,
   { context: { pubSub } }: { context: ChatRoomContext }
 ) => {
-  verifyCanSendMessage()
+  const user = verifyCanSendMessage()
 
-  const user = context.currentUser
   const newChatMessage: ChatMessage = {
     ...input,
     id: createId(),

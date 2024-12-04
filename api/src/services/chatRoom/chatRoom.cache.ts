@@ -75,14 +75,12 @@ export const getMessagesCacheLength = (streamId: number) => {
 }
 
 export const persistChatMessages = async (messages: ChatMessage[]) => {
-  messages.forEach((message) => {
-    delete message.user
+  const data = messages.map((message) => {
+    const { user: _, ...messageData } = message
+    return messageData
   })
 
-  await db.streamMessage.createMany({
-    data: messages,
-    skipDuplicates: true,
-  })
+  await db.streamMessage.createMany({ data, skipDuplicates: true })
 }
 
 export const persistsAndOffloadMessagesCache = async (streamId: number) => {

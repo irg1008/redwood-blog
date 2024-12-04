@@ -13,38 +13,33 @@ import { db } from 'src/lib/db'
 const veryfyOwnership = async ({ id }: QueryadminPostArgs) => {
   const post = await adminPost({ id })
   if (!post) throw new ForbiddenError("You don't have access to this post")
+  return post
 }
 
 export const adminPosts: QueryResolvers['adminPosts'] = () => {
-  requireAuth({ roles: 'admin' })
-
-  const userId = context.currentUser.id
-  return db.post.findMany({ where: { userId } })
+  const user = requireAuth({ roles: 'admin' })
+  return db.post.findMany({ where: { userId: user.id } })
 }
 
 export const adminPost: QueryResolvers['adminPost'] = ({ id }) => {
-  requireAuth({ roles: 'admin' })
-
-  const userId = context.currentUser.id
+  const user = requireAuth({ roles: 'admin' })
   return db.post.findUnique({
-    where: { id, userId },
+    where: { id, userId: user.id },
   })
 }
 
 export const createPost: MutationResolvers['createPost'] = async ({
   input,
 }) => {
-  requireAuth({ roles: 'admin' })
+  const user = requireAuth({ roles: 'admin' })
 
   const existingPost = await db.post.findFirst({ where: { slug: input.slug } })
-
   validate(existingPost?.slug, 'slug', {
     absence: { message: 'Slug already exists' },
   })
 
-  const userId = context.currentUser.id
   return db.post.create({
-    data: { ...input, userId },
+    data: { ...input, userId: user.id },
   })
 }
 
@@ -53,19 +48,17 @@ export const updatePost: MutationResolvers['updatePost'] = async ({
   input,
 }) => {
   await veryfyOwnership({ id })
-
-  const userId = context.currentUser.id
   return db.post.update({
-    data: input,
-    where: { id, userId },
+    data: {
+      slug: input.slug ?? undefined,
+      body: input.body ?? undefined,
+      title: input.title ?? undefined,
+    },
+    where: { id },
   })
 }
 
 export const deletePost: MutationResolvers['deletePost'] = async ({ id }) => {
   await veryfyOwnership({ id })
-
-  const userId = context.currentUser.id
-  return db.post.delete({
-    where: { id, userId },
-  })
+  return db.post.delete({ where: { id } })
 }

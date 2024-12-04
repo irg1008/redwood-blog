@@ -33,7 +33,7 @@ export const pushAuthEventHandler = createEventHandler({
       event: StreamEvent.PushAuth,
       pushUrl,
       hostname,
-      streamKey: streamKey || fallbackStreamKey,
+      streamKey: streamKey || fallbackStreamKey || '',
     }
   },
   async handle(data) {
@@ -66,13 +66,11 @@ export const pushAuthEventHandler = createEventHandler({
       throw new ForbiddenError('Streamer access is denied. Reason: Banned')
     }
 
-    const timeoutIsActive = streamer.timeout > new Date()
-    if (timeoutIsActive) {
+    if (streamer.timeout && streamer.timeout > new Date()) {
       throw new ForbiddenError(
         `Streamer access is denied. Reason: Timeout until ${streamer.timeout.toLocaleString()}`
       )
     }
-
     return createStreamName({
       type: StreamType.Live,
       streamPath,

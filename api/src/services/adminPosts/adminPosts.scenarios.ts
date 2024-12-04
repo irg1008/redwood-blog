@@ -1,4 +1,4 @@
-import type { Prisma, Post } from '@prisma/client'
+import type { Post, Prisma } from '@prisma/client'
 
 import { hashPassword } from '@redwoodjs/auth-dbauth-api'
 import type { ScenarioData } from '@redwoodjs/testing/api'
@@ -14,6 +14,7 @@ export const createAdminUser = (
 const USER_JOHN = createAdminUser('John Doe', 'john@doe.com')
 const USER_JANE = createAdminUser('Jane Doe', 'jane@doe.com')
 
+// @ts-expect-error - required for complex scenario
 export const standard = defineScenario<Prisma.PostCreateArgs>({
   post: {
     oneJohn: {
