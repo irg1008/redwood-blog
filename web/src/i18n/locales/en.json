@@ -217,6 +217,22 @@
       "login": {
         "with": "Login with {{provider}}"
       }
+    },
+    "errors": {
+      "oauth": {
+        "csrf": {
+          "invalid": "Invalid CSRF token. You may have taken too long to log in. Please try again",
+          "attack": "CSRF token does not match with callback state. You may be a victim of a CSRF attack"
+        },
+        "data": {
+          "invalid": "Invalid data received from {{provider}}. Please try again or contact support"
+        },
+        "invalid-callback": "Sorry, we received an invalid callback from {{provider}} provider",
+        "other": "An error occurred while trying to login with {{provider}}. Please try again or contact support",
+        "token": {
+          "empty": "No access token received from {{provider}}. Please try again or contact support"
+        }
+      }
     }
   },
   "stream-player": {

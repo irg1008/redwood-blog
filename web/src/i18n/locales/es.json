@@ -217,6 +217,22 @@
       "login": {
         "with": "Iniciar sesión con {{provider}}"
       }
+    },
+    "errors": {
+      "oauth": {
+        "csrf": {
+          "invalid": "Token CSRF inválido, puede que hayas tardado demasiado en iniciar sesión",
+          "attack": "Token CSRF no coincide. Puede que seas una víctima de un ataque CSRF"
+        },
+        "data": {
+          "invalid": "Datos de usuario erróneos, por favor contacta con soporte"
+        },
+        "invalid-callback": "Hemos recibido una respuesta inválida de {{provider}}",
+        "other": "Error al iniciar sesión con {{provider}}",
+        "token": {
+          "empty": "Token de acceso vacío. Por favor prueba de nuevo o contacta con soporte"
+        }
+      }
     }
   },
   "stream-player": {

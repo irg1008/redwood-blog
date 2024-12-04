@@ -3,7 +3,6 @@ import { randomUUID } from 'crypto'
 import { Provider, User } from '@prisma/client'
 import type { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { parse, serialize } from 'cookie'
-import { t } from 'i18next'
 
 import {
   encryptSession,
@@ -11,9 +10,11 @@ import {
   hashToken,
 } from '@redwoodjs/auth-dbauth-api'
 
-import { getEventLanguage, i18nInit } from 'src/i18n/i18n'
 import { cookieName } from 'src/lib/auth'
 import { db } from 'src/lib/db'
+import { logger } from 'src/lib/logger'
+
+import { TranslatePath } from '$web/src/i18n/i18n'
 
 export type ProviderUser = Pick<User, 'email' | 'name'> & {
   id: string | number
@@ -132,17 +133,24 @@ export const secureCookieAndRedirect = (user: User): Response => {
   return redirectToLocation(process.env.WEB_URI, userCookie, csrfCookie)
 }
 
-export const redirectWithError = (error: string): Response => {
+export const redirectWithError = <E extends string = TranslatePath>(
+  error: E,
+  provider?: Provider
+): Response => {
   const csrfCookie = removeCSRFCookie()
+
+  const location = new URL(process.env.WEB_URI)
+  location.pathname = '/login'
+  location.searchParams.set('error', error)
+
+  if (provider) {
+    location.searchParams.set('provider', provider)
+  }
 
   return {
     statusCode: 307,
-    headers: {
-      Location: `${process.env.WEB_URI}/login?error=${error}`,
-    },
-    multiValueHeaders: {
-      'Set-Cookie': [csrfCookie],
-    },
+    headers: { Location: location.toString() },
+    multiValueHeaders: { 'Set-Cookie': [csrfCookie] },
   }
 }
 
@@ -211,39 +219,25 @@ export const providerCallback = async (
 ): Promise<Response> => {
   const { provider, getUserFromToken } = providerInfo
   const { headers, queryStringParameters } = event
-  const lang = getEventLanguage(event)
-
-  await i18nInit(lang)
-  const test = t('emails.confirm-user.header', { lng: lang })
-
-  console.log({ test })
 
   if (!queryStringParameters) {
-    return redirectWithError(
-      `Sorry, we received an invalid callback from ${provider} provider`
-    )
+    return redirectWithError(`social.errors.oauth.invalid-callback`, provider)
   }
 
   const cookies = parse(headers.cookie || '')
   const csrfCookie = cookies[CSRF_TOKEN]
 
   if (!csrfCookie) {
-    return redirectWithError(
-      'Invalid CSRF token. You may have taken too long to log in. Please try again.'
-    )
+    return redirectWithError('social.errors.oauth.csrf.invalid', provider)
   }
 
   const { code, state } = queryStringParameters
   if (!code || !state) {
-    return redirectWithError(
-      `Sorry, we received an invalid callback from ${provider} provider`
-    )
+    return redirectWithError(`social.errors.oauth.invalid-callback`, provider)
   }
 
   if (hashToken(state) !== csrfCookie) {
-    return redirectWithError(
-      'CSRF token does not match with callback state. You may be a victim of CSRF attack'
-    )
+    return redirectWithError('social.errors.oauth.csrf.attack', provider)
   }
 
   try {
@@ -256,19 +250,15 @@ export const providerCallback = async (
       grant_type: 'authorization_code',
     })
 
-    if (error) return redirectWithError(error)
+    if (error) throw new Error(error)
     if (!accessToken) {
-      return redirectWithError(
-        'No access token received from provider. Please try again or contact support'
-      )
+      return redirectWithError('social.errors.oauth.token.empty', provider)
     }
 
     const providerUser = await getUserFromToken(accessToken)
 
     if (!providerUser?.id || !providerUser?.email) {
-      return redirectWithError(
-        'Invalid user data from provider. Please try again'
-      )
+      return redirectWithError('social.errors.oauth.data.invalid')
     }
 
     const user = await getUser({
@@ -281,9 +271,12 @@ export const providerCallback = async (
     return secureCookieAndRedirect(user)
   } catch (error) {
     if (error instanceof Error) {
-      return redirectWithError(error.message)
+      logger.error(
+        `> Oauth: [${provider}]. Unknown error when login via oauth provider. Error: ${error.message}`
+      )
+      return redirectWithError(error.message, provider)
     }
 
-    return redirectWithError('An unexpected error occurred')
+    return redirectWithError('social.errors.oauth.other')
   }
 }

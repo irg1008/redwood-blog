@@ -1,4 +1,5 @@
 import assert from 'node:assert'
+import { URLSearchParams } from 'node:url'
 
 import type { Provider } from '@prisma/client'
 
@@ -307,6 +308,20 @@ describe('common oauth provider functions', () => {
     })
   })
 
+  it("should add provider to search param on error if it's provided", () => {
+    const response = redirectWithError('error', 'github')
+
+    expect(response).toEqual({
+      statusCode: 307,
+      headers: {
+        Location: `${process.env.WEB_URI}/login?error=error&provider=${provider}`,
+      },
+      multiValueHeaders: {
+        'Set-Cookie': [emptyCSRFTokenCookie],
+      },
+    })
+  })
+
   it('receives mocked token information from provider tokenUrl in correct format', async () => {
     const providerOAuthInfo: Parameters<typeof getProviderToken>[0] = {
       clientId: 'clientId',
@@ -415,9 +430,7 @@ describe('common oauth provider functions', () => {
       expect(callbackRes).toHaveProperty('statusCode', 307)
       expect(callbackRes).toHaveProperty(
         'headers.Location',
-        expect.stringContaining(
-          'Invalid CSRF token. You may have taken too long to log in. Please try again.'
-        )
+        expect.stringContaining('social.errors.oauth.csrf.invalid')
       )
     })
 
@@ -441,9 +454,14 @@ describe('common oauth provider functions', () => {
         expect(callbackRes).toHaveProperty('statusCode', 307)
         expect(callbackRes).toHaveProperty(
           'headers.Location',
-          expect.stringContaining(
-            `Sorry, we received an invalid callback from ${providerInfo.provider} provider`
-          )
+          expect.stringContaining(`social.errors.oauth.invalid-callback`)
+        )
+
+        expect(callbackRes.headers?.Location).toContain(
+          'social.errors.oauth.invalid-callback'
+        )
+        expect(callbackRes.headers?.Location).toContain(
+          `&provider=${providerInfo.provider}`
         )
       }
     )
@@ -458,9 +476,7 @@ describe('common oauth provider functions', () => {
       expect(callbackRes).toHaveProperty('statusCode', 307)
       expect(callbackRes).toHaveProperty(
         'headers.Location',
-        expect.stringContaining(
-          'CSRF token does not match with callback state. You may be a victim of CSRF attack'
-        )
+        expect.stringContaining('social.errors.oauth.csrf.attack')
       )
     })
 
@@ -483,19 +499,21 @@ describe('common oauth provider functions', () => {
       expect(callbackRes).toHaveProperty('statusCode', 307)
       expect(callbackRes).toHaveProperty(
         'headers.Location',
-        expect.stringContaining('response.json is not a function')
+        expect.stringContaining(
+          new URLSearchParams({
+            error: 'response.json is not a function',
+          }).toString()
+        )
       )
     })
 
     it('should return error if token response has error', async () => {
       const { event } = redirectOAuthResponse()
+      const error = 'Oh no, an error from the provider'
 
       const invalidTokenMock = jest.fn(() =>
         Promise.resolve({
-          json: () =>
-            Promise.resolve<OAuthTokenResponse>({
-              error: 'Oh no you sent invalid client id or data',
-            }),
+          json: () => Promise.resolve<OAuthTokenResponse>({ error }),
           ok: false,
         })
       ) as jest.Mock
@@ -511,7 +529,7 @@ describe('common oauth provider functions', () => {
       expect(callbackRes).toHaveProperty('statusCode', 307)
       expect(callbackRes).toHaveProperty(
         'headers.Location',
-        expect.stringContaining('Oh no you sent invalid client id or data')
+        expect.stringContaining(new URLSearchParams({ error }).toString())
       )
     })
 
@@ -519,9 +537,10 @@ describe('common oauth provider functions', () => {
       mockValidTokenResponse()
 
       const { event } = redirectOAuthResponse()
+      const error = 'Oh no, an error from getUserFromToken'
 
       providerInfo.getUserFromToken = async () => {
-        throw new Error('Oh no, an error from getUserFromToken')
+        throw new Error(error)
       }
 
       const res = await providerCallback(event, providerInfo)
@@ -529,7 +548,7 @@ describe('common oauth provider functions', () => {
       expect(res).toHaveProperty('statusCode', 307)
       expect(res).toHaveProperty(
         'headers.Location',
-        expect.stringContaining('Oh no, an error from getUserFromToken')
+        expect.stringContaining(new URLSearchParams({ error }).toString())
       )
     })
 
@@ -571,9 +590,7 @@ describe('common oauth provider functions', () => {
         expect(res).toHaveProperty('statusCode', 307)
         expect(res).toHaveProperty(
           'headers.Location',
-          expect.stringContaining(
-            'Invalid user data from provider. Please try again'
-          )
+          expect.stringContaining('social.errors.oauth.data.invalid')
         )
       }
     )

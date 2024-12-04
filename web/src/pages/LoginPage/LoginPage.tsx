@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import { Button, Divider, Input } from '@nextui-org/react'
+import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { loginSchema } from 'schemas'
 import { TranslatePath } from 'types/i18next'
@@ -18,6 +19,7 @@ import Controller from 'src/components/UI/Controller/Controller'
 import Link from 'src/components/UI/Link/Link'
 import { useForm } from 'src/hooks/useForm'
 import { useAuth } from 'src/lib/auth'
+import { deleteSearchParams } from 'src/lib/router'
 
 const LoginPage = () => {
   const { t } = useTranslation()
@@ -32,14 +34,21 @@ const LoginPage = () => {
   })
 
   const { isAuthenticated, logIn, loading } = useAuth()
-  const { error } = useParams()
+  const { error, provider } = useParams()
   const [confirmOpen, setConfirmOpen] = useState(false)
 
   useEffect(() => {
-    if (error) {
-      toast.error(t('common.error', { error }))
+    if (!error) return
+    deleteSearchParams(error)
+
+    if (!i18next.exists(error)) {
+      console.error(error)
     }
-  }, [error, t])
+
+    toast.error(
+      t([error as TranslatePath, 'social.errors.oauth.other'], { provider })
+    )
+  }, [error, t, provider])
 
   useEffect(() => {
     if (isAuthenticated) {
