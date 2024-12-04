@@ -1,6 +1,6 @@
 import { Provider } from '@prisma/client'
 
-import { mockContext, mockHttpEvent } from '@redwoodjs/testing/api'
+import { mockHttpEvent } from '@redwoodjs/testing/api'
 
 import { handler } from './oauth'
 
@@ -13,14 +13,14 @@ describe('oauth function', () => {
       path: '/oauth/unknown/callback',
     })
 
-    const response = await handler(httpEvent, mockContext())
+    const response = await handler(httpEvent)
     expect(response).toHaveProperty('statusCode', 404)
 
     const httpEventRedirect = mockHttpEvent({
       path: '/oauth/unknown/redirect',
     })
 
-    const responseRedirect = await handler(httpEventRedirect, mockContext())
+    const responseRedirect = await handler(httpEventRedirect)
     expect(responseRedirect).toHaveProperty('statusCode', 404)
   })
 
@@ -46,7 +46,7 @@ describe('oauth function', () => {
         path: `/oauth/${provider}/redirect`,
       })
 
-      const response = await handler(httpEvent, mockContext())
+      const response = await handler(httpEvent)
 
       expect(response).toHaveProperty('statusCode', 302)
       expect(response).toHaveProperty(
@@ -59,23 +59,24 @@ describe('oauth function', () => {
       const redirectEvent = mockHttpEvent({
         path: `/oauth/${provider}/redirect`,
       })
-      const redirectResponse = await handler(redirectEvent, mockContext())
+      const redirectResponse = await handler(redirectEvent)
 
       const redirectState = new URL(
-        redirectResponse.headers?.Location
+        redirectResponse.headers?.Location?.toString() || ''
       ).searchParams.get('state')
 
       const callbackEvent = mockHttpEvent({
         path: `/oauth/${provider}/callback`,
         queryStringParameters: {
           code: '123',
-          state: redirectState,
+          state: redirectState ?? '',
         },
         headers: {
-          cookie: redirectResponse.headers['Set-Cookie'],
+          cookie:
+            redirectResponse.multiValueHeaders?.['Set-Cookie']?.toString(),
         },
       })
-      const callbackResponse = await handler(callbackEvent, mockContext())
+      const callbackResponse = await handler(callbackEvent)
 
       expect(callbackResponse).toHaveProperty('statusCode', 307)
       expect(callbackResponse).toHaveProperty(

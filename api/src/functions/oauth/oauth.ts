@@ -1,5 +1,5 @@
 import { Provider } from '@prisma/client'
-import type { APIGatewayEvent, Handler } from 'aws-lambda'
+import type { APIGatewayEvent } from 'aws-lambda'
 
 import { Response } from './providers/common'
 import {
@@ -32,7 +32,7 @@ const actions: Record<AllowedPath, FunctionForAction> = {
 const isValidAction = (path: string): path is AllowedPath =>
   Object.keys(actions).includes(path)
 
-export const handler: Handler<APIGatewayEvent, Response> = async (event) => {
+export const handler = async (event: APIGatewayEvent): Promise<Response> => {
   const { path } = event
   return isValidAction(path) ? actions[path](event) : { statusCode: 404 }
 }
