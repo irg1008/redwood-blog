@@ -2,9 +2,15 @@ import userEvent from '@testing-library/user-event'
 
 import { render, screen, waitFor } from '@redwoodjs/testing/web'
 
+import { i18nInit } from 'src/i18n/i18n'
+
 import ConfirmCodeForm from './ConfirmCodeForm'
 
 describe('ConfirmCodeForm', () => {
+  beforeAll(async () => {
+    await i18nInit('cimode')
+  })
+
   it('renders successfully', () => {
     expect(() => {
       render(<ConfirmCodeForm />)
@@ -16,25 +22,27 @@ describe('ConfirmCodeForm', () => {
 
     render(<ConfirmCodeForm onConfirm={onConfirm} />)
 
-    const submit = screen.getByText('Confirm')
+    const submit = screen.getByText('confirm-code.actions.submit')
 
     await waitFor(() => userEvent.click(submit))
 
     expect(onConfirm).not.toHaveBeenCalled()
-    expect(screen.getByText('Please enter a code')).toBeInTheDocument()
+    expect(screen.getByText('code.nonEmpty')).toBeInTheDocument()
   })
 
   test.each([
-    ['123456789', 'Code must be 6 characters long'],
-    ['123', 'Code must be 6 characters long'],
-    ['DEHECK', 'Code must contain only digits'],
+    ['123456789', 'code.length'],
+    ['123', 'code.length'],
+    ['DEHECK', 'code.regex'],
   ])(`code must be a 6 digit number. Checking %p`, async (code, message) => {
     const onConfirm = jest.fn()
 
     render(<ConfirmCodeForm onConfirm={onConfirm} />)
 
-    const submit = screen.getByText('Confirm')
-    const input: HTMLInputElement = screen.getByLabelText('Confirmation code')
+    const submit = screen.getByText('confirm-code.actions.submit')
+    const input: HTMLInputElement = screen.getByLabelText(
+      'confirm-code.form.code.label'
+    )
 
     input.type = 'text'
 
@@ -49,7 +57,7 @@ describe('ConfirmCodeForm', () => {
   it('input must be number type', async () => {
     render(<ConfirmCodeForm />)
 
-    const input = screen.getByLabelText('Confirmation code')
+    const input = screen.getByLabelText('confirm-code.form.code.label')
 
     expect(input).toHaveAttribute('type', 'number')
 
@@ -62,8 +70,8 @@ describe('ConfirmCodeForm', () => {
 
     render(<ConfirmCodeForm onConfirm={onConfirm} />)
 
-    const submit = screen.getByText('Confirm')
-    const input = screen.getByLabelText('Confirmation code')
+    const submit = screen.getByText('confirm-code.actions.submit')
+    const input = screen.getByLabelText('confirm-code.form.code.label')
 
     const code = '123456'
 
@@ -78,8 +86,8 @@ describe('ConfirmCodeForm', () => {
 
     render(<ConfirmCodeForm />)
 
-    const input = screen.getByLabelText('Confirmation code')
-    const paste = screen.getByLabelText('Paste from clipboard')
+    const input = screen.getByLabelText('confirm-code.form.code.label')
+    const paste = screen.getByLabelText('common.paste')
     expect(paste).toBeInTheDocument()
 
     const code = 123456

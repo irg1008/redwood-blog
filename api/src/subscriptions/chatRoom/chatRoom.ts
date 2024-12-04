@@ -1,8 +1,4 @@
-import {
-  ChatMessage,
-  ChatSubscriptionInput,
-  SubscriptionObject,
-} from 'types/graphql'
+import { ChatMessage, SubscriptionResolvers } from 'types/graphql'
 
 import { RedwoodGraphQLContext } from '@redwoodjs/graphql-server'
 import { PubSub, RedisLiveQueryStore } from '@redwoodjs/realtime'
@@ -28,23 +24,16 @@ export type ChatRoomContext = RedwoodGraphQLContext & {
   liveQueryStore: RedisLiveQueryStore
 }
 
-export type ChatRoomSub = SubscriptionObject<
-  ChatMessage,
-  string,
-  never,
-  ChatRoomContext,
-  { input: ChatSubscriptionInput }
->
-
 const verifyRoomAccess = () => {
   if (hasRole('admin')) return
 
+  // TODO:
   // Maybe needs to be logged in to access room
   // Maybe check if user is blocked from room
   // Maybe check if "premium users only" and "user is premium"
 }
 
-const chatRoomSub: ChatRoomSub = {
+const chatRoomSub: SubscriptionResolvers<ChatRoomContext>['chatRoom'] = {
   subscribe: (_, { input }, { pubSub }) => {
     verifyRoomAccess()
     return pubSub.subscribe('chatRoom', input.streamId)

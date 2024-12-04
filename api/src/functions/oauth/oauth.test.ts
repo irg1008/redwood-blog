@@ -2,6 +2,8 @@ import { Provider } from '@prisma/client'
 
 import { mockHttpEvent } from '@redwoodjs/testing/api'
 
+import { logger } from 'src/lib/logger'
+
 import { handler } from './oauth'
 
 describe('oauth function', () => {
@@ -38,7 +40,7 @@ describe('oauth function', () => {
     {
       provider: Provider.twitch,
       redirectUri: 'https://id.twitch.tv/oauth2/authorize',
-      tokenError: 'Invalid OAuth token',
+      tokenError: 'Invalid authorization code',
     },
   ])('provider: %s', ({ provider, redirectUri, tokenError }) => {
     it('calls oauth endpoint', async () => {
@@ -56,6 +58,8 @@ describe('oauth function', () => {
     })
 
     it('calls callback', async () => {
+      const errorLogger = jest.spyOn(logger, 'error')
+
       const redirectEvent = mockHttpEvent({
         path: `/oauth/${provider}/redirect`,
       })
@@ -78,9 +82,19 @@ describe('oauth function', () => {
       })
       const callbackResponse = await handler(callbackEvent)
 
+      const params = new URLSearchParams({
+        error: tokenError,
+        provider,
+      })
+
       expect(callbackResponse).toHaveProperty('statusCode', 307)
       expect(callbackResponse).toHaveProperty(
         'headers.Location',
+        expect.stringContaining(params.toString())
+      )
+
+      expect(errorLogger).toHaveBeenCalled()
+      expect(errorLogger).toHaveBeenCalledWith(
         expect.stringContaining(tokenError)
       )
     })

@@ -42,7 +42,7 @@ export const handler: APIGatewayProxyHandler = async (event) => {
   } catch (error) {
     if (error instanceof Error) {
       logger.error(
-        `> Streams: [${streamEvent ?? 'Unknown'}] refused. Reason: ${error.message}`
+        `> Streams: [${streamEvent ?? 'Unknown event'}] refused. Reason: ${error.message}`
       )
     }
 

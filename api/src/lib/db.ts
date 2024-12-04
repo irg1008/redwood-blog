@@ -21,4 +21,3 @@ handlePrismaLogging({
 })
 
 export const db = prismaClient
-

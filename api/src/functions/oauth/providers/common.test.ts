@@ -42,13 +42,15 @@ import {
 
 const randomUUIDSpy = jest.spyOn(require('crypto'), 'randomUUID')
 
-const emptyCSRFTokenCookie = `${CSRF_TOKEN}=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Strict`
-
 const validTokenResponse: OAuthTokenResponse = {
   access_token: '123456',
   scope: 'scope',
   state: 'state',
 }
+
+const isDev = process.env.NODE_ENV === 'development'
+const cookieSameSite = isDev ? 'Lax' : 'Strict'
+const emptyCSRFTokenCookie = `${CSRF_TOKEN}=; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=${cookieSameSite}`
 
 const redirectOAuthResponse = () => {
   const [csrf, csrfCookie] = getCSRFCookie()
@@ -100,7 +102,7 @@ describe('common oauth provider functions', () => {
 
     const hashedCSRF = hashToken(csrf)
     expect(cookie).toEqual(
-      `${CSRF_TOKEN}=${hashedCSRF}; Max-Age=300; Path=/; HttpOnly; Secure; SameSite=Strict`
+      `${CSRF_TOKEN}=${hashedCSRF}; Max-Age=300; Path=/; HttpOnly; Secure; SameSite=${cookieSameSite}`
     )
   })
 
@@ -267,7 +269,7 @@ describe('common oauth provider functions', () => {
 
       expect(cookie).toBeDefined()
       expect(cookie).toEqual(
-        `${sessionCookieName}=${session}; Max-Age=31536000; Path=/; HttpOnly; Secure; SameSite=Strict`
+        `${sessionCookieName}=${session}; Max-Age=31536000; Path=/; HttpOnly; Secure; SameSite=${cookieSameSite}`
       )
     }
   )
@@ -356,15 +358,15 @@ describe('common oauth provider functions', () => {
 
   it('correctly formats a cookie given basic data', () => {
     expect(createCookie('name', 'value', 100)).toEqual(
-      'name=value; Max-Age=100; Path=/; HttpOnly; Secure; SameSite=Strict'
+      `name=value; Max-Age=100; Path=/; HttpOnly; Secure; SameSite=${cookieSameSite}`
     )
 
     expect(createCookie('name', 'value', 0)).toEqual(
-      'name=value; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=Strict'
+      `name=value; Max-Age=0; Path=/; HttpOnly; Secure; SameSite=${cookieSameSite}`
     )
 
     expect(createCookie('name', 'value', 1000, '/my/custom/path')).toEqual(
-      'name=value; Max-Age=1000; Path=/my/custom/path; HttpOnly; Secure; SameSite=Strict'
+      `name=value; Max-Age=1000; Path=/my/custom/path; HttpOnly; Secure; SameSite=${cookieSameSite}`
     )
   })
 

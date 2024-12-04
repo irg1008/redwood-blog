@@ -9,6 +9,8 @@ import {
 
 import { render, screen, waitFor } from '@redwoodjs/testing/web'
 
+import { i18nInit } from 'src/i18n/i18n'
+
 import ConfirmUserModal from './ConfirmUserModal'
 
 const confirmError: Partial<GraphQLError> = {
@@ -26,10 +28,16 @@ const confirmError: Partial<GraphQLError> = {
 describe('ConfirmUserModal', () => {
   const email = 'example@mail.com'
 
+  beforeAll(async () => {
+    await i18nInit('cimode')
+  })
+
   it('displays the email', async () => {
     const res = render(<ConfirmUserModal email={email} isOpen={true} />)
 
-    const modalHeader = await res.findByText(`Confirm ${email}`)
+    const modalHeader = await res.findByText(
+      `confirm-user.actions.confirm ${email}`
+    )
     expect(modalHeader).toBeInTheDocument()
     expect(modalHeader.tagName).toEqual('HEADER')
   })
@@ -37,10 +45,10 @@ describe('ConfirmUserModal', () => {
   it('has confirm and code input', async () => {
     render(<ConfirmUserModal email={email} isOpen={true} />)
 
-    const input = screen.getByLabelText('Confirmation code')
+    const input = screen.getByLabelText('confirm-code.form.code.label')
     expect(input).toBeInTheDocument()
 
-    const confirm = screen.getByText('Confirm')
+    const confirm = screen.getByText('confirm-code.actions.submit')
     expect(confirm).toBeInTheDocument()
   })
 
@@ -58,7 +66,7 @@ describe('ConfirmUserModal', () => {
 
     render(<ConfirmUserModal email={email} isOpen={true} />)
 
-    const resend = screen.getByText('Resend code')
+    const resend = screen.getByText('confirm-user.actions.send-new')
     expect(resend).toBeInTheDocument()
 
     await waitFor(() => userEvent.click(resend))
@@ -89,8 +97,8 @@ describe('ConfirmUserModal', () => {
       <ConfirmUserModal email={email} isOpen={true} onClose={closeCallback} />
     )
 
-    const input = screen.getByLabelText('Confirmation code')
-    const confirm = screen.getByText('Confirm')
+    const input = screen.getByLabelText('confirm-code.form.code.label')
+    const confirm = screen.getByText('confirm-code.actions.submit')
 
     await waitFor(() => userEvent.type(input, correctCode.toString()))
     await waitFor(() => userEvent.click(confirm))
@@ -122,8 +130,8 @@ describe('ConfirmUserModal', () => {
       <ConfirmUserModal email={email} isOpen={true} onClose={closeCallback} />
     )
 
-    const input = screen.getByLabelText('Confirmation code')
-    const confirm = screen.getByText('Confirm')
+    const input = screen.getByLabelText('confirm-code.form.code.label')
+    const confirm = screen.getByText('confirm-code.actions.submit')
 
     await waitFor(() => userEvent.type(input, incorrectCode.toString()))
     await waitFor(() => userEvent.click(confirm))

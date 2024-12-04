@@ -1,13 +1,13 @@
 import { render, screen } from '@redwoodjs/testing/web'
 
-import { mockI18n } from 'src/i18n/i18n.test'
+import { i18nInit } from 'src/i18n/i18n'
 
 import { Empty, Failure, Loading, Success } from './ArticleCell'
 import { standard } from './ArticleCell.mock'
 
 describe('ArticleCell', () => {
-  beforeEach(() => {
-    mockI18n()
+  beforeAll(async () => {
+    await i18nInit('cimode')
   })
 
   it('Loading renders successfully', () => {
@@ -18,12 +18,12 @@ describe('ArticleCell', () => {
 
   it('Empty renders successfully', async () => {
     render(<Empty />)
-    expect(screen.getByText('Article not found')).toBeInTheDocument()
+    expect(screen.getByText('article.empty')).toBeInTheDocument()
   })
 
   it('Failure renders successfully', async () => {
     expect(() => {
-      render(<Failure error={new Error('Oh no')} />)
+      render(<Failure />)
     }).not.toThrow()
   })
 

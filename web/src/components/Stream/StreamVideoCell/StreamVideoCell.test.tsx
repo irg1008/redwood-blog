@@ -1,5 +1,7 @@
 import { render } from '@redwoodjs/testing/web'
 
+import { i18nInit } from 'src/i18n/i18n'
+
 import { Empty, Failure, Loading, Success } from './StreamVideoCell'
 import { standard } from './StreamVideoCell.mock'
 
@@ -10,6 +12,10 @@ import { standard } from './StreamVideoCell.mock'
 // https://redwoodjs.com/docs/testing#jest-expect-type-considerations
 
 describe('StreamCell', () => {
+  beforeAll(async () => {
+    await i18nInit('cimode')
+  })
+
   it('renders Loading successfully', () => {
     expect(() => {
       render(<Loading />)

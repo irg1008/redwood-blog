@@ -7,7 +7,7 @@ import { SendConfirmUserEmailJob } from './SendConfirmUserEmailJob'
 
 const confirmUserInput = {
   invalidCode: {
-    code: null,
+    code: 12,
     email: 'example@email.com',
   },
   invalidEmail: {
@@ -21,18 +21,18 @@ const confirmUserInput = {
 } satisfies Record<string, ConfirmUserInput>
 
 describe('SendConfirmUserEmailJob', () => {
-  it('Should add info entry to logger', () => {
+  it('Should add info entry to logger', async () => {
     const loggerInfo = jest.spyOn(jobs.logger, 'info')
-    SendConfirmUserEmailJob.perform(confirmUserInput.validData)
+
+    await SendConfirmUserEmailJob.perform(confirmUserInput.validData)
     expect(loggerInfo).toHaveBeenCalled()
   })
 
-  it("should call sendConfirmUserEmail with the payload's data", () => {
+  it("should call sendConfirmUserEmail with the payload's data", async () => {
     const payload = confirmUserInput.validData
-
     const sendConfirmUserEmail = jest.spyOn(mails, 'sendConfirmUserEmail')
 
-    SendConfirmUserEmailJob.perform(payload)
+    await SendConfirmUserEmailJob.perform(payload)
     expect(sendConfirmUserEmail).toHaveBeenCalledWith(payload)
   })
 

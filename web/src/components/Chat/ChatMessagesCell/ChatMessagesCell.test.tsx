@@ -1,5 +1,7 @@
 import { render } from '@redwoodjs/testing/web'
 
+import { i18nInit } from 'src/i18n/i18n'
+
 import { Failure, Loading, Success } from './ChatMessagesCell'
 import { standard } from './ChatMessagesCell.mock'
 
@@ -10,6 +12,10 @@ import { standard } from './ChatMessagesCell.mock'
 // https://redwoodjs.com/docs/testing#jest-expect-type-considerations
 
 describe('ChatMessagesCell', () => {
+  beforeAll(async () => {
+    await i18nInit('cimode')
+  })
+
   it('renders Loading successfully', () => {
     expect(() => {
       render(<Loading />)

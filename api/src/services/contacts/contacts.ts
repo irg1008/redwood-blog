@@ -18,10 +18,10 @@ export const contact: QueryResolvers['contact'] = ({ id }) => {
 }
 
 export const createContact: MutationResolvers<LanguageContext>['createContact'] =
-  async ({ input }, { context }) => {
+  async ({ input }, global) => {
     validate(input.email, 'email', { email: true })
 
-    const lang = context.req.language
+    const lang = global?.context.req.language
     await later(SendContactEmailJob, [input, lang])
 
     return db.contact.create({
@@ -34,7 +34,11 @@ export const updateContact: MutationResolvers['updateContact'] = ({
   input,
 }) => {
   return db.contact.update({
-    data: input,
+    data: {
+      ...input,
+      email: input.email ?? undefined,
+      message: input.message ?? undefined,
+    },
     where: { id },
   })
 }

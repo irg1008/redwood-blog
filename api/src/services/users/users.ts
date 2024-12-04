@@ -45,15 +45,19 @@ export const confirmUser: MutationResolvers['confirmUser'] = async ({
 
   if (user?.confirmed) return user
 
-  validate(new Date() <= user.confirmTokenExpiresAt, 'code', {
-    acceptance: {
-      in: [true],
-      message: 'confirm-user.errors.code.expired' satisfies TranslatePath,
-    },
-  })
+  validate(
+    user?.confirmTokenExpiresAt && new Date() <= user.confirmTokenExpiresAt,
+    'code',
+    {
+      acceptance: {
+        in: [true],
+        message: 'confirm-user.errors.code.expired' satisfies TranslatePath,
+      },
+    }
+  )
 
   return await db.user.update({
-    where: { id: user.id },
+    where: { id: user?.id },
     data: {
       confirmed: true,
       confirmToken: null,
@@ -62,21 +66,27 @@ export const confirmUser: MutationResolvers['confirmUser'] = async ({
   })
 }
 
+const generateCode = () => {
+  return Math.floor(100000 + Math.random() * 900000)
+}
+
 export const sendConfirmCode: MutationResolvers<LanguageContext>['sendConfirmCode'] =
-  async ({ email }, { context }) => {
-    const user = await db.user.findUnique({ where: { email } })
+  async ({ email }, global) => {
+    const user = await db.user.findUnique({
+      where: { email },
+    })
     if (!user) {
       throw new Error(
         'confirm-user.errors.username.not-found' satisfies TranslatePath
       )
     }
 
-    const isStillValid = user.confirmTokenExpiresAt > new Date()
+    const isStillValid =
+      user.confirmTokenExpiresAt && user.confirmTokenExpiresAt > new Date()
     if (isStillValid) return true
 
-    const code = Math.floor(100000 + Math.random() * 900000)
-
-    const lang = context.req.language
+    const code = generateCode()
+    const lang = global?.context.req.language
     await later(SendConfirmUserEmailJob, [{ email, code }, lang])
 
     await db.user.update({
@@ -103,6 +113,6 @@ export const sendResetPassword = async (
 
 export const User: UserRelationResolvers = {
   posts: (_obj, { root }) => {
-    return db.user.findUnique({ where: { id: root?.id } }).posts()
+    return db.user.findUniqueOrThrow({ where: { id: root?.id } }).posts()
   },
 }

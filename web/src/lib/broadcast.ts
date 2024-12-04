@@ -1,6 +1,8 @@
 import i18next from 'i18next'
 
 export const listenI18nBroadcast = () => {
+  if (!('BroadcastChannel' in globalThis)) return
+
   const i18nBC = new BroadcastChannel('i18n')
 
   i18next.on('languageChanged', () => {

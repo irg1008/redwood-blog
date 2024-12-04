@@ -60,6 +60,7 @@ const ConfirmUserModal = ({
         toast.success(t('confirm-user.actions.confirm', { context: 'success' }))
         onClose?.(true)
       },
+      onError: () => {},
     }
   )
 

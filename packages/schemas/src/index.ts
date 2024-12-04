@@ -29,7 +29,8 @@ export const createContactSchema = v.object<Schema<CreateContactInput>>({
 })
 
 export const codeSchema = v.pipe(
-  v.string(),
+  v.union([v.string(), v.number()]),
+  v.transform(String),
   v.nonEmpty(t('code.nonEmpty')),
   v.length(6, t('code.length')),
   v.regex(/^[0-9]{6}$/, t('code.regex'))
@@ -40,7 +41,7 @@ export const confirmCodeSchema = v.object<Schema<{ code: string }>>({
 })
 
 export const confirmUserSchema = v.object<Schema<ConfirmUserInput>>({
-  code: v.number(),
+  code: codeSchema,
   email: emailSchema,
 })
 

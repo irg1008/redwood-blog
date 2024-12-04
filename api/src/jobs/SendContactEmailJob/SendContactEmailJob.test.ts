@@ -27,18 +27,18 @@ const contactInput = {
 } satisfies Record<string, CreateContactInput>
 
 describe('SendContactEmailJob', () => {
-  it('Should add info entry to logger', () => {
+  it('Should add info entry to logger', async () => {
     const loggerInfo = jest.spyOn(jobs.logger, 'info')
-    SendContactEmailJob.perform(contactInput.validData)
+
+    await SendContactEmailJob.perform(contactInput.validData)
     expect(loggerInfo).toHaveBeenCalled()
   })
 
-  it("should call sendContactEmail with the payload's data", () => {
+  it("should call sendContactEmail with the payload's data", async () => {
     const payload = contactInput.validData
-
     const sendContactEmail = jest.spyOn(mails, 'sendContactEmail')
 
-    SendContactEmailJob.perform(payload)
+    await SendContactEmailJob.perform(payload)
     expect(sendContactEmail).toHaveBeenCalledWith(payload)
   })
 

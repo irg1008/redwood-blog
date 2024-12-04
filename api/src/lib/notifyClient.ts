@@ -1,5 +1,9 @@
-import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client'
-import { setContext } from '@apollo/client/link/context'
+import {
+  ApolloClient,
+  InMemoryCache,
+  createHttpLink,
+} from '@apollo/client/core/core.cjs'
+import { setContext } from '@apollo/client/link/context/context.cjs'
 import { SendServerEventInput, ServerEventResult, User } from 'types/graphql'
 
 import { signPayload } from '@redwoodjs/api/webhooks'

@@ -1,17 +1,35 @@
 import { InMemoryMailHandler } from '@redwoodjs/mailer-handler-in-memory'
 
-import { mailer } from 'src/lib/mailer'
+import { i18nInit } from 'src/i18n/i18n'
+import { mailDirections, mailer } from 'src/lib/mailer'
 
 import {
+  getNoReplyAddress,
   sendConfirmUserEmail,
   sendContactEmail,
   sendResetPasswordEmail,
 } from './mails'
 
 describe('mails', () => {
-  beforeEach(() => {
+  let noReplyAddressString: string
+
+  beforeAll(async () => {
+    await i18nInit('cimode')
+  })
+
+  beforeEach(async () => {
     const handler = mailer.getTestHandler() as InMemoryMailHandler
     handler.clearInbox()
+
+    const noReplyAddress = getNoReplyAddress()
+    noReplyAddressString = `${noReplyAddress.name} <${noReplyAddress.address}>`
+  })
+
+  it('sets a proper no reply address', () => {
+    expect(getNoReplyAddress()).toEqual({
+      name: 'emails.no-reply',
+      address: mailDirections.noReply,
+    })
   })
 
   it('sends reset password email', async () => {
@@ -36,18 +54,18 @@ describe('mails', () => {
         "attachments": [],
         "bcc": [],
         "cc": [],
-        "from": ""No Reply" <no-reply@example.com>",
+        "from": "${noReplyAddressString}",
         "handler": "nodemailer",
         "handlerOptions": undefined,
         "headers": {},
         "htmlContent": undefined,
         "renderer": "reactEmail",
         "rendererOptions": {},
-        "replyTo": "no-reply@example.com",
-        "subject": "Reset your password",
+        "replyTo": "${mailDirections.noReply}",
+        "subject": "emails.reset-password.subject",
         "textContent": undefined,
         "to": [
-          "jane@doe.com",
+          "${resetData.email}",
         ],
       }
     `)
@@ -84,18 +102,18 @@ describe('mails', () => {
         "attachments": [],
         "bcc": [],
         "cc": [],
-        "from": ""No Reply" <no-reply@example.com>",
+        "from": "${noReplyAddressString}",
         "handler": "nodemailer",
         "handlerOptions": undefined,
         "headers": {},
         "htmlContent": undefined,
         "renderer": "reactEmail",
         "rendererOptions": {},
-        "replyTo": "no-reply@example.com",
-        "subject": "Confirm your account",
+        "replyTo": "${mailDirections.noReply}",
+        "subject": "emails.confirm-user.subject",
         "textContent": undefined,
         "to": [
-          "jane@doe.com",
+          "${confirmData.email}",
         ],
       }
     `)
@@ -132,18 +150,18 @@ describe('mails', () => {
         "attachments": [],
         "bcc": [],
         "cc": [],
-        "from": ""No Reply" <no-reply@example.com>",
+        "from": "${noReplyAddressString}",
         "handler": "nodemailer",
         "handlerOptions": undefined,
         "headers": {},
         "htmlContent": undefined,
         "renderer": "reactEmail",
         "rendererOptions": {},
-        "replyTo": "jane@doe.com",
-        "subject": "New Contact Form Submission",
+        "replyTo": "${contactData.email}",
+        "subject": "emails.contact.subject",
         "textContent": undefined,
         "to": [
-          "contact@example.com",
+          "${mailDirections.contactReceiver}",
         ],
       }
     `)

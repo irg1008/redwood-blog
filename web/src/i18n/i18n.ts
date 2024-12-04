@@ -27,7 +27,7 @@ export type TranslatePath = FieldPathByValue<typeof en, string | string[]>
 
 export const FALLBACK_LANG: Lang = 'en'
 
-export const i18nInit = (lng?: Lang) => {
+export const i18nInit = (lng?: string) => {
   if (i18next.isInitialized) {
     i18next.changeLanguage(lng)
     return

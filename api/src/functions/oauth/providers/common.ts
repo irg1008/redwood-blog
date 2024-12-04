@@ -42,12 +42,14 @@ export type OAuthTokenResponse =
       scope: string | string[]
       state?: string
       error?: never
+      message?: never
     }
   | {
       access_token?: never
       scope?: never
       state?: string
       error: string
+      message?: string
     }
 
 export type Response = Omit<APIGatewayProxyResult, 'body'>
@@ -192,7 +194,7 @@ export const createCookie = (
     httpOnly: true,
     path,
     sameSite: isDev ? 'lax' : 'strict',
-    secure: !isDev,
+    secure: true,
     encode: (value) => value,
   })
 }
@@ -245,12 +247,15 @@ export const providerCallback = async (
       access_token: accessToken,
       scope,
       error,
+      message,
     } = await getProviderToken(providerInfo, {
       code,
       grant_type: 'authorization_code',
     })
 
-    if (error) throw new Error(error)
+    const err = error || message
+    if (err) throw new Error(err)
+
     if (!accessToken) {
       return redirectWithError('social.errors.oauth.token.empty', provider)
     }

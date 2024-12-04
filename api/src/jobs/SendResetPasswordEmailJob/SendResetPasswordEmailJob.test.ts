@@ -9,7 +9,7 @@ type ResetPasswordInput = Parameters<
 
 const resetPasswordInput = {
   invalidToken: {
-    resetToken: null,
+    resetToken: '',
     email: 'example@email.com',
   },
   invalidEmail: {
@@ -23,18 +23,18 @@ const resetPasswordInput = {
 } satisfies Record<string, ResetPasswordInput>
 
 describe('SendResetPasswordEmailJob', () => {
-  it('Should add info entry to logger', () => {
+  it('Should add info entry to logger', async () => {
     const loggerInfo = jest.spyOn(jobs.logger, 'info')
-    SendResetPasswordEmailJob.perform(resetPasswordInput.validData)
+
+    await SendResetPasswordEmailJob.perform(resetPasswordInput.validData)
     expect(loggerInfo).toHaveBeenCalled()
   })
 
-  it("should call sendConfirmUserEmail with the payload's data", () => {
+  it("should call sendConfirmUserEmail with the payload's data", async () => {
     const payload = resetPasswordInput.validData
-
     const sendResetPasswordEmail = jest.spyOn(mails, 'sendResetPasswordEmail')
 
-    SendResetPasswordEmailJob.perform(payload)
+    await SendResetPasswordEmailJob.perform(payload)
     expect(sendResetPasswordEmail).toHaveBeenCalledWith(payload)
   })
 })

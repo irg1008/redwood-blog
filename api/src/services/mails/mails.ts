@@ -8,10 +8,11 @@ import { ConfirmCodeEmail } from 'src/mail/ConfirmCodeEmail/ConfirmCodeEmail'
 import { ContactUsEmail } from 'src/mail/ContactUsEmail/ContactUsEmail'
 import { ResetPasswordEmail } from 'src/mail/ResetPasswordEmail/ResetPasswordEmail'
 
-const getNoReplyAddress = (): MailAddress => ({
-  name: t('emails.no-reply'),
-  address: mailDirections.noReply,
-})
+export const getNoReplyAddress = () =>
+  ({
+    name: t('emails.no-reply'),
+    address: mailDirections.noReply,
+  }) satisfies MailAddress
 
 export const sendResetPasswordEmail = async ({
   email,

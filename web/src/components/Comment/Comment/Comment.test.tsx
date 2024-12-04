@@ -1,5 +1,7 @@
 import { render, screen, waitFor } from '@redwoodjs/testing/web'
 
+import { i18nInit } from 'src/i18n/i18n'
+
 import Comment from './Comment'
 
 const COMMENT = {
@@ -11,6 +13,10 @@ const COMMENT = {
 }
 
 describe('Comment', () => {
+  beforeAll(async () => {
+    await i18nInit('cimode')
+  })
+
   it('renders successfully', () => {
     render(<Comment comment={COMMENT} />)
 
@@ -44,7 +50,9 @@ describe('Comment', () => {
     render(<Comment comment={COMMENT} />)
 
     await waitFor(() => {
-      const deleteBtn = screen.getByText('Delete', { selector: 'button' })
+      const deleteBtn = screen.getByText('comment.actions.delete', {
+        selector: 'button',
+      })
       expect(deleteBtn).toBeInTheDocument()
     })
   })
