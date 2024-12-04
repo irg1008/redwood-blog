@@ -2,14 +2,13 @@ import { useEffect, useRef, useState } from 'react'
 
 import { valibotResolver } from '@hookform/resolvers/valibot'
 import { Button, Divider, Input } from '@nextui-org/react'
-import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { loginSchema } from 'schemas'
 import { TranslatePath } from 'types/i18next'
 
 import { LoginAttributes } from '@redwoodjs/auth-dbauth-web'
 import { FieldError, Form, Submit } from '@redwoodjs/forms'
-import { navigate, routes, useParams } from '@redwoodjs/router'
+import { navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
@@ -19,7 +18,6 @@ import Controller from 'src/components/UI/Controller/Controller'
 import Link from 'src/components/UI/Link/Link'
 import { useForm } from 'src/hooks/useForm'
 import { useAuth } from 'src/lib/auth'
-import { deleteSearchParams } from 'src/lib/router'
 
 const LoginPage = () => {
   const { t } = useTranslation()
@@ -34,21 +32,7 @@ const LoginPage = () => {
   })
 
   const { isAuthenticated, logIn, loading } = useAuth()
-  const { error, provider } = useParams()
   const [confirmOpen, setConfirmOpen] = useState(false)
-
-  useEffect(() => {
-    if (!error) return
-    deleteSearchParams(error)
-
-    if (!i18next.exists(error)) {
-      console.error(error)
-    }
-
-    toast.error(
-      t([error as TranslatePath, 'social.errors.oauth.other'], { provider })
-    )
-  }, [error, t, provider])
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -97,7 +81,6 @@ const LoginPage = () => {
 
         <Form<LoginAttributes>
           onSubmit={onSubmit}
-          error={error}
           formMethods={formMethods}
           className="flex w-72 flex-col gap-4"
         >

@@ -1,7 +1,14 @@
-import { ComponentProps } from 'react'
+import { ComponentProps, useEffect } from 'react'
 
 import { Button, Link } from '@nextui-org/react'
+import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
+import { TranslatePath } from 'types/i18next'
+
+import { useParams } from '@redwoodjs/router'
+import { toast } from '@redwoodjs/web/toast'
+
+import { deleteSearchParams } from 'src/lib/router'
 
 const GithubIcon = (props: ComponentProps<'svg'>) => (
   <svg
@@ -39,6 +46,22 @@ const TwitchIcon = (props: ComponentProps<'svg'>) => (
 
 const SocialLogin = () => {
   const { t } = useTranslation()
+
+  const { error, provider } = useParams()
+
+  useEffect(() => {
+    if (!error) return
+    deleteSearchParams('error', 'provider')
+
+    if (!i18next.exists(error)) {
+      console.error(error)
+    }
+
+    toast.error(
+      t([error as TranslatePath, 'social.errors.oauth.other'], { provider }),
+      { id: error }
+    )
+  }, [error, t, provider])
 
   return (
     <div className="flex justify-center gap-2">

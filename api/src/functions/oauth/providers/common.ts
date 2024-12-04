@@ -258,7 +258,7 @@ export const providerCallback = async (
     const providerUser = await getUserFromToken(accessToken)
 
     if (!providerUser?.id || !providerUser?.email) {
-      return redirectWithError('social.errors.oauth.data.invalid')
+      return redirectWithError('social.errors.oauth.data.invalid', provider)
     }
 
     const user = await getUser({
@@ -277,6 +277,6 @@ export const providerCallback = async (
       return redirectWithError(error.message, provider)
     }
 
-    return redirectWithError('social.errors.oauth.other')
+    return redirectWithError('social.errors.oauth.other', provider)
   }
 }
