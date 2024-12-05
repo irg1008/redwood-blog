@@ -10,8 +10,6 @@ services:
       - redwood-blog-network
     volumes:
       - pgdata:/var/lib/postgresql/data
-    env_file:
-      - .env
     ports:
       - "${POSTGRES_PORT}:5432"
     healthcheck:
@@ -22,7 +20,6 @@ services:
 
   media-server:
     build:
-      context: ./docker
       dockerfile: Dockerfile.media-server
     container_name: redwood-blog-media-server
     restart: unless-stopped
@@ -33,8 +30,6 @@ services:
       - media-server-config:/config
       - ./scripts/mediaserver:/scripts
       - ./certs:/certs
-    env_file:
-      - .env
     ports:
       - 4242:4242 # API/UI
       - 1935:1935 # RTMP
@@ -52,8 +47,6 @@ services:
       - redwood-blog-network
     volumes:
       - redisdata:/data
-    env_file:
-      - .env
     ports:
       - ${REDIS_PORT}:6379
 
