@@ -1,38 +1,39 @@
 {
-  "editor.tabSize": 2,
-  "files.trimTrailingWhitespace": true,
-  "editor.formatOnSave": true,
-  "eslint.useFlatConfig": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit"
   },
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
-  "[prisma]": {
-    "editor.formatOnSave": true
-  },
+  "editor.formatOnSave": true,
+  "editor.tabSize": 2,
+  "eslint.useFlatConfig": false,
+  "explorerExclude.backup": {},
   "files.exclude": {
     "**/.classpath": true,
+    "**/.factorypath": true,
     "**/.project": true,
     "**/.settings": true,
-    "**/.factorypath": true,
     "**/node_modules": true,
-    ".yarn": true,
-    ".redwood": true
+    ".redwood": true,
+    ".yarn": true
   },
-  "explorerExclude.backup": {},
-  "typescript.tsdk": "node_modules\\typescript\\lib",
+  "files.trimTrailingWhitespace": true,
+  "i18n-ally.enabledFrameworks": [
+    "react-i18next",
+    "i18next"
+  ],
+  "i18n-ally.enabledParsers": [
+    "json",
+    "ts"
+  ],
+  "i18n-ally.extract.autoDetect": true,
+  "i18n-ally.keystyle": "nested",
   "i18n-ally.localesPaths": [
     "web/src/i18n/locales",
     "api/src/i18n/locales",
     "packages/schemas/src/i18n/locales"
   ],
-  "i18n-ally.enabledFrameworks": ["react-i18next", "i18next"],
-  "i18n-ally.extract.autoDetect": true,
-  "i18n-ally.keystyle": "nested",
   "i18n-ally.sortKeys": false,
-  "i18n-ally.enabledParsers": [
-    "json",
-    "ts"
-  ]
+  "terminals.showCommands": false,
+  "typescript.tsdk": "node_modules\\typescript\\lib"
 }

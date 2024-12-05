@@ -61,7 +61,7 @@
     "d:restart": "docker compose restart",
     "d:build": "docker compose up -d --build",
     "packages:build": "yarn workspace schemas build",
-    "packages:dev": "yarn workspace schemas dev",
+    "packages": "yarn workspace schemas dev",
     "i18n:set": "rw setup i18n"
   },
   "devDependencies": {

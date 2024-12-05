@@ -1,0 +1,55 @@
+{
+  "autorun": true,
+  "autokill": true,
+  "terminals": [
+    {
+      "name": "Test",
+      "icon": "beaker",
+      "color": "terminal.ansiGreen",
+      "command": "yarn test"
+    },
+    {
+      "name": "Storybook",
+      "icon": "notebook",
+      "color": "terminal.ansiMagenta",
+      "command": "yarn storybook",
+      "split": "Test"
+    },
+    {
+      "name": "Studio",
+      "icon": "dashboard",
+      "color": "terminal.ansiBlue",
+      "command": "yarn studio",
+      "execute": false
+    },
+    {
+      "name": "DB",
+      "icon": "database",
+      "color": "terminal.ansiCyan",
+      "command": "yarn db:dev",
+      "execute": false,
+      "split": "Studio"
+    },
+    {
+      "name": "Jobs",
+      "icon": "zap",
+      "color": "terminal.ansiYellow",
+      "command": "yarn jobs",
+      "execute": false
+    },
+    {
+      "name": "Packages",
+      "icon": "file-symlink-file",
+      "color": "terminal.ansiRed",
+      "command": "yarn packages",
+      "execute": false,
+      "split": "Jobs"
+    },
+    {
+      "name": "Terminal",
+      "icon": "terminal",
+      "color": "terminal.ansiWhite",
+      "focus": true
+    }
+  ]
+}
