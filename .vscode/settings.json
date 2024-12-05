@@ -34,6 +34,5 @@
     "packages/schemas/src/i18n/locales"
   ],
   "i18n-ally.sortKeys": false,
-  "terminals.showCommands": false,
   "typescript.tsdk": "node_modules\\typescript\\lib"
 }

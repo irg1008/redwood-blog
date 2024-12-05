@@ -34,15 +34,13 @@
       "name": "Jobs",
       "icon": "zap",
       "color": "terminal.ansiYellow",
-      "command": "yarn jobs",
-      "execute": false
+      "command": "yarn jobs"
     },
     {
       "name": "Packages",
       "icon": "file-symlink-file",
       "color": "terminal.ansiRed",
       "command": "yarn packages",
-      "execute": false,
       "split": "Jobs"
     },
     {
