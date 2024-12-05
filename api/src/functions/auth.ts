@@ -4,8 +4,8 @@ import { passwordSchema, v } from 'schemas'
 import type { DbAuthHandlerOptions, UserType } from '@redwoodjs/auth-dbauth-api'
 import { DbAuthHandler } from '@redwoodjs/auth-dbauth-api'
 
-import { cookieName } from 'src/auth'
 import { getLanguageContext } from 'src/i18n/i18n'
+import { cookieName } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 import { sendConfirmCode, sendResetPassword } from 'src/services/users'
 

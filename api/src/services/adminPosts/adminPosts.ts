@@ -7,7 +7,7 @@ import type {
 import { validate } from '@redwoodjs/api'
 import { ForbiddenError } from '@redwoodjs/graphql-server'
 
-import { requireAuth } from 'src/auth'
+import { requireAuth } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 
 const veryfyOwnership = async ({ id }: QueryadminPostArgs) => {

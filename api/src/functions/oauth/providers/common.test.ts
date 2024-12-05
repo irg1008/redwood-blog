@@ -11,7 +11,7 @@ import {
 } from '@redwoodjs/auth-dbauth-api'
 import { mockHttpEvent } from '@redwoodjs/testing/api'
 
-import { cookieName } from 'src/auth'
+import { cookieName } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 
 import {

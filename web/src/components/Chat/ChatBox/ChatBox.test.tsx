@@ -8,7 +8,7 @@ import ChatBox from './ChatBox'
 describe('ChatBox', () => {
   it('renders successfully', () => {
     expect(() => {
-      render(<ChatBox />)
+      render(<ChatBox streamId={1} />)
     }).not.toThrow()
   })
 })

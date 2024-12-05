@@ -11,7 +11,7 @@ import {
 import { validate } from '@redwoodjs/api'
 import { hashPassword } from '@redwoodjs/auth-dbauth-api'
 
-import { requireAuth } from 'src/auth'
+import { requireAuth } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 import { signJwt } from 'src/lib/jwt'
 import { createStreamName, StreamType } from 'src/lib/stream/streamName'

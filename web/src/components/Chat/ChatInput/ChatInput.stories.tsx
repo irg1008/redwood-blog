@@ -39,7 +39,7 @@ export const Primary: Story = {
         sendChatMessage: {
           body: input.body,
           createdAt: new Date().toISOString(),
-          id: Math.floor(Math.random() * 1000),
+          id: Math.floor(Math.random() * 1000).toString(),
           user: {
             email: 'User 1',
             id: 1,

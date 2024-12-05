@@ -4,7 +4,7 @@ import type {
   QueryResolvers,
 } from 'types/graphql'
 
-import { requireAuth } from 'src/auth'
+import { requireAuth } from 'src/lib/auth'
 import { db } from 'src/lib/db'
 
 export const comments: QueryResolvers['comments'] = ({ postId }) => {
