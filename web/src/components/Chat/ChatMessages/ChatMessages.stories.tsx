@@ -28,7 +28,7 @@ export const Primary: Story = {
     chatMessages: Array.from({ length: 50 }, (_, index) => ({
       body: `Message ${index + 1}`,
       createdAt: new Date(2021, 9, 1, 12, 0, 0).toISOString(),
-      id: index + 1,
+      id: `${index + 1}`,
       user: {
         email: `User ${(index % 5) + 1}`, // Cycle through 5 different users
         id: (index % 5) + 1,

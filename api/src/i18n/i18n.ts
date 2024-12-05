@@ -52,7 +52,10 @@ export const i18nInit = (lng?: string) => {
 
 export const registeri18nMiddleware = async (app: FastifyInstance) => {
   await i18nInit()
-  return app.register(i18nextMiddleware.plugin, { i18next })
+
+  return app.register((app, _opts, next) =>
+    i18nextMiddleware.plugin(app, { i18next }, (err) => next(err))
+  )
 }
 
 export const getEventLanguage = (event: APIGatewayProxyEvent): string => {

@@ -1,6 +1,9 @@
 import { useCallback, useEffect } from 'react'
 
-import type { EditPostById, UpdatePostInput } from 'types/graphql'
+import type {
+  CreatePostInput,
+  EditPostById
+} from 'types/graphql'
 
 import type { RWGqlError } from '@redwoodjs/forms'
 import {
@@ -18,16 +21,12 @@ type FormPost = NonNullable<EditPostById['post']>
 
 type PostFormProps = {
   post?: EditPostById['post']
-  onSave: (data: UpdatePostInput, id?: FormPost['id']) => void
-  error: RWGqlError
+  onSave: (data: CreatePostInput) => void
+  error?: RWGqlError
   loading: boolean
 }
 
 const PostForm = (props: PostFormProps) => {
-  const onSubmit = (data: FormPost) => {
-    props.onSave(data, props?.post?.id)
-  }
-
   const formMethods = useForm<FormPost>({ mode: 'onBlur' })
   const title = formMethods.watch('title')
 
@@ -50,7 +49,7 @@ const PostForm = (props: PostFormProps) => {
     <div className="rw-form-wrapper">
       <Form<FormPost>
         formMethods={formMethods}
-        onSubmit={onSubmit}
+        onSubmit={props.onSave}
         error={props.error}
       >
         <FormError

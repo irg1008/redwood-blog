@@ -7,8 +7,8 @@ import type {
 
 import { navigate, routes } from '@redwoodjs/router'
 import type {
-  CellSuccessProps,
   CellFailureProps,
+  CellSuccessProps,
   TypedDocumentNode,
 } from '@redwoodjs/web'
 import { useMutation } from '@redwoodjs/web'
@@ -16,20 +16,18 @@ import { toast } from '@redwoodjs/web/toast'
 
 import PostForm from 'src/components/Post/PostForm'
 
-export const QUERY: TypedDocumentNode<
-  EditPostById,
-  EditPostByIdVariables
-> = gql`
-  query EditPostById($id: Int!) {
-    post: adminPost(id: $id) {
-      id
-      title
-      slug
-      body
-      createdAt
+export const QUERY: TypedDocumentNode<EditPostById, EditPostByIdVariables> =
+  gql`
+    query EditPostById($id: Int!) {
+      post: adminPost(id: $id) {
+        id
+        title
+        slug
+        body
+        createdAt
+      }
     }
-  }
-`
+  `
 
 const UPDATE_POST_MUTATION: TypedDocumentNode<
   EditPostById,
@@ -63,8 +61,8 @@ export const Success = ({ post }: CellSuccessProps<EditPostById>) => {
     },
   })
 
-  const onSave = (input: UpdatePostInput, id: EditPostByIdVariables['id']) => {
-    updatePost({ variables: { id, input } })
+  const onSave = (input: UpdatePostInput) => {
+    updatePost({ variables: { input, id: post.id } })
   }
 
   return (

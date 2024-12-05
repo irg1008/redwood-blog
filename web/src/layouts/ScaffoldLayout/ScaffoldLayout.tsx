@@ -1,21 +1,20 @@
-import { Link, routes } from '@redwoodjs/router'
+import { AvailableRoutes, Link, routes, WrapperType } from '@redwoodjs/router'
 import { Toaster } from '@redwoodjs/web/toast'
 
 type LayoutProps = {
   title: string
-  titleTo: string
+  titleTo: keyof AvailableRoutes
   buttonLabel: string
-  buttonTo: string
-  children: React.ReactNode
+  buttonTo: keyof AvailableRoutes
 }
 
-const ScaffoldLayout = ({
+const ScaffoldLayout: WrapperType<LayoutProps> = ({
   title,
   titleTo,
   buttonLabel,
   buttonTo,
   children,
-}: LayoutProps) => {
+}) => {
   return (
     <div className="rw-scaffold">
       <Toaster toastOptions={{ className: 'rw-toast', duration: 6000 }} />

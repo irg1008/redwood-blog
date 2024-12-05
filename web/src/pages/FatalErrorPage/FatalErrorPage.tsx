@@ -8,57 +8,68 @@
 // thoughtful :)
 
 // This import will be automatically removed when building for production
+import { ComponentProps } from 'react'
+
 import { useTranslation } from 'react-i18next'
 
 import { DevFatalErrorPage } from '@redwoodjs/web/dist/components/DevFatalErrorPage'
 
-export default DevFatalErrorPage ||
-  (({ error }: { error: Error }) => {
-    const { t } = useTranslation()
+const DevError = ({ error }: { error?: Error }) => {
+  return (
+    <DevFatalErrorPage
+      error={error as ComponentProps<typeof DevFatalErrorPage>['error']}
+    />
+  )
+}
 
-    return (
-      <main>
-        <style
-          dangerouslySetInnerHTML={{
-            __html: `
-              html, body {
-                margin: 0;
-              }
-              html * {
-                box-sizing: border-box;
-              }
-              main {
-                display: flex;
-                align-items: center;
-                font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-                text-align: center;
-                background-color: #E2E8F0;
-                height: 100vh;
-              }
-              section {
-                background-color: white;
-                border-radius: 0.25rem;
-                width: 32rem;
-                padding: 1rem;
-                margin: 0 auto;
-                box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-              }
-              h1 {
-                font-size: 2rem;
-                margin: 0;
-                font-weight: 500;
-                line-height: 1;
-                color: #2D3748;
-              }
-            `,
-          }}
-        />
-        <section>
-          <h1>
-            <span>{t('FatalError.wrong')}</span>
-            <div>{error.message}</div>
-          </h1>
-        </section>
-      </main>
-    )
-  })
+const ProdError = ({ error }: { error?: Error }) => {
+  const { t } = useTranslation()
+
+  return (
+    <main>
+      <style
+        dangerouslySetInnerHTML={{
+          __html: `
+        html, body {
+          margin: 0;
+        }
+        html * {
+          box-sizing: border-box;
+        }
+        main {
+          display: flex;
+          align-items: center;
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+          text-align: center;
+          background-color: #E2E8F0;
+          height: 100vh;
+        }
+        section {
+          background-color: white;
+          border-radius: 0.25rem;
+          width: 32rem;
+          padding: 1rem;
+          margin: 0 auto;
+          box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+        h1 {
+          font-size: 2rem;
+          margin: 0;
+          font-weight: 500;
+          line-height: 1;
+          color: #2D3748;
+        }
+      `,
+        }}
+      />
+      <section>
+        <h1>
+          <span>{t('FatalError.wrong')}</span>
+          <div>{error?.message}</div>
+        </h1>
+      </section>
+    </main>
+  )
+}
+
+export default DevError || ProdError
