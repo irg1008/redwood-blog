@@ -47,18 +47,24 @@ const LoginPage = () => {
 
   const onSubmit = async (data: LoginAttributes) => {
     const response = await logIn(data)
+    if (!response.error) return
+
     const err: TranslatePath = response.error
-    if (!err) return
+    const message = t([err, 'common.error'], { ...data, error: err })
 
     switch (err) {
       case 'Login.actions.confirm-user': {
         setConfirmOpen(true)
-        return toast.success(t(err), { id: 'login-confirm' })
+        return toast.success(message, { id: 'login-confirm' })
+      }
+      case 'Login.errors.username.not-found': {
+        return formMethods.setError('username', { message })
+      }
+      case 'Login.errors.password.incorrect': {
+        return formMethods.setError('password', { message })
       }
       default: {
-        return toast.error(t([err, 'common.error'], { ...data, error: err }), {
-          id: err,
-        })
+        return toast.error(message, { id: err })
       }
     }
   }

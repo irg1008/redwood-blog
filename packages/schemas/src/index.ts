@@ -65,7 +65,7 @@ export const loginSchema = v.object<
   Schema<{ username: string; password: string }>
 >({
   username: emailSchema,
-  password: passwordSchema,
+  password: v.pipe(v.string(), v.nonEmpty(t('password.nonEmpty'))),
 })
 
 export const forgotPasswordSchema = v.pick(loginSchema, ['username'])

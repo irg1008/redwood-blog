@@ -28,7 +28,7 @@
     "description": "¿Olvidaste tu contraseña? ¡No hay problema!",
     "errors": {
       "username": {
-        "not-found": "Usuario {{username}} no encontrado",
+        "not-found": "Usuario no encontrado",
         "required": "El nombre de usuario es requerido"
       }
     },
@@ -55,10 +55,10 @@
     "errors": {
       "fields-required": "Todos los campos son requeridos",
       "password": {
-        "incorrect": "Contraseña incorrecta para {{username}}"
+        "incorrect": "Contraseña incorrecta"
       },
       "username": {
-        "not-found": "Usuario {{username}} no encontrado"
+        "not-found": "Usuario no encontrado"
       }
     },
     "form": {
@@ -208,7 +208,7 @@
         "invalid": "Código inválido, asegúrate de haberlo ingresado correctamente"
       },
       "username": {
-        "not-found": "Usuario {{username}} no encontrado"
+        "not-found": "Usuario no encontrado"
       }
     }
   },

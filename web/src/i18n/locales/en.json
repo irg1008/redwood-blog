@@ -28,7 +28,7 @@
     "description": "Forgot your password? No problem!",
     "errors": {
       "username": {
-        "not-found": "Username {{username}} not found",
+        "not-found": "Username not found",
         "required": "Username is required"
       }
     },
@@ -55,10 +55,10 @@
     "errors": {
       "fields-required": "All fields are required",
       "password": {
-        "incorrect": "Incorrect password for {{username}}"
+        "incorrect": "Incorrect password"
       },
       "username": {
-        "not-found": "Username {{username}} not found"
+        "not-found": "Username not found"
       }
     },
     "form": {
@@ -208,7 +208,7 @@
         "invalid": "Invalid code, make sure you entered it correctly"
       },
       "username": {
-        "not-found": "Username {{username}} not found"
+        "not-found": "Username not found"
       }
     }
   },

@@ -96,7 +96,7 @@ const ConfirmUserModal = ({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={() => onClose?.(false)}>
+    <Modal isOpen={isOpen} onClose={() => onClose?.(false)} backdrop="blur">
       <ModalContent>
         <ModalHeader className="line-clamp-1">
           {t('confirm-user.actions.confirm')} {email}

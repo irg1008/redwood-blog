@@ -50,17 +50,21 @@ const SignupPage = () => {
     const response = await signUp(data)
     const err: TranslatePath = response.error
 
-    if (err) {
-      return toast.error(t([err, 'common.error'], { ...data, error: err }), {
-        id: err,
+    if (!err) {
+      toast.success(t('Signup.actions.confirm-user'), {
+        id: 'signup-confirm',
       })
+
+      return setConfirmOpen(true)
     }
 
-    toast.success(t('Signup.actions.confirm-user'), {
-      id: 'signup-confirm',
-    })
+    const message = t([err, 'common.error'], { ...data, error: err })
 
-    setConfirmOpen(true)
+    if (err === 'Signup.errors.username.taken') {
+      return formMethods.setError('username', { message })
+    }
+
+    toast.error(message, { id: err })
   }
 
   const onUserConfirmed = async (success: boolean) => {
