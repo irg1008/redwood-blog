@@ -28,8 +28,8 @@ services:
       - redwood-blog-network
     volumes:
       - media-server-config:/config
-      - ./scripts/mediaserver:/scripts
-      - ./certs:/certs
+      - ../scripts/mediaserver:/scripts
+      - ../certs:/certs
     ports:
       - 4242:4242 # API/UI
       - 1935:1935 # RTMP
