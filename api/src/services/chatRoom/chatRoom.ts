@@ -5,7 +5,7 @@ import {
   MutationsendChatMessageArgs,
 } from 'types/graphql'
 
-import { requireAuth } from 'src/lib/auth'
+import { requireAuth } from 'src/auth'
 import { ChatRoomContext } from 'src/subscriptions/chatRoom/chatRoom'
 
 import { getLastMessagesFromCache, saveMessagesToCache } from './chatRoom.cache'

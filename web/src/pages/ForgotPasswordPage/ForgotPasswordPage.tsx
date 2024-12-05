@@ -12,9 +12,9 @@ import { back, navigate, routes } from '@redwoodjs/router'
 import { Metadata } from '@redwoodjs/web'
 import { toast } from '@redwoodjs/web/toast'
 
+import { useAuth } from 'src/auth'
 import Controller from 'src/components/UI/Controller/Controller'
 import { useForm } from 'src/hooks/useForm'
-import { useAuth } from 'src/lib/auth'
 
 type ForgotPasswordForm = Pick<LoginAttributes, 'username'>
 

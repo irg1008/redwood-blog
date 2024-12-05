@@ -22,6 +22,7 @@
         "../api/src/*",
         "../.redwood/types/mirror/api/src/*"
       ],
+      "web/src/auth": ["./src/lib/auth"],
       "$api/*": ["../api/*"],
       "types/*": ["./types/*"],
       "@redwoodjs/testing": ["../node_modules/@redwoodjs/testing/web"]
@@ -37,6 +38,7 @@
   "include": [
     "src",
     "config",
+    "./.storybook/*",
     "../.redwood/types/includes/all-*",
     "../.redwood/types/includes/web-*",
     "./types"

@@ -1,9 +1,8 @@
 import { PrivateSet, Route, Router, Set } from '@redwoodjs/router'
 
+import { useAuth } from 'src/auth'
 import BlogLayout from 'src/layouts/BlogLayout/BlogLayout'
 import ScaffoldLayout from 'src/layouts/ScaffoldLayout'
-
-import { useAuth } from './lib/auth'
 
 const Routes = () => {
   return (

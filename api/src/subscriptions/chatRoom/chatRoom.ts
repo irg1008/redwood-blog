@@ -3,7 +3,7 @@ import { ChatMessage, SubscriptionResolvers } from 'types/graphql'
 import { RedwoodGraphQLContext } from '@redwoodjs/graphql-server'
 import { PubSub, RedisLiveQueryStore } from '@redwoodjs/realtime'
 
-import { hasRole } from 'src/lib/auth'
+import { hasRole } from 'src/auth'
 
 export const schema = gql`
   input ChatSubscriptionInput {

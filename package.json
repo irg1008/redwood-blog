@@ -52,7 +52,7 @@
     "deploy:set": "rw setup deploy netlify",
     "ui:set": "rw setup ui tailwind",
     "mail:set": "rw setup mailer",
-    "storybook": "rw sbv",
+    "storybook": "rw storybook",
     "add:web": "yarn workspace web add -E",
     "add:api": "yarn workspace api add -E",
     "d:up": "docker compose up -d",
@@ -66,6 +66,7 @@
   },
   "devDependencies": {
     "@redwoodjs/auth-dbauth-setup": "8.4.1",
+    "@redwoodjs/cli-storybook-vite": "8.4.1",
     "@redwoodjs/core": "8.4.1",
     "@redwoodjs/project-config": "8.4.1",
     "@redwoodjs/realtime": "8.4.1",
@@ -77,7 +78,10 @@
     "root": true,
     "rules": {
       "@typescript-eslint/no-unused-expressions": "off"
-    }
+    },
+    "ignorePatterns": [
+      "!.storybook/"
+    ]
   },
   "engines": {
     "node": "=20.x"

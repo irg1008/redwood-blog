@@ -10,7 +10,7 @@ import {
   hashToken,
 } from '@redwoodjs/auth-dbauth-api'
 
-import { cookieName } from 'src/lib/auth'
+import { cookieName } from 'src/auth'
 import { db } from 'src/lib/db'
 import { logger } from 'src/lib/logger'
 

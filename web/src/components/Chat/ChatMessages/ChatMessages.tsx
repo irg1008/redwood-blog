@@ -4,7 +4,7 @@ import { Avatar, Button, cn } from '@nextui-org/react'
 import { ArrowDownIcon, CatIcon } from 'lucide-react'
 import { ChatMessageFragment } from 'types/graphql'
 
-import { useAuth } from 'src/lib/auth'
+import { useAuth } from 'src/auth'
 
 type ChatMessagesProps = {
   chatMessages: ChatMessageFragment[]

@@ -16,10 +16,10 @@ import { useTranslation } from 'react-i18next'
 import { routes, useParams } from '@redwoodjs/router'
 import { Toaster } from '@redwoodjs/web/toast'
 
+import { useAuth } from 'src/auth'
 import Link from 'src/components/UI/Link/Link'
 import NavLink from 'src/components/UI/NavLink/NavLink'
 import { langs } from 'src/i18n/i18n'
-import { useAuth } from 'src/lib/auth'
 import { deleteSearchParams } from 'src/lib/router'
 
 type BlogLayoutProps = {

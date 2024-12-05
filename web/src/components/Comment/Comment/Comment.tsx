@@ -7,8 +7,8 @@ import {
 
 import { useMutation } from '@redwoodjs/web'
 
+import { useAuth } from 'src/auth'
 import { QUERY as CommentsQuery } from 'src/components/Comment/CommentsCell/CommentsCell'
-import { useAuth } from 'src/lib/auth'
 
 const DELETE_COMMENT = gql`
   mutation DeleteCommentMutation($id: Int!) {

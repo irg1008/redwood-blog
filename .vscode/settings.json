@@ -2,7 +2,7 @@
   "editor.tabSize": 2,
   "files.trimTrailingWhitespace": true,
   "editor.formatOnSave": true,
-  "eslint.experimental.useFlatConfig": false,
+  "eslint.useFlatConfig": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.organizeImports": "explicit"
@@ -22,18 +22,6 @@
   },
   "explorerExclude.backup": {},
   "typescript.tsdk": "node_modules\\typescript\\lib",
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "dbaeumer.vscode-eslint"
-  },
-  "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features"
-  },
-  "[html]": {
-    "editor.defaultFormatter": "rvest.vs-code-prettier-eslint"
-  },
   "i18n-ally.localesPaths": [
     "web/src/i18n/locales",
     "api/src/i18n/locales",
@@ -43,5 +31,8 @@
   "i18n-ally.extract.autoDetect": true,
   "i18n-ally.keystyle": "nested",
   "i18n-ally.sortKeys": false,
-  "i18n-ally.enabledParsers": ["json", "ts"]
+  "i18n-ally.enabledParsers": [
+    "json",
+    "ts"
+  ]
 }
