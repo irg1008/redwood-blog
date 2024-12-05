@@ -12,7 +12,6 @@ dist-babel
 node_modules
 yarn-error.log
 web/public/mockServiceWorker.js
-web/.storybook
 web/types/graphql.d.ts
 api/types/graphql.d.ts
 api/src/lib/generateGraphiQLHeader.*
