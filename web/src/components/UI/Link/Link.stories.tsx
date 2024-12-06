@@ -23,4 +23,12 @@ export default meta
 
 type Story = StoryObj<typeof Link>
 
-export const Primary: Story = {}
+export const Primary: Story = {
+  render: (args) => {
+    return <Link {...args} />
+  },
+  args: {
+    children: 'Link',
+    to: '/',
+  },
+}

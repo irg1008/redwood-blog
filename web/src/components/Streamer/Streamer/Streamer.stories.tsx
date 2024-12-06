@@ -10,17 +10,21 @@
 //
 // See https://storybook.js.org/docs/react/writing-stories/args.
 
-import type { Meta, StoryObj } from "@storybook/react";
+import type { Meta, StoryObj } from '@storybook/react'
 
-import Streamer from "./Streamer";
+import { standard } from '../StreamerCell/StreamerCell.mock'
+
+import Streamer from './Streamer'
 
 const meta: Meta<typeof Streamer> = {
   component: Streamer,
-  tags: ["autodocs"],
-};
+  tags: ['autodocs'],
+}
 
-export default meta;
+export default meta
 
-type Story = StoryObj<typeof Streamer>;
+type Story = StoryObj<typeof Streamer>
 
-export const Primary: Story = {};
+export const Primary: Story = {
+  render: () => <Streamer {...standard()} />,
+}

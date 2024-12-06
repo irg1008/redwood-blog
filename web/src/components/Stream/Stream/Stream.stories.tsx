@@ -23,4 +23,14 @@ export default meta
 
 type Story = StoryObj<typeof Stream>
 
-export const Primary: Story = {}
+export const Primary: Story = {
+  render: () => (
+    <Stream
+      stream={{
+        id: 1,
+        createdAt: '2021-08-06T00:00:00Z',
+        recordingId: '1',
+      }}
+    />
+  ),
+}

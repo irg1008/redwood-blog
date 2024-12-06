@@ -10,5 +10,11 @@ export const standard = (/* vars, { ctx, req } */) => ({
       id: 1,
       email: 'email@email.com',
     },
+    liveStream: {
+      id: 1,
+      createdAt: new Date().toISOString(),
+      closedAt: new Date().toISOString(),
+      recordingId: '1',
+    },
   } satisfies FindStreamerQuery['streamer'],
 })

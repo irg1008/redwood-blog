@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react'
 
-import { Loading, Empty, Failure, Success } from './StreamerCell'
+import { Empty, Failure, Loading, Success } from './StreamerCell'
 import { standard } from './StreamerCell.mock'
 
 const meta: Meta = {
