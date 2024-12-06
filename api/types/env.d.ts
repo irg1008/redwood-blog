@@ -35,7 +35,6 @@ declare namespace NodeJS {
     MEDIA_SERVER_API_URL: string
     MEDIA_SERVER_EVENT_URL: string
     REDIS_HOST: string
-    REDIS_USERNAME: string
     REDIS_PORT: string
     REDIS_HOST_PASSWORD: string
   }
