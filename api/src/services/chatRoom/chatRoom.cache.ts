@@ -1,7 +1,7 @@
 import { ChatMessage } from 'types/graphql'
 
 import { db } from 'src/lib/db'
-import { KV } from 'src/lib/realtime'
+import { KV } from 'src/lib/kv'
 
 const MESSAGE_RETRIEVE_LIMIT = 500
 const OFFLOAD_SAVE_THRESHOLD = 200 // We save on <OFFLOAD_SAVE_THRESHOLD> messages over <MESSAGE_RETRIEVE_LIMIT>

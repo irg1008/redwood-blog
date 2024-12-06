@@ -1,0 +1,42 @@
+api:
+  dashboard: true
+  insecure: true
+  debug: false
+
+entryPoints:
+  web:
+    address: :80
+    # Optional if you want to redirect all HTTP to HTTPS
+    # http:
+    #   redirections:
+    #     entryPoint:
+    #       to: websecure
+    #       scheme: https
+  websecure:
+    address: :443
+    http:
+      tls:
+        certResolver: letsencrypt
+  db:
+    address: :5432
+  redis:
+    address: :6379
+
+serversTransport:
+  insecureSkipVerify: true
+
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+    network: proxy # Only use the "proxy" Docker network, even if containers are on multiple networks.
+
+certificatesResolvers:
+  letsencrypt:
+    acme:
+      email: youremail@email.com
+      storage: /certs/acme.json
+      # caServer: https://acme-v02.api.letsencrypt.org/directory # prod (default)
+      caServer: https://acme-staging-v02.api.letsencrypt.org/directory # staging
+      httpChallenge:
+        entryPoint: web

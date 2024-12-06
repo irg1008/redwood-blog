@@ -1,60 +1,117 @@
 version: "3.8"
-name: "redwood-blog"
+name: redwood-blog
 
 services:
   db:
-    image: postgres
-    container_name: redwood-blog-postgres
+    image: postgres:15-alpine3.20
+    container_name: postgres
     restart: unless-stopped
     networks:
-      - redwood-blog-network
+      - proxy
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
-      - "${POSTGRES_PORT}:5432"
+      - 5432
     healthcheck:
       test: [ "CMD", "pg_isready", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}" ]
       interval: 5s
       timeout: 5s
       retries: 5
+    labels:
+      - traefik.enable=true
+      - traefik.tcp.routers.db.entrypoints=db
+      - traefik.tcp.routers.db.rule=HostSNI(`*`)
+      - traefik.tcp.routers.db.service=db
+      - traefik.tcp.routers.db.tls=${USE_TLS}
+      - traefik.tcp.routers.db.tls.certresolver=letsencrypt
+      - traefik.tcp.services.db.loadbalancer.server.port=5432
+
+  redis:
+    image: redis:alpine3.20
+    container_name: redis
+    restart: unless-stopped
+    networks:
+      - proxy
+    command: redis-server --requirepass ${REDIS_HOST_PASSWORD}
+    volumes:
+      - redisdata:/data
+    environment:
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    ports:
+      - 6379
+    labels:
+      - traefik.enable=true
+      - traefik.tcp.routers.redis.entrypoints=redis
+      - traefik.tcp.routers.redis.rule=HostSNI(`*`)
+      - traefik.tcp.routers.redis.service=redis
+      - traefik.tcp.routers.redis.tls=${USE_TLS}
+      - traefik.tcp.routers.redis.tls.certresolver=letsencrypt
+      - traefik.tcp.services.redis.loadbalancer.server.port=6379
 
   media-server:
     build:
       dockerfile: Dockerfile.media-server
-    container_name: redwood-blog-media-server
+    container_name: media-server
     restart: unless-stopped
-    shm_size: 8g
     networks:
-      - redwood-blog-network
+      - proxy
+    shm_size: 8g
     volumes:
       - media-server-config:/config
       - ../scripts/mediaserver:/scripts
-      - ../certs:/certs
+      - ./certs:/certs
     ports:
-      - 4242:4242 # API/UI
-      - 1935:1935 # RTMP
-      - 8080:8080/tcp # HTTP
-      - 4433:4433/tcp # HTTPS
-      - 8889:8889/udp # SRT
-      - 5554:5554 # RTSP
+      - 4242 # API/UI
+      - 1935 # RTMP
+      - 8282 # HTTP
+    labels:
+      - traefik.enable=true
 
-  redis:
-    image: redis:alpine
-    container_name: redwood-blog-redis
+      - traefik.http.routers.media-api.entrypoints=web
+      - traefik.http.routers.media-api.rule=Host(`media.${DOMAIN}`)
+      - traefik.http.routers.media-api.service=media-api
+      - traefik.http.routers.media-api.tls=${USE_TLS}
+      - traefik.http.routers.media-api.tls.certresolver=letsencrypt
+      - traefik.http.services.media-api.loadbalancer.server.port=4242
+
+      - traefik.http.routers.media-rtmp.entrypoints=web
+      - traefik.http.routers.media-rtmp.rule=Host(`rtmp.${DOMAIN}`)
+      - traefik.http.routers.media-rtmp.service=media-rtmp
+      - traefik.http.routers.media-rtmp.tls=${USE_TLS}
+      - traefik.http.routers.media-rtmp.tls.certresolver=letsencrypt
+      - traefik.http.services.media-rtmp.loadbalancer.server.port=1935
+
+      - traefik.http.routers.media-hls.entrypoints=web
+      - traefik.http.routers.media-hls.rule=Host(`hls.${DOMAIN}`)
+      - traefik.http.routers.media-hls.service=media-hls
+      - traefik.http.routers.media-hls.tls=${USE_TLS}
+      - traefik.http.routers.media-hls.tls.certresolver=letsencrypt
+      - traefik.http.services.media-hls.loadbalancer.server.port=8282
+
+
+
+  traefik:
+    image: traefik:v3.2.1
+    container_name: traefik
     restart: unless-stopped
-    command: redis-server --requirepass ${REDIS_HOST_PASSWORD}
     networks:
-      - redwood-blog-network
-    volumes:
-      - redisdata:/data
+      - proxy
     ports:
-      - ${REDIS_PORT}:6379
+      - 80:80
+      - 443:443
+      - 8080:8080
+      - 5432:5432
+      - 6379:6379
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/traefik.yml:ro
+      - ./certs/traefik-certs:/certs
 
 networks:
-  redwood-blog-network:
-    driver: bridge
+  proxy: {}
 
 volumes:
   pgdata:
   media-server-config:
   redisdata:
+  traefik-certs:

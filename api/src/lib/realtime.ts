@@ -1,15 +1,10 @@
-import { Redis, RedisOptions } from 'ioredis'
+import { Redis } from 'ioredis'
 
 import { RedwoodRealtimeOptions } from '@redwoodjs/realtime'
 
 import subscriptions from 'src/subscriptions/**/*.{js,ts}'
 
-const redisOptions: RedisOptions = {
-  port: parseInt(process.env.REDIS_PORT),
-  password: process.env.REDIS_HOST_PASSWORD,
-}
-
-export const KV = new Redis(redisOptions)
+import { redisOptions } from './kv'
 
 const publishClient = new Redis(redisOptions)
 const subscribeClient = new Redis(redisOptions)
