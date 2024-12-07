@@ -1,13 +1,12 @@
 import { valibotResolver } from '@hookform/resolvers/valibot'
-import { Button, Input, Tooltip } from '@nextui-org/react'
-import { ClipboardPasteIcon } from 'lucide-react'
+import { Button, Input } from '@nextui-org/react'
 import { useTranslation } from 'react-i18next'
 import { confirmCodeSchema } from 'schemas'
 import { TranslatePath } from 'types/i18next'
 
 import { Form, Submit } from '@redwoodjs/forms'
-import { toast } from '@redwoodjs/web/toast'
 
+import CopyPasteButton from 'src/components/CopyPasteButton/CopyPasteButton'
 import Controller, {
   ApolloError,
 } from 'src/components/UI/Controller/Controller'
@@ -38,16 +37,6 @@ const ConfirmCodeForm = ({ onConfirm, error, loading }: ConfirmCodeProps) => {
     onConfirm?.(data)
   }
 
-  const pasteFromClipboard = async () => {
-    try {
-      const text = await navigator.clipboard.readText()
-      formMethods.setValue('code', text)
-    } catch (err) {
-      console.error(err)
-      toast.error(t('common.paste-error'))
-    }
-  }
-
   return (
     <Form<ConfirmCodeInput>
       onSubmit={onSubmit}
@@ -66,16 +55,11 @@ const ConfirmCodeForm = ({ onConfirm, error, loading }: ConfirmCodeProps) => {
             placeholder={t('confirm-code.form.code.placeholder')}
             isInvalid={invalid}
             endContent={
-              <Tooltip content={t('common.paste')}>
-                <Button
-                  onClick={pasteFromClipboard}
-                  isIconOnly
-                  variant="light"
-                  aria-label={t('common.paste')}
-                >
-                  <ClipboardPasteIcon />
-                </Button>
-              </Tooltip>
+              <CopyPasteButton
+                onPaste={(text) => {
+                  formMethods.setValue('code', text)
+                }}
+              />
             }
             errorMessage={error && t(error.message as TranslatePath)}
           />
