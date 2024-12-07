@@ -11,7 +11,7 @@ import {
 import { Metadata, useMutation } from '@redwoodjs/web'
 
 import { useAuth } from 'src/auth'
-import CopyPasteButton from 'src/components/CopyPasteButton/CopyPasteButton'
+import CopyPasteButton from 'src/components/UI/CopyPasteButton/CopyPasteButton'
 
 const CREATE_KEY = gql`
   mutation CreateStreamKeyMutation {

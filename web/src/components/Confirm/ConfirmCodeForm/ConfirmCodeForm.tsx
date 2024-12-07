@@ -6,10 +6,10 @@ import { TranslatePath } from 'types/i18next'
 
 import { Form, Submit } from '@redwoodjs/forms'
 
-import CopyPasteButton from 'src/components/CopyPasteButton/CopyPasteButton'
 import Controller, {
   ApolloError,
 } from 'src/components/UI/Controller/Controller'
+import CopyPasteButton from 'src/components/UI/CopyPasteButton/CopyPasteButton'
 import { useForm } from 'src/hooks/useForm'
 
 type ConfirmCodeInput = {
