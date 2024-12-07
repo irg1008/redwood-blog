@@ -235,7 +235,6 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
 
   return (
     <>
-      TimesLoading: {hls.timesLoading}
       <div className="flex max-h-full w-full flex-col">
         <section
           className="group/player relative flex overflow-hidden"

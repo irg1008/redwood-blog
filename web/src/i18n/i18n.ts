@@ -35,35 +35,39 @@ export const i18nInit = (lng?: string) => {
 
   listenI18nBroadcast()
 
-  return (
-    i18next
-      // learn more: https://github.com/i18next/i18next-browser-languageDetector
-      .use(LanguageDetector)
-      .use(initReactI18next)
-      .init({
-        interpolation: {
-          escapeValue: false, // React already does escaping
-          defaultVariables: {
-            appName: 'Blazing',
-          },
+  const i18n = i18next
+    // learn more: https://github.com/i18next/i18next-browser-languageDetector
+    .use(LanguageDetector)
+    .use(initReactI18next)
+    .init({
+      interpolation: {
+        escapeValue: false, // React already does escaping
+        defaultVariables: {
+          appName: 'Blazing',
         },
-        lng,
-        fallbackLng: FALLBACK_LANG,
-        load: 'currentOnly',
-        cleanCode: true,
-        resources,
-        supportedLngs: langs,
-        detection: {
-          convertDetectedLanguage: (lng) => lng.split('-')[0],
-          caches: ['cookie'],
-          lookupCookie: 'lang',
-        },
-      })
-  )
-}
+      },
+      lng,
+      fallbackLng: FALLBACK_LANG,
+      load: 'currentOnly',
+      cleanCode: true,
+      resources,
+      supportedLngs: langs,
+      detection: {
+        convertDetectedLanguage: (lng) => lng.split('-')[0],
+        caches: ['cookie'],
+        lookupCookie: 'lang',
+      },
+    })
 
-i18next.on('languageChanged', (lng) => {
-  schemaI18n.changeLanguage(lng)
-})
+  i18next.services.formatter?.add('lowercase', (value) => {
+    return value.toLowerCase()
+  })
+
+  i18next.on('languageChanged', (lng) => {
+    schemaI18n.changeLanguage(lng)
+  })
+
+  return i18n
+}
 
 export default i18next

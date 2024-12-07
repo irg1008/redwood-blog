@@ -8,7 +8,21 @@ export const schema = gql`
     user: User!
   }
 
+  type StreamKey {
+    streamKey: String!
+  }
+
+  input CreateStreamKeyInput {
+    userId: Int!
+  }
+
   type Query {
     streamer(id: Int!): Streamer @skipAuth
+  }
+
+  type Mutation {
+    adminCreateStreamKey(input: CreateStreamKeyInput!): StreamKey
+      @requireAuth(roles: ["admin"])
+    createStreamKey: StreamKey @requireAuth
   }
 `

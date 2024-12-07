@@ -78,6 +78,10 @@
     "description": "Posts",
     "title": "Posts"
   },
+  "ProfileSettings": {
+    "description": "Profile settings",
+    "title": "Profile Settings"
+  },
   "ResetPassword": {
     "actions": {
       "navigate-login": "Go to login",
@@ -133,6 +137,25 @@
     "description": "See whats happening",
     "title": "Streamer"
   },
+  "StreamerSettings": {
+    "actions": {
+      "generate-key": "Generate streaming key",
+      "generate-key_success": "Streaming key successfully generated"
+    },
+    "description": "Streamer settings",
+    "errors": {},
+    "form": {
+      "stream-key": {
+        "label": "Stream key"
+      }
+    },
+    "title": "Streamer Settings",
+    "warnings": {
+      "logged-in": "You must be logged in to generate a streaming key",
+      "only-once": "This key can only be viewed once. Make sure to save it somewhere safe",
+      "private-key": "This key is used to stream to your channel. Do not share it with anyone"
+    }
+  },
   "article": {
     "empty": "Article not found",
     "error": "Error loading article"
@@ -172,6 +195,9 @@
   },
   "common": {
     "by": "by {{name}}",
+    "copy": "Copy to clipboard",
+    "copy_error": "Error copying to clipboard",
+    "copy_success": "Copied to clipboard",
     "error": "Error: {{error}}",
     "language-dropdown": {
       "aria": "Select a language"
@@ -181,7 +207,8 @@
     "logout": "Logout",
     "name": "{{appName}}",
     "paste": "Paste from clipboard",
-    "paste-error": "Error pasting from clipboard",
+    "paste_error": "Error pasting from clipboard",
+    "paste_success": "Pasted from clipboard",
     "unknown": "Unknown"
   },
   "confirm-code": {
@@ -212,6 +239,15 @@
       }
     }
   },
+  "settings": {
+    "full-title": "{{setting}} settings",
+    "sidenav": {
+      "aria": "Navigate to a different settings page",
+      "profile": "Profile",
+      "streamer": "Streamer"
+    },
+    "title": "Settings"
+  },
   "social": {
     "action": {
       "login": {
@@ -221,8 +257,8 @@
     "errors": {
       "oauth": {
         "csrf": {
-          "invalid": "Invalid CSRF token. You may have taken too long to log in. Please try again",
-          "attack": "CSRF token does not match with callback state. You may be a victim of a CSRF attack"
+          "attack": "CSRF token does not match with callback state. You may be a victim of a CSRF attack",
+          "invalid": "Invalid CSRF token. You may have taken too long to log in. Please try again"
         },
         "data": {
           "invalid": "Invalid data received from {{provider}}. Please try again or contact support"

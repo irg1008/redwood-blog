@@ -1,0 +1,20 @@
+import { render } from '@redwoodjs/testing/web'
+
+import { i18nInit } from 'src/i18n/i18n'
+
+import StreamerSettingsPage from './StreamerSettingsPage'
+
+//   Improve this test with help from the Redwood Testing Doc:
+//   https://redwoodjs.com/docs/testing#testing-pages-layouts
+
+describe('StreamerSettingsPage', () => {
+  beforeAll(async () => {
+    await i18nInit('cimode')
+  })
+
+  it('renders successfully', () => {
+    expect(() => {
+      render(<StreamerSettingsPage />)
+    }).not.toThrow()
+  })
+})

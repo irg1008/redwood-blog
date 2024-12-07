@@ -1,3 +1,5 @@
+import { PropsWithChildren } from 'react'
+
 import {
   Button,
   Chip,
@@ -10,10 +12,10 @@ import {
   NavbarContent,
   NavbarItem,
 } from '@nextui-org/react'
-import { LanguagesIcon } from 'lucide-react'
+import { LanguagesIcon, SettingsIcon } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 
-import { routes, useParams } from '@redwoodjs/router'
+import { routes, Link as RWLink, useParams } from '@redwoodjs/router'
 import { Toaster } from '@redwoodjs/web/toast'
 
 import { useAuth } from 'src/auth'
@@ -22,11 +24,7 @@ import NavLink from 'src/components/UI/NavLink/NavLink'
 import { langs } from 'src/i18n/i18n'
 import { deleteSearchParams } from 'src/lib/router'
 
-type BlogLayoutProps = {
-  children?: React.ReactNode
-}
-
-const BlogLayout = ({ children }: BlogLayoutProps) => {
+const BlogLayout = ({ children }: PropsWithChildren) => {
   const { isAuthenticated, currentUser, logOut, hasRole } = useAuth()
   const { i18n, t } = useTranslation()
 
@@ -38,10 +36,10 @@ const BlogLayout = ({ children }: BlogLayoutProps) => {
   }
 
   return (
-    <main className="flex min-h-dvh flex-col">
+    <main className="flex min-h-dvh flex-col bg-gradient-to-br from-foreground-50 to-background">
       <Toaster toastOptions={{ position: 'bottom-center', duration: 5000 }} />
 
-      <Navbar isBordered className="h-16">
+      <Navbar isBordered className="h-16" isBlurred>
         <NavbarBrand>
           <Link
             className="text-3xl font-semibold tracking-tight text-blue-400"
@@ -53,7 +51,7 @@ const BlogLayout = ({ children }: BlogLayoutProps) => {
 
         <NavbarContent justify="end">
           <NavLink to={routes.about()}>{t('About.title')}</NavLink>
-          <NavLink to={routes.streamer({ streamerId: 1 })}>
+          <NavLink to={routes.streamer({ streamerId: 26 })}>
             {t('Streamer.title')}
           </NavLink>
           <NavLink to={routes.contact()}>{t('Contact.title')}</NavLink>
@@ -99,6 +97,16 @@ const BlogLayout = ({ children }: BlogLayoutProps) => {
               ))}
             </DropdownMenu>
           </Dropdown>
+
+          <Button
+            as={RWLink}
+            to={routes.profileSettings()}
+            size="sm"
+            isIconOnly
+            variant="light"
+          >
+            <SettingsIcon className="size-4" />
+          </Button>
         </NavbarContent>
       </Navbar>
 

@@ -78,6 +78,10 @@
     "description": "Publicaciones",
     "title": "Publicaciones"
   },
+  "ProfileSettings": {
+    "description": "Configuración de perfil",
+    "title": "Configuración de perfil"
+  },
   "ResetPassword": {
     "actions": {
       "navigate-login": "Ir a iniciar sesión",
@@ -133,6 +137,24 @@
     "description": "Mira lo que está pasando",
     "title": "Streamer"
   },
+  "StreamerSettings": {
+    "actions": {
+      "generate-key": "Generar clave de transmisión",
+      "generate-key_success": "Clave de transmisión generada exitosamente"
+    },
+    "description": "Configuración del transmisor",
+    "form": {
+      "stream-key": {
+        "label": "Clave de transmisión"
+      }
+    },
+    "title": "Configuración del transmisor",
+    "warnings": {
+      "logged-in": "Debes iniciar sesión para generar una clave de transmisión",
+      "only-once": "Esta clave sólo se puede ver una vez. \nAsegúrate de guardarlo en un lugar seguro.",
+      "private-key": "Esta clave se utiliza para transmitir a su canal. \nNo lo compartas con nadie"
+    }
+  },
   "article": {
     "empty": "Artículo no encontrado",
     "error": "Error al cargar el artículo"
@@ -172,6 +194,9 @@
   },
   "common": {
     "by": "por {{name}}",
+    "copy": "Copiar al portapapeles",
+    "copy_error": "Error al copiar al portapapeles",
+    "copy_success": "Copiado al portapapeles",
     "error": "Error: {{error}}",
     "language-dropdown": {
       "aria": "Seleccionar un idioma"
@@ -181,7 +206,8 @@
     "logout": "Cerrar sesión",
     "name": "{{appName}}",
     "paste": "Pegar desde el portapapeles",
-    "paste-error": "Error al pegar desde el portapapeles",
+    "paste_error": "Error al pegar desde el portapapeles",
+    "paste_success": "Pegado desde el portapapeles",
     "unknown": "Desconocido"
   },
   "confirm-code": {
@@ -212,6 +238,15 @@
       }
     }
   },
+  "settings": {
+    "full-title": "Configuración de {{setting, lowercase}}",
+    "sidenav": {
+      "aria": "Navegar a una página de configuración diferente",
+      "profile": "Perfil",
+      "streamer": "Streamer"
+    },
+    "title": "Ajustes"
+  },
   "social": {
     "action": {
       "login": {
@@ -221,8 +256,8 @@
     "errors": {
       "oauth": {
         "csrf": {
-          "invalid": "Token CSRF inválido, puede que hayas tardado demasiado en iniciar sesión",
-          "attack": "Token CSRF no coincide. Puede que seas una víctima de un ataque CSRF"
+          "attack": "Token CSRF no coincide. Puede que seas una víctima de un ataque CSRF",
+          "invalid": "Token CSRF inválido, puede que hayas tardado demasiado en iniciar sesión"
         },
         "data": {
           "invalid": "Datos de usuario erróneos, por favor contacta con soporte"
