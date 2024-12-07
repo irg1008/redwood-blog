@@ -67,7 +67,7 @@ export const trimMessagesCache = (streamId: number, count: number) => {
 }
 
 export const cleanMessagesCache = (streamId: number) => {
-  return KV.getdel(getKeyForStream(streamId))
+  return KV.del(getKeyForStream(streamId))
 }
 
 export const getMessagesCacheLength = (streamId: number) => {
