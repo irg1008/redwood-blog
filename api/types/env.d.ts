@@ -31,7 +31,7 @@ declare namespace NodeJS {
     MEDIA_SERVER_SIGNATURE_HEADER: string
     MEDIA_SERVER_TRIGGER_HEADER: string
     MEDIA_SERVER_SECRET: string
-    MEDIA_SERVER_HTTPS_URL: string
+    MEDIA_SERVER_HTTP_URL: string
     MEDIA_SERVER_API_URL: string
     MEDIA_SERVER_EVENT_URL: string
     REDIS_HOST: string

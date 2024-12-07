@@ -20,7 +20,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.tcp.routers.db.entrypoints=db
-      - traefik.tcp.routers.db.rule=HostSNI(`*`)
+      - traefik.tcp.routers.db.rule=HostSNI(`${TCP_DOMAIN}`)
       - traefik.tcp.routers.db.service=db
       - traefik.tcp.routers.db.tls=${USE_TLS}
       - traefik.tcp.routers.db.tls.certresolver=letsencrypt
@@ -42,7 +42,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.tcp.routers.redis.entrypoints=redis
-      - traefik.tcp.routers.redis.rule=HostSNI(`*`)
+      - traefik.tcp.routers.redis.rule=HostSNI(`${TCP_DOMAIN}`)
       - traefik.tcp.routers.redis.service=redis
       - traefik.tcp.routers.redis.tls=${USE_TLS}
       - traefik.tcp.routers.redis.tls.certresolver=letsencrypt
@@ -60,35 +60,39 @@ services:
       - media-server-config:/config
       - ../scripts/mediaserver:/scripts
       - ./certs:/certs
+    environment:
+      - MEDIA_SERVER_SECRET=${MEDIA_SERVER_SECRET}
+      - MEDIA_SERVER_SIGNATURE_HEADER=${MEDIA_SERVER_SIGNATURE_HEADER}
+      - MEDIA_SERVER_EVENT_URL=${MEDIA_SERVER_EVENT_URL}
+      - MEDIA_SERVER_TRIGGER_HEADER=${MEDIA_SERVER_TRIGGER_HEADER}
     ports:
       - 4242 # API/UI
       - 1935 # RTMP
-      - 8282 # HTTP
+      - 8080 # HTTP
+      - 4433 # HTTPS
     labels:
       - traefik.enable=true
 
       - traefik.http.routers.media-api.entrypoints=web
-      - traefik.http.routers.media-api.rule=Host(`media.${DOMAIN}`)
+      - traefik.http.routers.media-api.rule=Host(`media-ui.${DOMAIN}`)
       - traefik.http.routers.media-api.service=media-api
       - traefik.http.routers.media-api.tls=${USE_TLS}
       - traefik.http.routers.media-api.tls.certresolver=letsencrypt
       - traefik.http.services.media-api.loadbalancer.server.port=4242
 
-      - traefik.http.routers.media-rtmp.entrypoints=web
-      - traefik.http.routers.media-rtmp.rule=Host(`rtmp.${DOMAIN}`)
-      - traefik.http.routers.media-rtmp.service=media-rtmp
-      - traefik.http.routers.media-rtmp.tls=${USE_TLS}
-      - traefik.http.routers.media-rtmp.tls.certresolver=letsencrypt
-      - traefik.http.services.media-rtmp.loadbalancer.server.port=1935
+      - traefik.tcp.routers.media-cast.entrypoints=rtmp
+      - traefik.tcp.routers.media-cast.rule=HostSNI(`${TCP_DOMAIN}`)
+      - traefik.tcp.routers.media-cast.service=media-cast
+      - traefik.tcp.routers.media-cast.tls=${USE_TLS}
+      - traefik.tcp.routers.media-cast.tls.certresolver=letsencrypt
+      - traefik.tcp.services.media-cast.loadbalancer.server.port=1935
 
-      - traefik.http.routers.media-hls.entrypoints=web
-      - traefik.http.routers.media-hls.rule=Host(`hls.${DOMAIN}`)
-      - traefik.http.routers.media-hls.service=media-hls
-      - traefik.http.routers.media-hls.tls=${USE_TLS}
-      - traefik.http.routers.media-hls.tls.certresolver=letsencrypt
-      - traefik.http.services.media-hls.loadbalancer.server.port=8282
-
-
+      - traefik.http.routers.media.entrypoints=web
+      - traefik.http.routers.media.rule=Host(`media.${DOMAIN}`)
+      - traefik.http.routers.media.service=media
+      - traefik.http.routers.media.tls=${USE_TLS}
+      - traefik.http.routers.media.tls.certresolver=letsencrypt
+      - traefik.http.services.media.loadbalancer.server.port=8080
 
   traefik:
     image: traefik:v3.2.1
@@ -97,18 +101,24 @@ services:
     networks:
       - proxy
     ports:
+      - 9090:8080
       - 80:80
       - 443:443
-      - 8080:8080
       - 5432:5432
       - 6379:6379
+      - 1935:1935
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik.yml:/traefik.yml:ro
       - ./certs/traefik-certs:/certs
+    labels:
+      - traefik.http.routers.dashboard.entrypoints=web
+      - traefik.http.routers.dashboard.rule=Host(`traefik.${DOMAIN}`)
+      - traefik.http.routers.dashboard.service=api@internal
 
 networks:
-  proxy: {}
+  proxy:
+    driver: bridge
 
 volumes:
   pgdata:
