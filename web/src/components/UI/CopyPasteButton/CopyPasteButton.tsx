@@ -2,9 +2,8 @@ import { useEffect, useState } from 'react'
 
 import { Button, Tooltip } from '@nextui-org/react'
 import { CheckIcon, ClipboardCopyIcon, ClipboardPasteIcon } from 'lucide-react'
+import { toast } from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
-
-import { toast } from '@redwoodjs/web/toast'
 
 type CopyPasteButton =
   | {
