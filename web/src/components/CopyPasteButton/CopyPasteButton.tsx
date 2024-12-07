@@ -38,8 +38,8 @@ const CopyPasteButton = ({ onCopy, onPaste, value }: CopyPasteButton) => {
   const pasteFromClipboard = async () => {
     try {
       const text = await navigator.clipboard.readText()
-      onPaste?.(text)
       setShowSuccess(true)
+      onPaste?.(text)
       toast.success(t('common.paste', { context: 'success' }), {
         id: 'paste-success',
       })
@@ -56,8 +56,8 @@ const CopyPasteButton = ({ onCopy, onPaste, value }: CopyPasteButton) => {
 
     try {
       await navigator.clipboard.writeText(value)
-      onCopy?.(value)
       setShowSuccess(true)
+      onCopy?.(value)
       toast.success(t('common.copy', { context: 'success' }), {
         id: 'copy-success',
       })
