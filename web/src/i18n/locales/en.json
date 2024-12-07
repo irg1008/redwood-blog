@@ -143,7 +143,6 @@
       "generate-key_success": "Streaming key successfully generated"
     },
     "description": "Streamer settings",
-    "errors": {},
     "form": {
       "stream-key": {
         "label": "Stream key"

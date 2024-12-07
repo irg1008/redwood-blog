@@ -63,11 +63,11 @@ export const i18nInit = (lng?: string) => {
     return value.toLowerCase()
   })
 
-  i18next.on('languageChanged', (lng) => {
-    schemaI18n.changeLanguage(lng)
-  })
-
   return i18n
 }
+
+i18next.on('languageChanged', (lng) => {
+  schemaI18n.changeLanguage(lng)
+})
 
 export default i18next

@@ -58,6 +58,7 @@ const ConfirmCodeForm = ({ onConfirm, error, loading }: ConfirmCodeProps) => {
               <CopyPasteButton
                 onPaste={(text) => {
                   formMethods.setValue('code', text)
+                  formMethods.trigger('code')
                 }}
               />
             }

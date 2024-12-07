@@ -37,8 +37,6 @@ describe('ConfirmCodeForm', () => {
   ])(`code must be a 6 digit number. Checking %p`, async (code, message) => {
     const onConfirm = jest.fn()
 
-    render(<ConfirmCodeForm onConfirm={onConfirm} />)
-
     const submit = screen.getByText('confirm-code.actions.submit')
     const input: HTMLInputElement = screen.getByLabelText(
       'confirm-code.form.code.label'
