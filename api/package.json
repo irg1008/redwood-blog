@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@paralleldrive/cuid2": "2.2.2",
-    "@react-email/components": "0.0.28",
+    "@react-email/components": "0.0.31",
     "@redwoodjs/api": "8.4.1",
     "@redwoodjs/api-server": "8.4.1",
     "@redwoodjs/auth-dbauth-api": "8.4.1",
@@ -15,7 +15,7 @@
     "@redwoodjs/mailer-renderer-react-email": "8.4.1",
     "@redwoodjs/realtime": "8.4.1",
     "cookie": "1.0.2",
-    "i18next": "24.0.2",
+    "i18next": "24.1.0",
     "i18next-http-middleware": "3.7.0",
     "ioredis": "5.4.1",
     "jose": "5.9.6",
