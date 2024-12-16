@@ -15,3 +15,15 @@ export const listenI18nBroadcast = () => {
     i18next.changeLanguage(event.data)
   }
 }
+
+export const listenAuthBroadcast = (onAuthEvent: (isAuth: boolean) => void) => {
+  if (!('BroadcastChannel' in globalThis)) return
+
+  const authBC = new BroadcastChannel('auth')
+  authBC.onmessage = (event) => onAuthEvent(event.data)
+
+  return {
+    sendEvent: (isAuth: boolean) => authBC.postMessage(isAuth),
+    clean: () => authBC.close(),
+  }
+}

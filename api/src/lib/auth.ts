@@ -33,7 +33,7 @@ export const cookieName = 'session_%port%'
  */
 export const getCurrentUser = async (session: Decoded) => {
   if (!session || typeof session.id !== 'number') {
-    throw new Error('Invalid session')
+    return null
   }
 
   return await db.user.findUnique({

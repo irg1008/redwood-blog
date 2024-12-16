@@ -1,6 +1,6 @@
 import { ComponentProps, useEffect } from 'react'
 
-import { Button, Link } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
 import i18next from 'i18next'
 import { useTranslation } from 'react-i18next'
 import { TranslatePath } from 'types/i18next'
@@ -66,8 +66,8 @@ const SocialLogin = () => {
   return (
     <div className="flex justify-center gap-2">
       <Button
-        href={`${window.RWJS_API_URL}/oauth/github/redirect`}
-        as={Link}
+        href={`api/oauth/github/redirect`}
+        as={'a'}
         variant="solid"
         size="lg"
         className="bg-[#333] text-gray-50"
@@ -77,8 +77,8 @@ const SocialLogin = () => {
       </Button>
 
       <Button
-        href={`${window.RWJS_API_URL}/oauth/google/redirect`}
-        as={Link}
+        href={`api/oauth/google/redirect`}
+        as={'a'}
         variant="solid"
         size="lg"
         className="bg-[#4285F4] text-gray-50"
@@ -88,8 +88,8 @@ const SocialLogin = () => {
       </Button>
 
       <Button
-        href={`${window.RWJS_API_URL}/oauth/twitch/redirect`}
-        as={Link}
+        href={`api/oauth/twitch/redirect`}
+        as={'a'}
         variant="solid"
         size="lg"
         className="bg-[#6441A4] text-gray-50"
