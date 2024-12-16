@@ -1,6 +1,4 @@
-// import { Link, routes } from '@redwoodjs/router'
-import { Button, Card, CardBody, Input } from '@nextui-org/react'
-import { AlertTriangleIcon } from 'lucide-react'
+import { Alert, Button, Input } from '@nextui-org/react'
 import toast from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 import {
@@ -54,14 +52,17 @@ const StreamerSettingsPage = () => {
           <div className="flex items-center gap-4">
             <Input
               label={t('StreamerSettings.form.stream-key.label')}
-              value={streamKey ?? '-'}
+              value={streamKey}
               readOnly
+              variant="bordered"
+              defaultValue="-"
               endContent={streamKey && <CopyPasteButton value={streamKey} />}
             />
             <Button
               color="warning"
+              variant="flat"
               disabled={loading}
-              onClick={() => createStreamKey()}
+              onPress={() => createStreamKey()}
             >
               {t('StreamerSettings.actions.generate-key')}
             </Button>
@@ -73,14 +74,10 @@ const StreamerSettingsPage = () => {
         )}
 
         {streamKey && (
-          <Card className="bg-warning-600 text-warning-foreground">
-            <CardBody>
-              <p className="flex items-center gap-2">
-                <AlertTriangleIcon className="size-[1.2em]" />
-                {t('StreamerSettings.warnings.private-key')}
-              </p>
-            </CardBody>
-          </Card>
+          <Alert
+            title={t('StreamerSettings.warnings.private-key')}
+            color="warning"
+          />
         )}
       </section>
     </>

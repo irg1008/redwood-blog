@@ -11,4 +11,12 @@ export default meta
 
 type Story = StoryObj<typeof ConfirmCodeForm>
 
-export const Primary: Story = {}
+export const Primary: Story = {
+  render: () => (
+    <ConfirmCodeForm
+      onConfirm={(input) => {
+        alert(input.code)
+      }}
+    />
+  ),
+}

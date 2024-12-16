@@ -1,5 +1,5 @@
 import userEvent from '@testing-library/user-event'
-import { GraphQLError } from 'graphql'
+import type { GraphQLError } from 'graphql'
 import {
   ConfirmUserMutation,
   ConfirmUserMutationVariables,
@@ -12,6 +12,14 @@ import { render, screen, waitFor } from '@redwoodjs/testing/web'
 import { i18nInit } from 'src/i18n/i18n'
 
 import ConfirmUserModal from './ConfirmUserModal'
+
+global.ResizeObserver = jest.fn().mockImplementation(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+}))
+
+document.elementFromPoint = jest.fn()
 
 const confirmError: Partial<GraphQLError> = {
   message: 'Invalid code',
@@ -45,10 +53,10 @@ describe('ConfirmUserModal', () => {
   it('has confirm and code input', async () => {
     render(<ConfirmUserModal email={email} isOpen={true} />)
 
-    const input = screen.getByLabelText('confirm-code.form.code.label')
+    const input = await screen.findByLabelText('confirm-code.form.code.label')
     expect(input).toBeInTheDocument()
 
-    const confirm = screen.getByText('confirm-code.actions.submit')
+    const confirm = await screen.findByText('confirm-code.actions.submit')
     expect(confirm).toBeInTheDocument()
   })
 
@@ -150,7 +158,7 @@ describe('ConfirmUserModal', () => {
       <ConfirmUserModal email={email} isOpen={true} onClose={closeCallback} />
     )
 
-    const close = screen.getByLabelText('Close')
+    const close = await screen.findByLabelText('Close')
     expect(close).toBeInTheDocument()
 
     await waitFor(() => userEvent.click(close))

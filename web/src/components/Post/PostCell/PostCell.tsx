@@ -1,27 +1,25 @@
 import type { FindPostById, FindPostByIdVariables } from 'types/graphql'
 
 import type {
-  CellSuccessProps,
   CellFailureProps,
+  CellSuccessProps,
   TypedDocumentNode,
 } from '@redwoodjs/web'
 
 import Post from 'src/components/Post/Post'
 
-export const QUERY: TypedDocumentNode<
-  FindPostById,
-  FindPostByIdVariables
-> = gql`
-  query FindPostById($id: Int!) {
-    post: adminPost(id: $id) {
-      id
-      title
-      slug
-      body
-      createdAt
+export const QUERY: TypedDocumentNode<FindPostById, FindPostByIdVariables> =
+  gql`
+    query FindPostById($id: Int!) {
+      post: adminPost(id: $id) {
+        id
+        title
+        slug
+        body
+        createdAt
+      }
     }
-  }
-`
+  `
 
 export const Loading = () => <div>Loading...</div>
 

@@ -28,12 +28,15 @@ export const createContactSchema = v.object<Schema<CreateContactInput>>({
   name: v.optional(v.string()),
 })
 
+export const minCodeLength = 6
+export const codeRegex = /^[0-9]+$/
+
 export const codeSchema = v.pipe(
   v.union([v.string(), v.number()]),
   v.transform(String),
   v.nonEmpty(t('code.nonEmpty')),
-  v.length(6, t('code.length')),
-  v.regex(/^[0-9]{6}$/, t('code.regex'))
+  v.length(minCodeLength, t('code.length')),
+  v.regex(codeRegex, t('code.regex'))
 )
 
 export const confirmCodeSchema = v.object<Schema<{ code: string }>>({

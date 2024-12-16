@@ -290,7 +290,7 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
                 isIconOnly
                 size="sm"
                 aria-label="Play/Pause"
-                onClick={hls.togglePlay}
+                onPress={hls.togglePlay}
                 variant="light"
               >
                 {hls.paused ? (
@@ -309,7 +309,7 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
                       ? t('stream-player.toolbar.volume.mute')
                       : t('stream-player.toolbar.volume.unmute')
                   }
-                  onClick={hls.toggleMute}
+                  onPress={hls.toggleMute}
                   variant="light"
                 >
                   {hls.muted ? (
@@ -367,7 +367,7 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
                   aria-label={t(
                     'stream-player.toolbar.picture-in-picture.aria'
                   )}
-                  onClick={hls.togglePictureInPicture}
+                  onPress={hls.togglePictureInPicture}
                   variant="light"
                 >
                   {hls.pictureInPicture ? (
@@ -389,7 +389,7 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
                   isIconOnly
                   size="sm"
                   aria-label={t('stream-player.toolbar.fullscreen.aria')}
-                  onClick={toggleFullscreen}
+                  onPress={toggleFullscreen}
                   variant="light"
                 >
                   {hls.fullscreen ? (

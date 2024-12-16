@@ -1,7 +1,7 @@
 import { valibotResolver } from '@hookform/resolvers/valibot'
-import { Button, Input } from '@nextui-org/react'
+import { Button, InputOtp } from '@nextui-org/react'
 import { useTranslation } from 'react-i18next'
-import { confirmCodeSchema } from 'schemas'
+import { confirmCodeSchema, minCodeLength } from 'schemas'
 import { TranslatePath } from 'types/i18next'
 
 import { Form, Submit } from '@redwoodjs/forms'
@@ -42,28 +42,31 @@ const ConfirmCodeForm = ({ onConfirm, error, loading }: ConfirmCodeProps) => {
       onSubmit={onSubmit}
       error={error}
       formMethods={formMethods}
-      className="flex flex-col gap-4"
+      className="grid place-content-center gap-4"
     >
       <Controller
         name="code"
         render={({ field, fieldState: { invalid, error } }) => (
-          <Input
-            {...field}
-            type="number"
-            label={t('confirm-code.form.code.label')}
-            variant="bordered"
-            placeholder={t('confirm-code.form.code.placeholder')}
-            isInvalid={invalid}
-            endContent={
-              <CopyPasteButton
-                onPaste={(text) => {
-                  formMethods.setValue('code', text)
-                  formMethods.trigger('code')
-                }}
+          <label>
+            <span className="text-sm">{t('confirm-code.form.code.label')}</span>
+            <span className="flex gap-2">
+              <InputOtp
+                {...field}
+                placeholder={t('confirm-code.form.code.placeholder')}
+                errorMessage={error && t(error.message as TranslatePath)}
+                isInvalid={invalid}
+                length={minCodeLength}
               />
-            }
-            errorMessage={error && t(error.message as TranslatePath)}
-          />
+              <aside className="pt-2">
+                <CopyPasteButton
+                  onPaste={(text) => {
+                    formMethods.setValue('code', text)
+                    formMethods.trigger('code')
+                  }}
+                />
+              </aside>
+            </span>
+          </label>
         )}
       />
 

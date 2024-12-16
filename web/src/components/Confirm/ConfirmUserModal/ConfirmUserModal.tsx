@@ -40,7 +40,7 @@ export const SEND_CONFIRM_CODE_MUTATION: TypedDocumentNode<
   }
 `
 
-type ConfirmUserModalProps = {
+export type ConfirmUserModalProps = {
   email: string
   onClose?: (success: boolean) => void
   isOpen: boolean
@@ -96,7 +96,12 @@ const ConfirmUserModal = ({
   }
 
   return (
-    <Modal isOpen={isOpen} onClose={() => onClose?.(false)} backdrop="blur">
+    <Modal
+      isOpen={isOpen}
+      onClose={() => onClose?.(false)}
+      backdrop="blur"
+      size="sm"
+    >
       <ModalContent>
         <ModalHeader className="line-clamp-1">
           {t('confirm-user.actions.confirm')} {email}
@@ -116,7 +121,7 @@ const ConfirmUserModal = ({
             isLoading={loadingRequest}
             variant="light"
             color="primary"
-            onClick={sendNewConfirmCode}
+            onPress={sendNewConfirmCode}
           >
             {t('confirm-user.actions.send-new')}
           </Button>

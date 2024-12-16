@@ -59,7 +59,7 @@ const BlogLayout = ({ children }: PropsWithChildren) => {
 
           {isAuthenticated ? (
             <NavbarItem>
-              <Button variant="flat" onClick={logOut}>
+              <Button variant="flat" onPress={logOut}>
                 {t('common.logout')}
               </Button>
             </NavbarItem>
@@ -91,7 +91,7 @@ const BlogLayout = ({ children }: PropsWithChildren) => {
               selectionMode="single"
             >
               {langs.map((lang) => (
-                <DropdownItem key={lang} onClick={() => changeLang(lang)}>
+                <DropdownItem key={lang} onPress={() => changeLang(lang)}>
                   {lang}
                 </DropdownItem>
               ))}

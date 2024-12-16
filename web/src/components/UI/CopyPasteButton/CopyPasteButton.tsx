@@ -71,7 +71,7 @@ const CopyPasteButton = ({ onCopy, onPaste, value }: CopyPasteButton) => {
   return value ? (
     <Tooltip content={t('common.copy')}>
       <Button
-        onClick={copyToClipboard}
+        onPress={copyToClipboard}
         isIconOnly
         variant="light"
         aria-label={t('common.copy')}
@@ -86,7 +86,7 @@ const CopyPasteButton = ({ onCopy, onPaste, value }: CopyPasteButton) => {
   ) : (
     <Tooltip content={t('common.paste')}>
       <Button
-        onClick={pasteFromClipboard}
+        onPress={pasteFromClipboard}
         isIconOnly
         variant="light"
         aria-label={t('common.paste')}

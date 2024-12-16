@@ -6,6 +6,14 @@ import { i18nInit } from 'src/i18n/i18n'
 
 import ConfirmCodeForm from './ConfirmCodeForm'
 
+global.ResizeObserver = jest.fn().mockImplementation(() => ({
+  observe: jest.fn(),
+  unobserve: jest.fn(),
+  disconnect: jest.fn(),
+}))
+
+document.elementFromPoint = jest.fn()
+
 describe('ConfirmCodeForm', () => {
   beforeAll(async () => {
     await i18nInit('cimode')
@@ -31,7 +39,6 @@ describe('ConfirmCodeForm', () => {
   })
 
   test.each([
-    ['123456789', 'code.length'],
     ['123', 'code.length'],
     ['DEHECK', 'code.regex'],
   ])(`code must be a 6 digit number. Checking %p`, async (code, message) => {
@@ -54,15 +61,10 @@ describe('ConfirmCodeForm', () => {
     expect(onConfirm).not.toHaveBeenCalled()
   })
 
-  it('input must be number type', async () => {
+  it('input must be inputmode numeric', async () => {
     render(<ConfirmCodeForm />)
-
     const input = screen.getByLabelText('confirm-code.form.code.label')
-
-    expect(input).toHaveAttribute('type', 'number')
-
-    await waitFor(() => userEvent.type(input, 'abc'))
-    expect(input).toHaveValue(null)
+    expect(input).toHaveAttribute('inputmode', 'numeric')
   })
 
   it('onConfirm should receive the code', async () => {
@@ -86,20 +88,16 @@ describe('ConfirmCodeForm', () => {
 
     render(<ConfirmCodeForm />)
 
-    const input = screen.getByLabelText('confirm-code.form.code.label')
+    const input: HTMLInputElement = screen.getByLabelText(
+      'confirm-code.form.code.label'
+    )
     const paste = screen.getByLabelText('common.paste')
     expect(paste).toBeInTheDocument()
 
-    const code = 123456
+    const code = '123456'
     await navigator.clipboard.writeText(code.toString())
 
     await waitFor(() => user.click(paste))
     await waitFor(() => expect(input).toHaveValue(code))
-
-    const wrongCode = 'abc'
-    await navigator.clipboard.writeText(wrongCode)
-
-    await waitFor(() => user.click(paste))
-    await waitFor(() => expect(input).toHaveValue(null))
   })
 })

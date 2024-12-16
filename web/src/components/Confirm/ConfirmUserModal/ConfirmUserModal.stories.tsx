@@ -1,4 +1,5 @@
-import type { Meta, StoryObj } from '@storybook/react'
+import { useArgs } from '@storybook/preview-api'
+import type { Decorator, Meta, StoryObj } from '@storybook/react'
 import { GraphQLError } from 'graphql'
 import {
   ConfirmUserMutation,
@@ -7,13 +8,23 @@ import {
   SendConfirmCodeMutationVariables,
 } from 'types/graphql'
 
-import ConfirmUserModal from './ConfirmUserModal'
+import ConfirmUserModal, { ConfirmUserModalProps } from './ConfirmUserModal'
+
+const OncloseDecorator: Decorator<ConfirmUserModalProps> = (Story, context) => {
+  const [args, setArgs] = useArgs()
+
+  return (
+    <Story
+      {...context}
+      args={{ ...args, onClose: (isOpen) => setArgs({ isOpen }) }}
+    />
+  )
+}
 
 const meta: Meta<typeof ConfirmUserModal> = {
   component: ConfirmUserModal,
-  tags: ['autodocs'],
   args: {
-    isOpen: false,
+    isOpen: true,
     email: 'example@mail.com',
   },
   loaders: [
@@ -28,6 +39,7 @@ const meta: Meta<typeof ConfirmUserModal> = {
       })
     },
   ],
+  decorators: [OncloseDecorator],
 }
 
 const confirmError: Partial<GraphQLError> = {
@@ -63,10 +75,7 @@ export const Successful: Story = {
 
     return (
       <>
-        <ConfirmUserModal
-          {...args}
-          onClose={(success) => success && alert(`User confirmed`)}
-        />
+        <ConfirmUserModal {...args} />
       </>
     )
   },

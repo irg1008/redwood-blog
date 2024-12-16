@@ -87,7 +87,7 @@ const ChatMessages = ({
 
       {scrollingAway && (
         <aside className="fixed bottom-20 right-6 flex p-2">
-          <Button className="w-full" isIconOnly onClick={scrollToBottom}>
+          <Button className="w-full" isIconOnly onPress={scrollToBottom}>
             <ArrowDownIcon />
           </Button>
         </aside>

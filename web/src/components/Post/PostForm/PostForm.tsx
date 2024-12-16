@@ -1,9 +1,6 @@
 import { useCallback, useEffect } from 'react'
 
-import type {
-  CreatePostInput,
-  EditPostById
-} from 'types/graphql'
+import type { CreatePostInput, EditPostById } from 'types/graphql'
 
 import type { RWGqlError } from '@redwoodjs/forms'
 import {
