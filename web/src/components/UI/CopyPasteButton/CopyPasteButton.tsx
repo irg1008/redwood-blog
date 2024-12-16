@@ -5,10 +5,10 @@ import { CheckIcon, ClipboardCopyIcon, ClipboardPasteIcon } from 'lucide-react'
 import { toast } from 'react-hot-toast'
 import { useTranslation } from 'react-i18next'
 
-type CopyPasteButton =
+type CopyPasteButton<T extends string = string> =
   | {
-      value: string
-      onCopy?: (value: string) => void
+      value: T
+      onCopy?: (value: CopyPasteButton['value']) => void
       onPaste?: never
     }
   | {

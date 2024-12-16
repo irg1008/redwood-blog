@@ -1,14 +1,21 @@
-import { render } from "@redwoodjs/testing/web";
+import { render } from '@redwoodjs/testing/web'
 
-import CopyPasteButton from "./CopyPasteButton";
+import CopyPasteButton from './CopyPasteButton'
 
 //   Improve this test with help from the Redwood Testing Doc:
 //    https://redwoodjs.com/docs/testing#testing-components
 
-describe("CopyPasteButton", () => {
-  it("renders successfully", () => {
+describe('CopyPasteButton', () => {
+  it('renders successfully', () => {
     expect(() => {
-      render(<CopyPasteButton />);
-    }).not.toThrow();
-  });
-});
+      render(
+        <CopyPasteButton
+          value="test"
+          onCopy={(value) => {
+            alert(value)
+          }}
+        />
+      )
+    }).not.toThrow()
+  })
+})

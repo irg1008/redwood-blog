@@ -59,7 +59,11 @@ export const CHAT_MESSAGES_SUB: TypedDocumentNode<
   }
 `
 
-export const Loading = () => <Spinner />
+export const Loading = () => (
+  <div className="grid h-full place-content-center place-items-center">
+    <Spinner />
+  </div>
+)
 
 export const Failure = ({ error }: CellFailureProps) => {
   const { t } = useTranslation()

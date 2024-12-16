@@ -15,7 +15,7 @@ const StreamComponent = ({ stream }: { stream: StreamerlessStream }) => {
         <StreamVideoCell streamId={stream.id} />
       </div>
 
-      <aside className="absolute right-0 top-0 flex h-full w-80 pt-16">
+      <aside className="fixed right-0 top-0 flex h-full w-80 pt-16">
         <ChatBox streamId={stream.id} />
       </aside>
     </>

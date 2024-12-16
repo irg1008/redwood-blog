@@ -117,11 +117,11 @@ export const useHls = (streamUrl: string) => {
     video.preload = 'auto'
 
     if (!Hls.isSupported()) {
-      videoRef.current.src = streamUrl
+      video.src = streamUrl
       return
     }
 
-    hls.attachMedia(videoRef.current)
+    hls.attachMedia(video)
 
     hls.on(Hls.Events.MEDIA_ATTACHED, () => {
       hls.loadSource(streamUrl)
@@ -254,7 +254,9 @@ export const useHls = (streamUrl: string) => {
     }
   }
 
-  const toggleFullscreen = <E extends HTMLElement>(altRef?: RefObject<E>) => {
+  const toggleFullscreen = <E extends HTMLElement | null>(
+    altRef?: RefObject<E>
+  ) => {
     const ref = altRef ?? videoRef
     if (!ref.current) return
 

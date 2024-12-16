@@ -47,9 +47,10 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
   const { t } = useTranslation()
 
   const hls = useHls(streamUrl)
-  const containerRef = useRef<HTMLHeadingElement>(null)
+  const containerRef = useRef<HTMLElement>(null)
 
   const toggleFullscreen = () => hls.toggleFullscreen(containerRef)
+
   const iconClasses = 'size-5 transition-transform group-hover:scale-105'
   const menuIconClasses = `${iconClasses} text-default-400`
 
@@ -70,13 +71,15 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
           >
             <DropdownSection showDivider>
               <DropdownItem
+                key="close"
                 startContent={<XIcon className={menuIconClasses} />}
               >
                 {t('stream-player.toolbar.close')}
               </DropdownItem>
             </DropdownSection>
             <DropdownItem
-              onClick={() => setCurrentMenu('qualities')}
+              key="qualities"
+              onPress={() => setCurrentMenu('qualities')}
               closeOnSelect={false}
               startContent={<Settings2Icon className={menuIconClasses} />}
               endContent={
@@ -88,7 +91,8 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
               {t('stream-player.toolbar.settings.resolution')}
             </DropdownItem>
             <DropdownItem
-              onClick={() => setCurrentMenu('playRate')}
+              key="playRate"
+              onPress={() => setCurrentMenu('playRate')}
               closeOnSelect={false}
               startContent={
                 hls.currentSpeed < 1 ? (
@@ -106,14 +110,16 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
               {t('stream-player.toolbar.settings.playback-speed')}
             </DropdownItem>
             <DropdownItem
-              onClick={() => setCurrentMenu('stats')}
+              key="stats"
+              onPress={() => setCurrentMenu('stats')}
               closeOnSelect={false}
               startContent={<HourglassIcon className={menuIconClasses} />}
             >
               {t('stream-player.toolbar.settings.stats')}
             </DropdownItem>
             <DropdownItem
-              onClick={hls.seekLive}
+              key="seek-live"
+              onPress={hls.seekLive}
               startContent={<FastForwardIcon className={menuIconClasses} />}
               className={cn(!hls.isHlsSupported && 'hidden')}
             >
@@ -141,7 +147,8 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
           >
             <DropdownSection showDivider>
               <DropdownItem
-                onClick={() => setCurrentMenu('base')}
+                key="back"
+                onPress={() => setCurrentMenu('base')}
                 closeOnSelect={false}
                 startContent={<ArrowLeft className={menuIconClasses} />}
               >
@@ -183,7 +190,8 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
           >
             <DropdownSection showDivider>
               <DropdownItem
-                onClick={() => setCurrentMenu('base')}
+                key="back"
+                onPress={() => setCurrentMenu('base')}
                 closeOnSelect={false}
                 startContent={<ArrowLeft className={menuIconClasses} />}
               >
@@ -209,7 +217,8 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
           >
             <DropdownSection showDivider>
               <DropdownItem
-                onClick={() => setCurrentMenu('base')}
+                key="back"
+                onPress={() => setCurrentMenu('base')}
                 closeOnSelect={false}
                 startContent={<ArrowLeft className={menuIconClasses} />}
               >
@@ -217,6 +226,7 @@ const StreamVideo = ({ streamUrl, thumbnailUrl }: SteramVideoProps) => {
               </DropdownItem>
             </DropdownSection>
             <DropdownItem
+              key="latency"
               isReadOnly
               startContent={<TrendingDownIcon className={menuIconClasses} />}
               endContent={
