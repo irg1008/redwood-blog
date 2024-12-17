@@ -139,7 +139,7 @@
   },
   "StreamerSettings": {
     "actions": {
-      "generate-key": "Generar clave de transmisión",
+      "generate-key": "Generar clave",
       "generate-key_success": "Clave de transmisión generada exitosamente"
     },
     "description": "Configuración del transmisor",

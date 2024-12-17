@@ -39,7 +39,7 @@ const BlogLayout = ({ children }: PropsWithChildren) => {
     <main className="flex min-h-dvh flex-col bg-gradient-to-br from-foreground-50 to-background">
       <Toaster toastOptions={{ position: 'bottom-center', duration: 5000 }} />
 
-      <Navbar isBordered className="h-16" isBlurred>
+      <Navbar isBordered className="h-16" isBlurred maxWidth="full">
         <NavbarBrand>
           <Link
             className="text-3xl font-semibold tracking-tight text-blue-400"
@@ -110,7 +110,7 @@ const BlogLayout = ({ children }: PropsWithChildren) => {
         </NavbarContent>
       </Navbar>
 
-      <div className="mx-auto flex w-full grow flex-col">{children}</div>
+      <div className="flex w-full grow flex-col">{children}</div>
     </main>
   )
 }

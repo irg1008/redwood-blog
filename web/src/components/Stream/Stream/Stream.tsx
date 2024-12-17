@@ -1,3 +1,5 @@
+import { PropsWithChildren } from 'react'
+
 import { Stream } from 'types/graphql'
 
 import ChatBox from 'src/components/Chat/ChatBox'
@@ -8,17 +10,23 @@ export type StreamComponentProps = {
   stream: StreamerlessStream
 }
 
-const StreamComponent = ({ stream }: { stream: StreamerlessStream }) => {
+const StreamComponent = ({
+  stream,
+  children,
+}: PropsWithChildren<StreamComponentProps>) => {
   return (
-    <>
-      <div className="flex max-h-[80dvh] pe-80">
-        <StreamVideoCell streamId={stream.id} />
+    <section className="flex grow">
+      <div className="flex max-h-[calc(100dvh-4rem)] grow flex-col overflow-auto">
+        <figure className="flex max-h-[80dvh]">
+          <StreamVideoCell streamId={stream.id} />
+        </figure>
+        {children}
       </div>
 
-      <aside className="fixed right-0 top-0 flex h-full w-80 pt-16">
+      <article className="sticky right-0 top-0 flex w-80 shrink-0">
         <ChatBox streamId={stream.id} />
-      </aside>
-    </>
+      </article>
+    </section>
   )
 }
 

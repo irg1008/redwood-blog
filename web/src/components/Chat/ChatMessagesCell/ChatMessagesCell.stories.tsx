@@ -1,36 +1,20 @@
-import { ApolloClient, ApolloProvider, InMemoryCache } from '@apollo/client'
-import { MockSubscriptionLink } from '@apollo/client/testing'
-import type { Decorator, Meta, StoryObj } from '@storybook/react'
+import type { Meta, StoryObj } from '@storybook/react'
 
 import { Failure, Loading, Success } from './ChatMessagesCell'
 import { standard } from './ChatMessagesCell.mock'
 
-const meta: Meta = {
+const meta: Meta<typeof Success> = {
   title: 'Cells/Chat/ChatMessagesCell',
   tags: ['autodocs'],
 }
 
 export default meta
 
-const subscriptionDecorator: Decorator = (Story) => {
-  const link = new MockSubscriptionLink()
-  const client = new ApolloClient({
-    link,
-    cache: new InMemoryCache({ addTypename: false }),
-  })
-
-  return (
-    <ApolloProvider client={client}>
-      <Story />
-    </ApolloProvider>
-  )
-}
-
 export const success: StoryObj<typeof Success> = {
   render: (args) => {
-    return Success ? <Success {...standard()} {...args} /> : <></>
+    return Success ? <Success {...args} /> : <></>
   },
-  decorators: [subscriptionDecorator],
+  args: standard(),
 }
 
 export const loading: StoryObj<typeof Loading> = {

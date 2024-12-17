@@ -60,7 +60,7 @@ export const CHAT_MESSAGES_SUB: TypedDocumentNode<
 `
 
 export const Loading = () => (
-  <div className="grid h-full place-content-center place-items-center">
+  <div className="grid h-full place-content-center place-items-center p-12">
     <Spinner />
   </div>
 )

@@ -1,7 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react'
-import { ChatMessagesQuery, ChatMessagesQueryVariables } from 'types/graphql'
+import {
+  SendChatMessageMutation,
+  SendChatMessageMutationVariables
+} from 'types/graphql'
 
-import { standard } from '../ChatMessagesCell/ChatMessagesCell.mock'
 
 import ChatBox from './ChatBox'
 
@@ -22,14 +24,22 @@ export const LoggedIn: Story = {
       roles: 'user',
     })
 
-    mockGraphQLQuery<ChatMessagesQuery, ChatMessagesQueryVariables>(
-      'ChatMessagesQuery',
-      (_variables) => {
-        return {
-          chatMessages: standard().chatMessages,
-        }
+    mockGraphQLMutation<
+      SendChatMessageMutation,
+      SendChatMessageMutationVariables
+    >('SendChatMessageMutation', ({ input }) => {
+      return {
+        sendChatMessage: {
+          body: input.body,
+          createdAt: new Date().toISOString(),
+          id: Math.floor(Math.random() * 1000).toString(),
+          user: {
+            email: 'User 1',
+            id: 1,
+          },
+        },
       }
-    )
+    })
 
     return <ChatBox {...args} />
   },
@@ -38,15 +48,6 @@ export const LoggedIn: Story = {
 export const LoggedOut: Story = {
   render: (args) => {
     mockCurrentUser(null)
-
-    mockGraphQLQuery<ChatMessagesQuery, ChatMessagesQueryVariables>(
-      'ChatMessagesQuery',
-      (_variables) => {
-        return {
-          chatMessages: standard().chatMessages,
-        }
-      }
-    )
 
     return <ChatBox {...args} />
   },

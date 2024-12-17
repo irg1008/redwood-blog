@@ -139,7 +139,7 @@
   },
   "StreamerSettings": {
     "actions": {
-      "generate-key": "Generate streaming key",
+      "generate-key": "Generate",
       "generate-key_success": "Streaming key successfully generated"
     },
     "description": "Streamer settings",

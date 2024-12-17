@@ -60,5 +60,10 @@ export const Failure = ({
 export const Success = ({
   streamer,
 }: CellSuccessProps<FindStreamerQuery, FindStreamerQueryVariables>) => {
+  mockCurrentUser({
+    id: streamer.user.id,
+    email: streamer.user.email,
+    roles: 'user',
+  })
   return <Streamer streamer={streamer} />
 }

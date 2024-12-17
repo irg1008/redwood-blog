@@ -9,7 +9,7 @@ const ChatBox = ({ streamId }: ChatMessagesCellProps) => {
   const { isAuthenticated } = useAuth()
 
   return (
-    <Card isFooterBlurred className="grid w-full" radius="none">
+    <Card isFooterBlurred className="w-full" radius="none">
       <ChatMessagesCell streamId={streamId} />
 
       {isAuthenticated && (
